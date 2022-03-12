@@ -3,7 +3,7 @@ const Token = require("./Token")
 class RightCurlyToken {
     
     constructor() {
-        this.value = "{"
+        this.value = "}"
     }
 }
 
