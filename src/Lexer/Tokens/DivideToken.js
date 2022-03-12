@@ -3,7 +3,7 @@ const Token = require("./Token")
 class DivideToken {
     
     constructor() {
-        this.value = '/'
+        this.value = "/"
     }
 }
 
