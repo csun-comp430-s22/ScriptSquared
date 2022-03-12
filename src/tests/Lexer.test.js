@@ -1,4 +1,4 @@
 const Tokenizer = require('../Lexer/Lexer')
 
-let tokenizer = new Tokenizer("123")
-console.log(tokenizer.tryTokenizeInteger())
+let tokenizer = new Tokenizer("4578")
+console.log(tokenizer.test())

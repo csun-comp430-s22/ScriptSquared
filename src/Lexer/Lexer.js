@@ -1,4 +1,4 @@
-const IntegerToken = require()
+const IntegerToken = require("./Tokens/IntegerToken")
 
 class Tokenizer {
 
@@ -8,6 +8,10 @@ class Tokenizer {
         this.inputLength = input.length
     }
     
+    test() {
+        let test = new IntegerToken(123)
+        return test.equals(new IntegerToken(456));
+    }
 
     skipWhiteSpace () {
         while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) === ' ') ) {
@@ -25,10 +29,12 @@ class Tokenizer {
             this.offset++
         }
 
-        if (number !== "")
-            return new IntegerToken(parseInt(number))
-        else
+        if (number !== "") {
+            return new IntegerToken(number);
+        }
+        else {
             return null;
+        }
     }
 }
 
