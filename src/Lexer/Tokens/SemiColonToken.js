@@ -3,7 +3,7 @@ const Token = require("./Token")
 class SemiColonToken {
     
     constructor() {
-        this.value = "semiColon"
+        this.value = ";"
     }
 }
 
