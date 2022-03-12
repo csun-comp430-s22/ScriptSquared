@@ -3,7 +3,7 @@ const Token = require("./Token")
 class GreaterThanToken {
     
     constructor() {
-        this.value = '>'
+        this.value = ">"
     }
 }
 

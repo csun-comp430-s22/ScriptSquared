@@ -3,7 +3,7 @@ const Token = require("./Token")
 class LessThanEqualToken {
     
     constructor() {
-        this.value = '<='
+        this.value = "<="
     }
 }
 

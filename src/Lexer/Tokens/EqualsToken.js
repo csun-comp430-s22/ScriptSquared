@@ -3,7 +3,7 @@ const Token = require("./Token")
 class EqualsToken {
     
     constructor() {
-        this.value = '=='
+        this.value = "=="
     }
 }
 

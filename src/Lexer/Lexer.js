@@ -10,7 +10,7 @@ class Tokenizer {
     
     test() {
         let test = new IntegerToken(123)
-        return test.equals(new IntegerToken(456));
+        return test.getTokenValue()
     }
 
     skipWhiteSpace () {
