@@ -7,7 +7,7 @@ class ElseToken {
     }
 }
 
-IntegerToken.prototype.getTokenValue = Token.getTokenValue
+ElseToken.prototype.getTokenValue = Token.getTokenValue
 
 
 module.exports = ElseToken;
