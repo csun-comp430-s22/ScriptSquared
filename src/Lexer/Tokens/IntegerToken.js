@@ -8,7 +8,6 @@ class IntegerToken {
 }
 
 IntegerToken.prototype.getTokenValue = Token.getTokenValue
-IntegerToken.prototype.equals = Token.equals
 
 
 module.exports = IntegerToken;
