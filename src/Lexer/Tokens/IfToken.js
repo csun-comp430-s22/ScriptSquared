@@ -3,7 +3,7 @@ const Token = require("./Token")
 class IfToken {
     
     constructor() {
-        this.value = "If"
+        this.value = "if"
     }
 }
 
