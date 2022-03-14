@@ -231,3 +231,111 @@ describe("A single token should equal", () => {
         expect(result).toEqual([new WhileToken()])
     })
 })
+
+
+describe("Testing Invalid Inputs", () => {
+    
+    test("Using an invalid string: ret!rn", () => {
+        
+        const result = () => {
+            expectTokenizes("ret!rn")
+        }
+        expect(result).toThrow(EvalError)
+    })
+
+    test("Using an invalid symbol: %", () => {
+        
+        const result = () => {
+            expectTokenizes("%")
+        }
+        expect(result).toThrow(EvalError)
+    })
+
+    test("Using an invalid integer: 11@", () => {
+        
+        const result = () => {
+            expectTokenizes("11@")
+        }
+        expect(result).toThrow(EvalError)
+    })
+})
+
+describe("Testing More Complex Inputs", () => {
+    //Test multiple valid tokens
+    //Test mutliple valid tokens w/o whitespace (should be a variable)
+    //Test basic expressions
+        //Test basic math expressions
+
+    describe("Multiple valid tokens", () => {
+
+        test("if else: one IfToken, one ElseToken", () => {
+            let result = expectTokenizes("if else")
+            expect(result).toEqual([new IfToken(), new ElseToken()])
+        })
+
+    })
+
+    describe("Multiple valid tokens without whitespace", () => {
+        
+        test("ifelse: one VariableToken called 'ifelse'", () => {
+            let result = expectTokenizes("ifelse")
+            expect(result).toEqual([new VariableToken("ifelse")])
+        })
+
+        test("{public: one leftCurlyToken, one PublicToken", () => {
+            let result = expectTokenizes("{public")
+            expect(result).toEqual([new LeftCurlyToken, new PublicToken])
+        })
+
+        test("1myVariable: one IntegerToken of value 1, one VariableToken called 'myVariable'", () => {
+            let result = expectTokenizes("1myVariable")
+            expect(result).toEqual([new IntegerToken(1), new VariableToken("myVariable")])
+        })
+    })
+
+    describe("Basic Expressions", () => {
+        
+        test("(4 > 7)", () => {
+            let result = expectTokenizes("(4 > 7)")
+            expect(result).toEqual([
+                new LeftParenToken(),
+                new IntegerToken(4),
+                new GreaterThanToken(),
+                new IntegerToken(7),
+                new RightParenToken()
+            ])
+        })
+    })
+
+    describe("Really Long Input", () => {
+        
+        test("if ( 1 < 2 ) { int var = 69 } else { int var = 96 }", () => {
+            let result = expectTokenizes("if ( 1 < 2 ) { int var = 69 } else { int var = 96 }")
+            expect(result).toEqual([
+                new IfToken(),
+                new LeftParenToken(),
+                new IntegerToken(1),
+                new LessThanToken(),
+                new IntegerToken(2),
+                new RightParenToken(),
+                new LeftCurlyToken(),
+                //FIXME: Need something for int here (is it supposed to be variable)
+                new VariableToken("int"),
+                //------------------------
+                new VariableToken("var"),
+                new AssignmentToken(),
+                new IntegerToken(69),
+                new RightCurlyToken(),
+                new ElseToken(),
+                new LeftCurlyToken(),
+                //FIXME: Need something for int here (is it supposed to be variable)
+                new VariableToken("int"),
+                //------------------------
+                new VariableToken("var"),
+                new AssignmentToken(),
+                new IntegerToken(96),
+                new RightCurlyToken(),
+            ])
+        })
+    })
+})
