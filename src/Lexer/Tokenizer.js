@@ -1,32 +1,40 @@
 const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
-const BreakToken = require('../Lexer/Tokens/BreakToken');
-const DivideToken = require('../Lexer/Tokens/DivideToken');
-const ElseToken = require('../Lexer/Tokens/ElseToken');
-const EqualsToken = require('../Lexer/Tokens/EqualsToken')
-const FalseToken = require('../Lexer/Tokens/FalseToken');
-const GreaterThanEqualToken = require('../Lexer/Tokens/GreaterThanEqualToken');
-const GreaterThanToken = require('../Lexer/Tokens/GreaterThanToken');
-const IfToken = require('../Lexer/Tokens/IfToken');
-const IntegerToken = require('../Lexer/Tokens/IntegerToken');
-const LeftCurlyToken = require('../Lexer/Tokens/LeftCurlyToken');
-const LeftParenToken = require('../Lexer/Tokens/LeftParenToken');
-const LessThanEqualToken = require('../Lexer/Tokens/LessThanEqualToken');
-const LessThanToken = require('../Lexer/Tokens/LessThanToken');
-const MinusToken = require('../Lexer/Tokens/MinusToken');
-const MultiplyToken = require('../Lexer/Tokens/MultiplyToken');
-const NotEqualsToken = require('../Lexer/Tokens/NotEqualsToken');
-const PlusToken = require('../Lexer/Tokens/PlusToken');
-const PrintToken = require('../Lexer/Tokens/PrintToken');
-const PrivateToken = require('../Lexer/Tokens/PrivateToken');
-const ProtecToken = require('../Lexer/Tokens/ProtecToken');
-const PublicToken = require('../Lexer/Tokens/PublicToken');
-const ReturnToken = require('../Lexer/Tokens/ReturnToken');
-const RightCurlyToken = require('../Lexer/Tokens/RightCurlyToken');
-const RightParenToken = require('../Lexer/Tokens/RightParenToken');
+const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
+const { 
+    LeftCurlyToken,
+    RightCurlyToken, 
+    LeftParenToken, 
+    RightParenToken
+} = require("../Lexer/Tokens/BraceTokens")
+const { 
+    PlusToken,
+    MinusToken,
+    MultiplyToken,
+    DivideToken,
+    EqualsToken,
+    NotEqualsToken,
+    GreaterThanEqualToken,
+    GreaterThanToken,
+    LessThanEqualToken,
+    LessThanToken
+ } = require("../Lexer/Tokens/OperatorTokens")
+const { 
+    ReturnToken,
+    IfToken,
+    ElseToken,
+    WhileToken,
+    BreakToken,
+    PrintToken
+ } = require("../Lexer/Tokens/StatementTokens")
+const { 
+    IntegerToken,
+    TrueToken,
+    FalseToken,
+    StringToken,
+    VoidToken
+ } = require("../Lexer/Tokens/TypeTokens")
 const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
-const TrueToken = require('../Lexer/Tokens/TrueToken');
 const VariableToken = require("../Lexer/Tokens/VariableToken");
-const WhileToken = require('../Lexer/Tokens/WhileToken');
 
 
 class Tokenizer {
