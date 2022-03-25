@@ -1,3 +1,4 @@
+const Tokenizer = require('../Lexer/Tokenizer');
 const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
