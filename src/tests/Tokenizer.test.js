@@ -45,7 +45,6 @@ function expectTokenizes (input) {
     return result;
 }
 
-
 describe("Tokens should be empty", () => {
     
     test("if input is empty", () => {
@@ -218,6 +217,13 @@ describe("A single token should equal", () => {
         
         let result = expectTokenizes(";")
         expect(result).toEqual([new SemiColonToken()])
+    })
+
+    test("String if a string is passed", () => {
+
+        let result = expectTokenizes('"Hello World"')
+        console.log(result)
+        expect(result).toEqual([new StringToken("Hello World")])
     })
 
     test("TrueToken if 'true' is passed", () => {

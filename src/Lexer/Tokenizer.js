@@ -70,6 +70,7 @@ class Tokenizer {
         if  (this.offset < this.inputLength &&
             (retval = this.tryTokenizeVariableOrKeyword()) === null &&
             (retval = this.tryTokenizeInteger()) === null &&
+            (retval = this.tryTokenizeString()) === null &&
             (retval = this.tryTokenizeSymbol()) === null) 
             {
                 throw new EvalError("Invalid token! d u m b y")
@@ -240,6 +241,28 @@ class Tokenizer {
             return new IntegerToken(parseInt(number));
         }
         else {
+            return null;
+        }
+    }
+
+    tryTokenizeString () {
+        this.skipWhiteSpace()
+
+        let string = ""
+
+        if (this.input.charAt(this.offset) !== '"')
+            return null;
+
+        this.offset++
+        while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) !== '"') ) {
+            string += this.input.charAt(this.offset)
+            this.offset++
+        }
+
+        if (this.input.charAt(this.offset) === '"') {
+            this.offset++
+            return new StringToken(string);
+        } else {
             return null;
         }
     }
