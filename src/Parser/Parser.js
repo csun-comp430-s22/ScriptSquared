@@ -1,0 +1,73 @@
+const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
+const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
+const { 
+    LeftCurlyToken,
+    RightCurlyToken, 
+    LeftParenToken, 
+    RightParenToken
+} = require("../Lexer/Tokens/BraceTokens")
+const { 
+    PlusToken,
+    MinusToken,
+    MultiplyToken,
+    DivideToken,
+    EqualsToken,
+    NotEqualsToken,
+    GreaterThanEqualToken,
+    GreaterThanToken,
+    LessThanEqualToken,
+    LessThanToken
+ } = require("../Lexer/Tokens/OperatorTokens")
+const { 
+    ReturnToken,
+    IfToken,
+    ElseToken,
+    WhileToken,
+    BreakToken,
+    PrintToken
+ } = require("../Lexer/Tokens/StatementTokens")
+const { 
+    IntegerToken,
+    TrueToken,
+    FalseToken,
+    StringToken,
+    VoidToken
+ } = require("../Lexer/Tokens/TypeTokens")
+const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
+const VariableToken = require("../Lexer/Tokens/VariableToken");
+
+const ParseResult = require("./ParseResult") 
+
+
+class Parser {
+
+    constructor(tokensArray) {
+        this.tokens = tokensArray
+    }
+
+    getToken(position) {
+        if (position >= 0 && position < this.tokens.size()) {
+            return this.tokens[position]
+        } else {
+            throw new EvalError("Invalid token position: " + position)
+        }
+    }
+
+    assertTokenHereIs(position, expectedToken) {
+        const recieved = this.getToken(position)
+
+        // TODO: Change equals/there is no equals function on classes
+        if (!expectedToken.equals(recieved)) {
+            throw new EvalError("expected: " + expectedToken + "; recieved: " + recieved)
+        }
+    }
+
+    parseStmt(position) {
+        const token = this.getToken(position)
+
+        // Return;
+        if (token.constructor === ReturnToken.constructor) {
+            
+        }
+    }
+}
