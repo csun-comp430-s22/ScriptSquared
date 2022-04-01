@@ -2,7 +2,7 @@
 class LeftCurlyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "{"
     }
 }
@@ -10,7 +10,7 @@ class LeftCurlyToken  {
 class RightCurlyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "}"
     }
 }
@@ -18,7 +18,7 @@ class RightCurlyToken  {
 class LeftParenToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "("
     }
 }
@@ -26,7 +26,7 @@ class LeftParenToken  {
 class RightParenToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ")"
     }
 }
@@ -34,7 +34,7 @@ class RightParenToken  {
 class SemiColonToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ";"
     }
 }
@@ -42,7 +42,7 @@ class SemiColonToken  {
 class PeriodToken  {
 
     constructor() {
-        super(Token)
+         
         this.value = "."
     }
 }
@@ -50,7 +50,7 @@ class PeriodToken  {
 class CommaToken  {
 
     constructor() {
-        super(Token)
+         
         this.value = ","
     }
 }

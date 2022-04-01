@@ -3,7 +3,7 @@
 class ReturnToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "return"
     }
 }
@@ -11,7 +11,7 @@ class ReturnToken  {
 class IfToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "if"
     }
 }
@@ -19,7 +19,7 @@ class IfToken  {
 class ElseToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "else"
     }
 }
@@ -27,7 +27,7 @@ class ElseToken  {
 class WhileToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "while"
     }
 }
@@ -35,7 +35,7 @@ class WhileToken  {
 class BreakToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "break"
     }
 }
@@ -43,7 +43,7 @@ class BreakToken  {
 class PrintToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "print"
     }
 }
@@ -51,7 +51,7 @@ class PrintToken  {
 class ThisToken  {
 
     constructor() {
-        super(Token)
+         
         this.value = "this"
     }
 }

@@ -2,7 +2,7 @@
 class IntegerToken  {
     
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
@@ -10,7 +10,7 @@ class IntegerToken  {
 class TrueToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "true"
     }
 }
@@ -18,7 +18,7 @@ class TrueToken  {
 class FalseToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "false"
     }
 }
@@ -26,7 +26,7 @@ class FalseToken  {
 class StringToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
@@ -34,15 +34,15 @@ class StringToken  {
 class VoidToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Void"
+         
+        this.value = "void"
     }
 }
 
 class ClassNameToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
@@ -50,7 +50,7 @@ class ClassNameToken  {
 class MethodNameToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
@@ -58,8 +58,8 @@ class MethodNameToken  {
 class IntegerTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Int"
+         
+        this.value = "int"
     }
 
 }
@@ -67,16 +67,16 @@ class IntegerTypeToken  {
 class StringTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "String"
+         
+        this.value = "string"
     }
 }
 
 class BooleanTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Boolean"
+         
+        this.value = "boolean"
     }
 }
 

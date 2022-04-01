@@ -2,7 +2,7 @@
 class PublicToken   {
     
     constructor() {
-        super(Token)
+         
         this.value = "public"
     }
 }
@@ -10,7 +10,7 @@ class PublicToken   {
 class PrivateToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "private"
     }
 }
@@ -18,7 +18,7 @@ class PrivateToken  {
 class ProtecToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "protec"
     }
 }

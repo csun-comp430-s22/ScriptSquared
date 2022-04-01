@@ -2,7 +2,7 @@
 class ClassToken   {
     
     constructor() {
-        super(Token)
+         
         this.value = "class"
     }
 }

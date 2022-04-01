@@ -2,7 +2,7 @@
 class PlusToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '+'
     }
 }
@@ -10,7 +10,7 @@ class PlusToken  {
 class MinusToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '-'
     }
 }
@@ -18,7 +18,7 @@ class MinusToken  {
 class MultiplyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '*'
     }
 }
@@ -26,7 +26,7 @@ class MultiplyToken  {
 class DivideToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "/"
     }
 }
@@ -34,7 +34,7 @@ class DivideToken  {
 class EqualsToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "=="
     }
 }
@@ -42,7 +42,7 @@ class EqualsToken  {
 class NotEqualsToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '!='
     }
 }
@@ -50,7 +50,7 @@ class NotEqualsToken  {
 class GreaterThanEqualToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ">="
     }
 }
@@ -58,7 +58,7 @@ class GreaterThanEqualToken  {
 class GreaterThanToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ">"
     }
 }
@@ -66,7 +66,7 @@ class GreaterThanToken  {
 class LessThanEqualToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "<="
     }
 }
@@ -74,7 +74,7 @@ class LessThanEqualToken  {
 class LessThanToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "<"
     }
 }
@@ -82,7 +82,7 @@ class LessThanToken  {
 class AssignmentToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "="
     }
 }
