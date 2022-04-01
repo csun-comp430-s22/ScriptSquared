@@ -1,6 +1,5 @@
-const Token = require("./Token")
-
-class IntegerToken extends Token {
+ 
+class IntegerToken  {
     
     constructor(value) {
         super(Token)
@@ -8,7 +7,7 @@ class IntegerToken extends Token {
     }
 }
 
-class TrueToken extends Token {
+class TrueToken  {
     
     constructor() {
         super(Token)
@@ -16,7 +15,7 @@ class TrueToken extends Token {
     }
 }
 
-class FalseToken extends Token {
+class FalseToken  {
     
     constructor() {
         super(Token)
@@ -24,7 +23,7 @@ class FalseToken extends Token {
     }
 }
 
-class StringToken extends Token {
+class StringToken  {
 
     constructor(value) {
         super(Token)
@@ -32,7 +31,7 @@ class StringToken extends Token {
     }
 }
 
-class VoidToken extends Token {
+class VoidToken  {
 
     constructor() {
         super(Token)
@@ -40,7 +39,7 @@ class VoidToken extends Token {
     }
 }
 
-class ClassNameToken extends Token {
+class ClassNameToken  {
 
     constructor(value) {
         super(Token)
@@ -48,7 +47,7 @@ class ClassNameToken extends Token {
     }
 }
 
-class MethodNameToken extends Token {
+class MethodNameToken  {
 
     constructor(value) {
         super(Token)
@@ -56,7 +55,7 @@ class MethodNameToken extends Token {
     }
 }
 
-class IntegerTypeToken extends Token {
+class IntegerTypeToken  {
 
     constructor() {
         super(Token)
@@ -65,7 +64,7 @@ class IntegerTypeToken extends Token {
 
 }
 
-class StringTypeToken extends Token {
+class StringTypeToken  {
 
     constructor() {
         super(Token)
@@ -73,7 +72,7 @@ class StringTypeToken extends Token {
     }
 }
 
-class BooleanTypeToken extends Token {
+class BooleanTypeToken  {
 
     constructor() {
         super(Token)

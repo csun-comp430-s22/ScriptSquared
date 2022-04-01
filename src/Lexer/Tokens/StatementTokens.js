@@ -1,7 +1,6 @@
-const Token = require("./Token")
+ 
 
-
-class ReturnToken extends Token {
+class ReturnToken  {
     
     constructor() {
         super(Token)
@@ -9,7 +8,7 @@ class ReturnToken extends Token {
     }
 }
 
-class IfToken extends Token {
+class IfToken  {
     
     constructor() {
         super(Token)
@@ -17,7 +16,7 @@ class IfToken extends Token {
     }
 }
 
-class ElseToken extends Token {
+class ElseToken  {
     
     constructor() {
         super(Token)
@@ -25,7 +24,7 @@ class ElseToken extends Token {
     }
 }
 
-class WhileToken extends Token {
+class WhileToken  {
     
     constructor() {
         super(Token)
@@ -33,7 +32,7 @@ class WhileToken extends Token {
     }
 }
 
-class BreakToken extends Token {
+class BreakToken  {
     
     constructor() {
         super(Token)
@@ -41,7 +40,7 @@ class BreakToken extends Token {
     }
 }
 
-class PrintToken extends Token {
+class PrintToken  {
     
     constructor() {
         super(Token)
@@ -49,7 +48,7 @@ class PrintToken extends Token {
     }
 }
 
-class ThisToken extends Token {
+class ThisToken  {
 
     constructor() {
         super(Token)

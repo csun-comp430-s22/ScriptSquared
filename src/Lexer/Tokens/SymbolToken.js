@@ -1,6 +1,5 @@
-const Token = require("./Token")
-
-class LeftCurlyToken extends Token {
+ 
+class LeftCurlyToken  {
     
     constructor() {
         super(Token)
@@ -8,7 +7,7 @@ class LeftCurlyToken extends Token {
     }
 }
 
-class RightCurlyToken extends Token {
+class RightCurlyToken  {
     
     constructor() {
         super(Token)
@@ -16,7 +15,7 @@ class RightCurlyToken extends Token {
     }
 }
 
-class LeftParenToken extends Token {
+class LeftParenToken  {
     
     constructor() {
         super(Token)
@@ -24,7 +23,7 @@ class LeftParenToken extends Token {
     }
 }
 
-class RightParenToken extends Token {
+class RightParenToken  {
     
     constructor() {
         super(Token)
@@ -32,7 +31,7 @@ class RightParenToken extends Token {
     }
 }
 
-class SemiColonToken extends Token {
+class SemiColonToken  {
     
     constructor() {
         super(Token)
@@ -40,7 +39,7 @@ class SemiColonToken extends Token {
     }
 }
 
-class PeriodToken extends Token {
+class PeriodToken  {
 
     constructor() {
         super(Token)
@@ -48,7 +47,7 @@ class PeriodToken extends Token {
     }
 }
 
-class CommaToken extends Token {
+class CommaToken  {
 
     constructor() {
         super(Token)

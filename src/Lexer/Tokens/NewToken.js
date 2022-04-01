@@ -1,6 +1,5 @@
-const Token = require("./Token")
-
-class NewToken extends Token {
+ 
+class NewToken  {
     
     constructor() {
         super(Token)

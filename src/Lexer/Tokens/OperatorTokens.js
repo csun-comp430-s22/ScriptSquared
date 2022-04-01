@@ -1,6 +1,5 @@
-const Token = require("./Token")
 
-class PlusToken extends Token {
+class PlusToken  {
     
     constructor() {
         super(Token)
@@ -8,7 +7,7 @@ class PlusToken extends Token {
     }
 }
 
-class MinusToken extends Token {
+class MinusToken  {
     
     constructor() {
         super(Token)
@@ -16,7 +15,7 @@ class MinusToken extends Token {
     }
 }
 
-class MultiplyToken extends Token {
+class MultiplyToken  {
     
     constructor() {
         super(Token)
@@ -24,7 +23,7 @@ class MultiplyToken extends Token {
     }
 }
 
-class DivideToken extends Token {
+class DivideToken  {
     
     constructor() {
         super(Token)
@@ -32,7 +31,7 @@ class DivideToken extends Token {
     }
 }
 
-class EqualsToken extends Token {
+class EqualsToken  {
     
     constructor() {
         super(Token)
@@ -40,7 +39,7 @@ class EqualsToken extends Token {
     }
 }
 
-class NotEqualsToken extends Token {
+class NotEqualsToken  {
     
     constructor() {
         super(Token)
@@ -48,7 +47,7 @@ class NotEqualsToken extends Token {
     }
 }
 
-class GreaterThanEqualToken extends Token {
+class GreaterThanEqualToken  {
     
     constructor() {
         super(Token)
@@ -56,7 +55,7 @@ class GreaterThanEqualToken extends Token {
     }
 }
 
-class GreaterThanToken extends Token {
+class GreaterThanToken  {
     
     constructor() {
         super(Token)
@@ -64,7 +63,7 @@ class GreaterThanToken extends Token {
     }
 }
 
-class LessThanEqualToken extends Token {
+class LessThanEqualToken  {
     
     constructor() {
         super(Token)
@@ -72,7 +71,7 @@ class LessThanEqualToken extends Token {
     }
 }
 
-class LessThanToken extends Token {
+class LessThanToken  {
     
     constructor() {
         super(Token)
@@ -80,7 +79,7 @@ class LessThanToken extends Token {
     }
 }
 
-class AssignmentToken extends Token {
+class AssignmentToken  {
     
     constructor() {
         super(Token)

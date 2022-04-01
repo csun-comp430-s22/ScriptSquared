@@ -1,6 +1,5 @@
-const Token = require("./Token")
-
-class PublicToken  extends Token {
+ 
+class PublicToken   {
     
     constructor() {
         super(Token)
@@ -8,7 +7,7 @@ class PublicToken  extends Token {
     }
 }
 
-class PrivateToken extends Token {
+class PrivateToken  {
     
     constructor() {
         super(Token)
@@ -16,7 +15,7 @@ class PrivateToken extends Token {
     }
 }
 
-class ProtecToken extends Token {
+class ProtecToken  {
     
     constructor() {
         super(Token)
