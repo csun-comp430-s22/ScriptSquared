@@ -1,56 +1,62 @@
 const Token = require("./Token")
 
 
-class ReturnToken {
+class ReturnToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "return"
     }
 }
 
-class IfToken {
+class IfToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "if"
     }
 }
 
-class ElseToken {
+class ElseToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "else"
     }
 }
 
-class WhileToken {
+class WhileToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "while"
     }
 }
 
-class BreakToken {
+class BreakToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "break"
     }
 }
 
-class PrintToken {
+class PrintToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "print"
     }
 }
 
+class ThisToken extends Token {
 
+    constructor() {
+        super(Token)
+        this.value = "this"
+    }
+}
 
-ReturnToken.prototype.getTokenValue = Token.getTokenValue
-IfToken.prototype.getTokenValue = Token.getTokenValue
-ElseToken.prototype.getTokenValue = Token.getTokenValue
-WhileToken.prototype.getTokenValue = Token.getTokenValue
-BreakToken.prototype.getTokenValue = Token.getTokenValue
-PrintToken.prototype.getTokenValue = Token.getTokenValue
 
 
 module.exports = {

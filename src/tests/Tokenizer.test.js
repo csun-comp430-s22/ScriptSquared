@@ -1,12 +1,14 @@
 const Tokenizer = require('../Lexer/Tokenizer');
-const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
     LeftParenToken, 
-    RightParenToken
-} = require("../Lexer/Tokens/BraceTokens")
+    RightParenToken,
+    SemiColonToken,
+    PeriodToken,
+    CommaToken
+} = require("../Lexer/Tokens/SymbolToken")
 const { 
     PlusToken,
     MinusToken,
@@ -17,7 +19,8 @@ const {
     GreaterThanEqualToken,
     GreaterThanToken,
     LessThanEqualToken,
-    LessThanToken
+    LessThanToken,
+    AssignmentToken
  } = require("../Lexer/Tokens/OperatorTokens")
 const { 
     ReturnToken,
@@ -32,10 +35,17 @@ const {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken
+    VoidToken,
+    ClassNameToken,
+    MethodNameToken,
+    IntegerTypeToken,
+    StringTypeToken,
+    BooleanTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
-const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
 const VariableToken = require("../Lexer/Tokens/VariableToken");
+const NewToken = require("../Lexer/Tokens/NewToken")
+const ClassToken = require("../Lexer/Tokens/ClassToken")
+const SuperToken = require("../Lexer/Tokens/SuperToken")
 
 
 function expectTokenizes (input) {
@@ -219,11 +229,46 @@ describe("A single token should equal", () => {
         expect(result).toEqual([new SemiColonToken()])
     })
 
+    test("PeriodToken if '.' is passed", () => {
+        
+        let result = expectTokenizes(".")
+        expect(result).toEqual([new PeriodToken()])
+    })
+
+    test("PeriodToken if ',' is passed", () => {
+        
+        let result = expectTokenizes(",")
+        expect(result).toEqual([new CommaToken()])
+    })
+
     test("String if a string is passed", () => {
 
         let result = expectTokenizes('"Hello World"')
-        console.log(result)
         expect(result).toEqual([new StringToken("Hello World")])
+    })
+
+    test("VoidToken if a 'Void' is passed", () => {
+
+        let result = expectTokenizes('Void')
+        expect(result).toEqual([new VoidToken()])
+    })
+
+    test("IntegerTypeToken if a 'Int' is passed", () => {
+
+        let result = expectTokenizes('Int')
+        expect(result).toEqual([new IntegerTypeToken()])
+    })
+
+    test("StringTypeToken if a 'String' is passed", () => {
+
+        let result = expectTokenizes('String')
+        expect(result).toEqual([new StringTypeToken()])
+    })
+
+    test("BoolTypeToken if a 'Boolean' is passed", () => {
+
+        let result = expectTokenizes('Boolean')
+        expect(result).toEqual([new BooleanTypeToken()])
     })
 
     test("TrueToken if 'true' is passed", () => {
@@ -232,17 +277,36 @@ describe("A single token should equal", () => {
         expect(result).toEqual([new TrueToken()])
     })
 
+    test("WhileToken if 'while' is passed", () => {
+        
+        let result = expectTokenizes("while")
+        expect(result).toEqual([new WhileToken()])
+    })
+
+    test("NewToken if 'new' is passed", () => {
+        
+        let result = expectTokenizes("new")
+        expect(result).toEqual([new NewToken()])
+    })
+
+    test("ClassToken if 'class' is passed", () => {
+        
+        let result = expectTokenizes("new")
+        expect(result).toEqual([new ClassToken()])
+    })
+
+    test("SuperToken if 'super' is passed", () => {
+        
+        let result = expectTokenizes("new")
+        expect(result).toEqual([new SuperToken()])
+    })
+
     test("VariableToken if non-reserved word string is passed", () => {
         
         let result = expectTokenizes("testVariable")
         expect(result).toEqual([new VariableToken("testVariable")])
     })
 
-    test("WhileToken if 'while' is passed", () => {
-        
-        let result = expectTokenizes("while")
-        expect(result).toEqual([new WhileToken()])
-    })
 })
 
 

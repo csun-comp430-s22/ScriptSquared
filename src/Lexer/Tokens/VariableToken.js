@@ -1,13 +1,11 @@
 const Token = require("./Token")
 
-class VariableToken {
+class VariableToken extends Token {
     
     constructor(value) {
+        super(Token)
         this.value = value
     }
 }
-
-VariableToken.prototype.getTokenValue = Token.getTokenValue
-
 
 module.exports = VariableToken;

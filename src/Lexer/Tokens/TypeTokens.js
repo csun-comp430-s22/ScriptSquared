@@ -1,46 +1,86 @@
 const Token = require("./Token")
 
-class IntegerToken {
+class IntegerToken extends Token {
     
     constructor(value) {
+        super(Token)
         this.value = value
     }
 }
 
-class TrueToken {
+class TrueToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "true"
     }
 }
 
-class FalseToken {
+class FalseToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "false"
     }
 }
 
-class StringToken {
+class StringToken extends Token {
 
     constructor(value) {
+        super(Token)
         this.value = value
     }
 }
 
-class VoidToken {
+class VoidToken extends Token {
 
     constructor() {
-        
+        super(Token)
+        this.value = "Void"
     }
 }
 
+class ClassNameToken extends Token {
 
-IntegerToken.prototype.getTokenValue = Token.getTokenValue
-TrueToken.prototype.getTokenValue = Token.getTokenValue
-FalseToken.prototype.getTokenValue = Token.getTokenValue
-StringToken.prototype.getTokenValue = Token.getTokenValue
-VoidToken.prototype.getTokenValue = Token.getTokenValue
+    constructor(value) {
+        super(Token)
+        this.value = value
+    }
+}
+
+class MethodNameToken extends Token {
+
+    constructor(value) {
+        super(Token)
+        this.value = value
+    }
+}
+
+class IntegerTypeToken extends Token {
+
+    constructor() {
+        super(Token)
+        this.value = "Int"
+    }
+
+}
+
+class StringTypeToken extends Token {
+
+    constructor() {
+        super(Token)
+        this.value = "String"
+    }
+}
+
+class BooleanTypeToken extends Token {
+
+    constructor() {
+        super(Token)
+        this.value = "Boolean"
+    }
+}
+
 
 
 module.exports = {
@@ -48,5 +88,10 @@ module.exports = {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken
+    VoidToken,
+    MethodNameToken,
+    ClassNameToken,
+    IntegerTypeToken,
+    StringTypeToken,
+    BooleanTypeToken
 };

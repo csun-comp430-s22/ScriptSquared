@@ -5,7 +5,7 @@ const {
     RightCurlyToken, 
     LeftParenToken, 
     RightParenToken
-} = require("../Lexer/Tokens/BraceTokens")
+} = require("../Lexer/Tokens/SymbolToken")
 const { 
     PlusToken,
     MinusToken,
@@ -37,7 +37,7 @@ const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 
 const ParseResult = require("./ParseResult") 
-
+const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("./Operations")
 
 class Parser {
 

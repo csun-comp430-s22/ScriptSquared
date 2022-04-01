@@ -1,11 +1,11 @@
-const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
     LeftParenToken, 
-    RightParenToken
-} = require("../Lexer/Tokens/BraceTokens")
+    RightParenToken,
+    PeriodToken
+} = require("./Tokens/SymbolToken")
 const { 
     PlusToken,
     MinusToken,
@@ -16,7 +16,8 @@ const {
     GreaterThanEqualToken,
     GreaterThanToken,
     LessThanEqualToken,
-    LessThanToken
+    LessThanToken,
+    AssignmentToken
  } = require("../Lexer/Tokens/OperatorTokens")
 const { 
     ReturnToken,
@@ -33,6 +34,7 @@ const {
     StringToken,
     VoidToken
  } = require("../Lexer/Tokens/TypeTokens")
+const NewToken = require("../Lexer/Tokens/NewToken")
 const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 
@@ -147,7 +149,10 @@ class Tokenizer {
         } else if (this.input.startsWith('=', this.offset)) {
             this.offset++
             retval = new AssignmentToken()
-            
+
+        } else if (this.input.startsWith(".", this.offset)) {
+            this.offset++
+            retval = new PeriodToken()
         }
         
         return retval;
@@ -209,6 +214,10 @@ class Tokenizer {
             else if (name === "protec")
             {
                 return new ProtecToken();
+            } 
+            else if (name === "new") 
+            {
+                return new NewToken();
             }
             else
             {

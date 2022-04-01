@@ -1,87 +1,93 @@
 const Token = require("./Token")
 
-class PlusToken {
+class PlusToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = '+'
     }
 }
 
-class MinusToken {
+class MinusToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = '-'
     }
 }
 
-class MultiplyToken {
+class MultiplyToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = '*'
     }
 }
 
-class DivideToken {
+class DivideToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "/"
     }
 }
 
-class EqualsToken {
+class EqualsToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "=="
     }
 }
 
-class NotEqualsToken {
+class NotEqualsToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = '!='
     }
 }
 
-class GreaterThanEqualToken {
+class GreaterThanEqualToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = ">="
     }
 }
 
-class GreaterThanToken {
+class GreaterThanToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = ">"
     }
 }
 
-class LessThanEqualToken {
+class LessThanEqualToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "<="
     }
 }
 
-class LessThanToken {
+class LessThanToken extends Token {
     
     constructor() {
+        super(Token)
         this.value = "<"
     }
 }
 
+class AssignmentToken extends Token {
+    
+    constructor() {
+        super(Token)
+        this.value = "="
+    }
+}
 
-
-PlusToken.prototype.getTokenValue = Token.getTokenValue
-MinusToken.prototype.getTokenValue = Token.getTokenValue
-MultiplyToken.prototype.getTokenValue = Token.getTokenValue
-DivideToken.prototype.getTokenValue = Token.getTokenValue
-EqualsToken.prototype.getTokenValue = Token.getTokenValue
-NotEqualsToken.prototype.getTokenValue = Token.getTokenValue
-GreaterThanEqualToken.prototype.getTokenValue = Token.getTokenValue
-GreaterThanToken.prototype.getTokenValue = Token.getTokenValue
-LessThanEqualToken.prototype.getTokenValue = Token.getTokenValue
-LessThanToken.prototype.getTokenValue = Token.getTokenValue
 
 
 module.exports = {
@@ -94,5 +100,6 @@ module.exports = {
     GreaterThanEqualToken,
     GreaterThanToken,
     LessThanEqualToken,
-    LessThanToken
+    LessThanToken,
+    AssignmentToken
 };
