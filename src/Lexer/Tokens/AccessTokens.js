@@ -1,25 +1,24 @@
-const Token = require("./Token")
-
-class PublicToken  extends Token {
+ 
+class PublicToken   {
     
     constructor() {
-        super(Token)
+         
         this.value = "public"
     }
 }
 
-class PrivateToken extends Token {
+class PrivateToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "private"
     }
 }
 
-class ProtecToken extends Token {
+class ProtecToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "protec"
     }
 }

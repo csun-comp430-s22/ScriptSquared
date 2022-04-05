@@ -1,9 +1,8 @@
-const Token = require("./Token")
-
-class VariableToken extends Token {
+ 
+class VariableToken  {
     
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }

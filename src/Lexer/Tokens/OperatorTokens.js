@@ -1,89 +1,88 @@
-const Token = require("./Token")
 
-class PlusToken extends Token {
+class PlusToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '+'
     }
 }
 
-class MinusToken extends Token {
+class MinusToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '-'
     }
 }
 
-class MultiplyToken extends Token {
+class MultiplyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '*'
     }
 }
 
-class DivideToken extends Token {
+class DivideToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "/"
     }
 }
 
-class EqualsToken extends Token {
+class EqualsToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "=="
     }
 }
 
-class NotEqualsToken extends Token {
+class NotEqualsToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = '!='
     }
 }
 
-class GreaterThanEqualToken extends Token {
+class GreaterThanEqualToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ">="
     }
 }
 
-class GreaterThanToken extends Token {
+class GreaterThanToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ">"
     }
 }
 
-class LessThanEqualToken extends Token {
+class LessThanEqualToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "<="
     }
 }
 
-class LessThanToken extends Token {
+class LessThanToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "<"
     }
 }
 
-class AssignmentToken extends Token {
+class AssignmentToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "="
     }
 }

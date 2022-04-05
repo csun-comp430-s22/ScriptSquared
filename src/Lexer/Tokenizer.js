@@ -4,7 +4,9 @@ const {
     RightCurlyToken, 
     LeftParenToken, 
     RightParenToken,
-    PeriodToken
+    DotToken,
+    SemiColonToken,
+    CommaToken
 } = require("./Tokens/SymbolToken")
 const { 
     PlusToken,
@@ -32,11 +34,15 @@ const {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken
+    VoidToken,
+    IntegerTypeToken,
+    StringTypeToken,
+    BooleanTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const NewToken = require("../Lexer/Tokens/NewToken")
-const SemiColonToken = require('../Lexer/Tokens/SemiColonToken');
 const VariableToken = require("../Lexer/Tokens/VariableToken");
+const SuperToken = require("./Tokens/SuperToken")
+const ClassToken = require("./Tokens/ClassToken")
 
 
 class Tokenizer {
@@ -152,7 +158,10 @@ class Tokenizer {
 
         } else if (this.input.startsWith(".", this.offset)) {
             this.offset++
-            retval = new PeriodToken()
+            retval = new DotToken()
+        } else if (this.input.startsWith(",", this.offset)) {
+            this.offset++
+            retval = new CommaToken()
         }
         
         return retval;
@@ -218,6 +227,30 @@ class Tokenizer {
             else if (name === "new") 
             {
                 return new NewToken();
+            } 
+            else if (name === "int")
+            {
+                return new IntegerTypeToken();
+            }
+            else if (name === "string")
+            {
+                return new StringTypeToken();
+            }
+            else if (name === "boolean")
+            {
+                return new BooleanTypeToken();
+            }
+            else if (name === "void")
+            {
+                return new VoidToken();
+            }
+            else if (name === "super")
+            {
+                return new SuperToken();
+            }
+            else if (name === "class")
+            {
+                return new ClassToken();
             }
             else
             {

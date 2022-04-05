@@ -1,83 +1,82 @@
-const Token = require("./Token")
-
-class IntegerToken extends Token {
+ 
+class IntegerToken  {
     
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
 
-class TrueToken extends Token {
+class TrueToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "true"
     }
 }
 
-class FalseToken extends Token {
+class FalseToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "false"
     }
 }
 
-class StringToken extends Token {
+class StringToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
 
-class VoidToken extends Token {
+class VoidToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Void"
+         
+        this.value = "void"
     }
 }
 
-class ClassNameToken extends Token {
+class ClassNameToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
 
-class MethodNameToken extends Token {
+class MethodNameToken  {
 
     constructor(value) {
-        super(Token)
+         
         this.value = value
     }
 }
 
-class IntegerTypeToken extends Token {
+class IntegerTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Int"
+         
+        this.value = "int"
     }
 
 }
 
-class StringTypeToken extends Token {
+class StringTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "String"
+         
+        this.value = "string"
     }
 }
 
-class BooleanTypeToken extends Token {
+class BooleanTypeToken  {
 
     constructor() {
-        super(Token)
-        this.value = "Boolean"
+         
+        this.value = "boolean"
     }
 }
 

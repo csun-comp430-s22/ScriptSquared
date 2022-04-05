@@ -1,57 +1,56 @@
-const Token = require("./Token")
-
-class LeftCurlyToken extends Token {
+ 
+class LeftCurlyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "{"
     }
 }
 
-class RightCurlyToken extends Token {
+class RightCurlyToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "}"
     }
 }
 
-class LeftParenToken extends Token {
+class LeftParenToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = "("
     }
 }
 
-class RightParenToken extends Token {
+class RightParenToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ")"
     }
 }
 
-class SemiColonToken extends Token {
+class SemiColonToken  {
     
     constructor() {
-        super(Token)
+         
         this.value = ";"
     }
 }
 
-class PeriodToken extends Token {
+class DotToken  {
 
     constructor() {
-        super(Token)
+         
         this.value = "."
     }
 }
 
-class CommaToken extends Token {
+class CommaToken  {
 
     constructor() {
-        super(Token)
+         
         this.value = ","
     }
 }
@@ -63,6 +62,6 @@ module.exports = {
     LeftParenToken,
     RightParenToken,
     SemiColonToken,
-    PeriodToken,
+    DotToken,
     CommaToken
 };
