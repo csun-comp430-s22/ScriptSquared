@@ -39,7 +39,7 @@ class SemiColonToken  {
     }
 }
 
-class PeriodToken  {
+class DotToken  {
 
     constructor() {
          
@@ -62,6 +62,6 @@ module.exports = {
     LeftParenToken,
     RightParenToken,
     SemiColonToken,
-    PeriodToken,
+    DotToken,
     CommaToken
 };

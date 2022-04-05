@@ -4,7 +4,7 @@ const {
     RightCurlyToken, 
     LeftParenToken, 
     RightParenToken,
-    PeriodToken,
+    DotToken,
     SemiColonToken,
     CommaToken
 } = require("./Tokens/SymbolToken")
@@ -158,7 +158,7 @@ class Tokenizer {
 
         } else if (this.input.startsWith(".", this.offset)) {
             this.offset++
-            retval = new PeriodToken()
+            retval = new DotToken()
         } else if (this.input.startsWith(",", this.offset)) {
             this.offset++
             retval = new CommaToken()

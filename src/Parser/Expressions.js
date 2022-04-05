@@ -1,3 +1,6 @@
+const { arraysEqual } = require("../utils");
+const { Variable } = require("./Variable");
+
 class Exp {}
 
 // 1, 2
@@ -40,12 +43,17 @@ class BooleanExp extends Exp {
 // variable
 class VariableExp extends Exp {
 
-    constructor(name) {
-        this.name = name
+    constructor(variable) {
+
+        if (!(variable instanceof Variable)) {
+            throw new EvalError("Incorrect type passed to VariableExp")
+        }
+
+        this.variable = variable
     }
 
     equals(other) {
-        return ( (other instanceof VariableExp) && (this.value === other.name) )
+        return ( (other instanceof VariableExp) && (this.variable === other.variable) )
     }
 }
 
@@ -79,26 +87,12 @@ class OpExp extends Exp {
     }
 }
 
-function arraysEqual(arrayOne, arrayTwo) {
-
-    if (arrayOne.length !== arrayTwo.length)
-        return false;
-    
-    for (let i = 0; i < arrayOne.length; i++) {
-        if ( arrayOne[i].constructor !== arrayTwo[i].constructor ) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
 // exp.methodname(exp*)
 class ExpMethodExp extends Exp {
 
     constructor(parentExp, methodName, parameterExpsArray) {
         
-        if ( !(parentExp instanceof Exp && parameterExpsArray instanceof Array) )
+        if ( !(parentExp instanceof Exp && methodName instanceof String && parameterExpsArray instanceof Array) )
             throw new EvalError("Incorrect type passed to ExpMethodExp")
 
         this.parentExp = parentExp
@@ -114,14 +108,18 @@ class ExpMethodExp extends Exp {
 }
 
 // new classname(exp*)
-class ClassExp extends Exp {
+class NewClassExp extends Exp {
 
     constructor(className, parameterExpsArray) {
-        if ( !(parameterExpsArray instanceof Array) )
-            throw new EvalError("Incorrect type passed to ClassExp")
+        if ( !(className instanceof String) && !(parameterExpsArray instanceof Array) )
+            throw new EvalError("Incorrect type passed to NewClassExp")
 
         this.className = className
         this.parameterExpsArray = parameterExpsArray
+    }
+
+    equals(other) {
+        return ( (other.className === this.className && arraysEqual(this.parameterExpsArray, other.parameterExpsArray)) )
     }
 }
 
@@ -135,5 +133,5 @@ module.exports = {
     ThisExp,
     OpExp,
     ExpMethodExp,
-    ClassExp,
+    NewClassExp,
 }
