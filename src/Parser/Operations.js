@@ -73,6 +73,7 @@ class NotEqualOp extends Op {
 
 
 module.exports = {
+    Op,
     PlusOp,
     MinusOp,
     MultiplyOp,
