@@ -24,5 +24,6 @@ class ClassDec {
 
 
 //TODO Think about the nonsense of instanceDec, Program, and how to incorparate instanceDecList*, constructor, and methDecList*
+//TODO Look at profs function definitions in type checker repo
 
 module.exports = ClassDec
