@@ -39,6 +39,7 @@ class VoidToken  {
     }
 }
 
+// TODO: finsih
 class ClassNameToken  {
 
     constructor(value) {
@@ -47,6 +48,7 @@ class ClassNameToken  {
     }
 }
 
+// TODO: finish
 class MethodNameToken  {
 
     constructor(value) {

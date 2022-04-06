@@ -3,14 +3,14 @@ const { AccessModifier } = require("./AccessModifier")
 const { arraysEqual } = require("../utils")
 const { MethodName } = require("./MethodName")
 const { Type } = require("./Type")
-const { Vardec } = require("./Vardec")
+const { VarDec } = require("./VarDec")
 
 // ex. access type methodname(vardec*) {stmt}
 class MethodDec {
     constructor(accessModifier, type, methodName, varDecList, stmtList) {
 
         if (!(accessModifier instanceof AccessModifier) || !(type instanceof Type) || !(methodName instanceof MethodName) 
-        || arrayMatchType(varDecList, Vardec) || arrayMatchType(stmtList, Stmt)) {
+        || arrayMatchType(varDecList, VarDec) || arrayMatchType(stmtList, Stmt)) {
             throw new EvalError("Incorrect type passed to MethodDec");
         }
 
