@@ -48,15 +48,6 @@ class ClassNameToken  {
     }
 }
 
-// TODO: finish
-class MethodNameToken  {
-
-    constructor(value) {
-         
-        this.value = value
-    }
-}
-
 class IntegerTypeToken  {
 
     constructor() {
@@ -90,7 +81,6 @@ module.exports = {
     FalseToken,
     StringToken,
     VoidToken,
-    MethodNameToken,
     ClassNameToken,
     IntegerTypeToken,
     StringTypeToken,

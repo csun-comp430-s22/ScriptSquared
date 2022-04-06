@@ -37,11 +37,11 @@ const {
     StringToken,
     VoidToken,
     ClassNameToken,
-    MethodNameToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
+const MethodNameToken = require("../Lexer/Tokens/MethodNameToken")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 const NewToken = require("../Lexer/Tokens/NewToken")
 const ClassToken = require("../Lexer/Tokens/ClassToken")
