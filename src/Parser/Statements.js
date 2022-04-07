@@ -6,6 +6,7 @@ const { Variable } = require("./Variable");
 
 class Stmt {}
 
+// if (exp) stmt else stmt
 class IfStmt extends Stmt {
 
     constructor(guardExp, trueBranch, falseBranch) {
@@ -27,7 +28,7 @@ class IfStmt extends Stmt {
     }
 }
 
-
+// while (exp) stmt
 class WhileStmt extends Stmt {
 
     constructor(guardExp, loopStmt) {
@@ -47,6 +48,7 @@ class WhileStmt extends Stmt {
     }
 }
 
+// return exp;
 class ReturnExpStmt extends Stmt {
 
     constructor(returnExp)
@@ -66,6 +68,7 @@ class ReturnExpStmt extends Stmt {
     }
 }
 
+// return;
 class ReturnStmt extends Stmt {
     
     equals(otherReturnStmt) {
@@ -73,6 +76,7 @@ class ReturnStmt extends Stmt {
     }
 }
 
+// print(exp);
 class PrintExpStmt extends Stmt {
     constructor(exp) {
         if( !(exp instanceof Exp)) {
@@ -87,6 +91,7 @@ class PrintExpStmt extends Stmt {
     }
 }
 
+// break;
 class BreakStmt extends Stmt {
     
     equals(otherBreakStmt) {
@@ -94,6 +99,7 @@ class BreakStmt extends Stmt {
     }
 }
 
+// { stmt* }
 class BlockStmt extends Stmt {
     
     constructor(stmtList) {
@@ -131,6 +137,7 @@ class BlockStmt extends Stmt {
 // }
 
 // TODO: double check this is correct; check in parser
+// exp.methodname(exp*);
 class ExpMethodExpStmt extends Stmt {
     constructor(expMethodExp) {
 
@@ -147,6 +154,7 @@ class ExpMethodExpStmt extends Stmt {
     }
 }
 
+// var = exp;
 class VarEqualsExpStmt extends Stmt {
     constructor(variable, exp){
         if(!(variable instanceof Variable) || !(exp instanceof Exp)) {
@@ -164,6 +172,7 @@ class VarEqualsExpStmt extends Stmt {
     }
 }
 
+// vardec = exp; 
 class VarDecEqualsExpStmt extends Stmt {
     constructor(vardec, exp){
         if(!(vardec instanceof VarDec) || !(exp instanceof Exp)) {
