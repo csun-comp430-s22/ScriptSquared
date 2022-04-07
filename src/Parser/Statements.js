@@ -117,39 +117,22 @@ class BlockStmt extends Stmt {
     }
 }
 
-// class ExpMethodExpStmt extends Stmt {
-//     constructor(parentExp, methodName, expList) {
-        
-//         if ( !(parentExp instanceof Exp) || !(methodName instanceof MethodName) || !(arrayMatchType(expList, Exp)) ) {
-//             throw new EvalError("Incorrect type passed to ExpMethodExpStmt")
-//         }
-
-//         this.parentExp = parentExp
-//         this.methodName = methodName
-//         this.expList = expList
-//     } 
-
-//     equals(otherExpMethodExpStmt) {
-//         return (otherExpMethodExpStmt instanceof ExpMethodExpStmt
-//                     && this.parentExp.equals(otherExpMethodExpStmt.parentExp)
-//                     && arraysEqual(this.expList, otherExpMethodExpStmt.expList));
-//     }
-// }
-
-// TODO: double check this is correct; check in parser
 // exp.methodname(exp*);
 class ExpMethodExpStmt extends Stmt {
-    constructor(expMethodExp) {
+    constructor(parentExp, methodName, parameterExpsArray) {
+        
+        if ( !(parentExp instanceof Exp) || !(methodName instanceof MethodName) || !(arrayMatchType(parameterExpsArray, Exp)) ) {
+            throw new EvalError("Incorrect type passed to ExpMethodExpStmt")
+        }
 
-        this.parentExp = expMethodExp.parentExp
-        this.methodName = expMethodExp.methodName
-        this.parameterExpsArray = expMethodExp.parameterExpsArray
+        this.parentExp = parentExp
+        this.methodName = methodName
+        this.parameterExpsArray = parameterExpsArray
     } 
 
     equals(otherExpMethodExpStmt) {
         return (otherExpMethodExpStmt instanceof ExpMethodExpStmt
                     && this.parentExp.equals(otherExpMethodExpStmt.parentExp)
-                    && this.methodName.equals(otherExpMethodExpStmt.methodName)
                     && arraysEqual(this.parameterExpsArray, otherExpMethodExpStmt.parameterExpsArray));
     }
 }

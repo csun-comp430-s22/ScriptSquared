@@ -400,13 +400,16 @@ class Parser {
 
         // exp.methodname(exp*);
         else {
-            const result = this.parseExp(position)
+            const exp = this.parseExp(position)
 
-            if ( !(result.result instanceof ExpMethodExp) ) 
+            if ( !(exp.result instanceof ExpMethodExp) ) 
                 throw new EvalError("expected ExpMethodExp;")
             
-            this.assertTokenHereIs(result.position, SemiColonToken)
-            return new ParseResult(new ExpMethodExpStmt(result.result), result.position + 1);
+            this.assertTokenHereIs(exp.position, SemiColonToken)
+            return new ParseResult(new ExpMethodExpStmt(exp.result.parentExp,
+                                                        exp.result.methodName,
+                                                        exp.result.parameterExpsArray), 
+                                    exp.position + 1);
         } 
     }
 
