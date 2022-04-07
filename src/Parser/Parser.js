@@ -47,7 +47,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt } = require('./Statements');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
 const { Type } = require('./Type');
 
@@ -373,7 +373,12 @@ class Parser {
 
         // while (exp) stmt
         else if (token instanceof WhileToken) {
+            this.assertTokenHereIs(position + 1, LeftParenToken)
+            const guard = this.parseExp(position + 2)
+            this.assertTokenHereIs(guard.position, RightParenToken)
+            const stmt = this.parseStmt(guard.position + 1)
 
+            return new ParseResult( new WhileStmt( guard.result, stmt.result ), stmt.position );
         }
 
         // break;
