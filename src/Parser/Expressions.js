@@ -1,4 +1,5 @@
 const { arraysEqual } = require("../utils");
+const { MethodName } = require("./MethodName");
 const { Variable } = require("./Variable");
 
 class Exp {}
@@ -92,7 +93,7 @@ class ExpMethodExp extends Exp {
 
     constructor(parentExp, methodName, parameterExpsArray) {
         
-        if ( !(parentExp instanceof Exp && methodName instanceof String && parameterExpsArray instanceof Array) )
+        if ( !(parentExp instanceof Exp && methodName instanceof MethodName && arrayMatchType(parameterExpsArray, Exp)) ) 
             throw new EvalError("Incorrect type passed to ExpMethodExp")
 
         this.parentExp = parentExp

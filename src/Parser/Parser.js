@@ -46,6 +46,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
+const { ExpMethodExpStmt } = require('./Statements');
 
 class Parser {
 
@@ -279,13 +280,65 @@ class Parser {
         return this.parseComparisonExp(position);
     }
 
+
+    // stmt ::= var = exp; | vardec = exp; |  
+    //         { stmt* } |	// stmt’s separated by semi-colons
+    //         return exp; |
+    //         return; | 
+    //         if (exp) stmt else stmt |
+    //         while (exp) stmt | 
+    //         break;	|
+    //         print(exp); |
+    //         exp.methodname(exp*);
+
     parseStmt(position) {
         const token = this.getToken(position)
 
-        // Return;
-        if (token.constructor === ReturnToken.constructor) {
-            
+        // var = exp;
+        if (token instanceof VariableToken) {
+
         }
+
+        // vardec = exp;
+        else if (token instanceof Type) {
+
+        }
+
+        // return exp; | return;
+        else if (token instanceof ReturnToken) {
+
+        }
+
+        // if (exp) stmt else stmt
+        else if (token instanceof IfToken) {
+
+        }
+
+        // while (exp) stmt
+        else if (token instanceof WhileToken) {
+
+        }
+
+        // break;
+        else if (token instanceof BreakToken) {
+
+        }
+
+        // print(exp);
+        else if (token instanceof PrintToken) {
+
+        }
+
+        // exp.methodname(exp*);
+        else {
+            const result = this.parseExp(position)
+
+            if ( !(result.result instanceof ExpMethodExp) ) 
+                throw new EvalError("expected ExpMethodExp;")
+            
+            this.assertTokenHereIs(result.position, SemiColonToken)
+            return new ParseResult(new ExpMethodExpStmt(result.result), result.position + 1);
+        } 
     }
 
     
