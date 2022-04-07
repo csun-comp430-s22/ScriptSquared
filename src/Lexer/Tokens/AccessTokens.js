@@ -5,6 +5,7 @@ class PublicToken   {
          
         this.value = "public"
     }
+    
 }
 
 class PrivateToken  {

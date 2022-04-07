@@ -64,5 +64,6 @@ module.exports = {
     ElseToken,
     WhileToken,
     BreakToken,
-    PrintToken
+    PrintToken,
+    ThisToken
 };
