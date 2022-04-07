@@ -47,7 +47,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt } = require('./Statements');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
 const { Type } = require('./Type');
 
@@ -317,27 +317,39 @@ class Parser {
             return new ParseResult( new VarDecEqualsExpStmt( new VarDec(new Type(token.value), new Variable(variable.value) ), exp.result ), exp.position + 1 );
         }
 
+        // { stmt* } 
+        else if (token instanceof LeftCurlyToken) {
+
+        }
+
         // return exp; | return;
         else if (token instanceof ReturnToken) {
 
             // return;
             try {
                 this.assertTokenHereIs(position + 1, SemiColonToken)
-                return ParseResult(new ReturnStmt(), position + 2);
+                return new ParseResult(new ReturnStmt(), position + 2);
 
             } 
             // return exp;
             catch (e) {
-                let exp = this.parseExp(position + 1)
+                const exp = this.parseExp(position + 1)
                 this.assertTokenHereIs(exp.position, SemiColonToken)
 
-                return ParseResult(new ReturnExpStmt(exp.result), exp.position + 1);
+                return new ParseResult(new ReturnExpStmt(exp.result), exp.position + 1);
             }
         }
 
         // if (exp) stmt else stmt
         else if (token instanceof IfToken) {
+            this.assertTokenHereIs(position + 1, LeftParenToken)
+            const guard = this.parseExp(position + 2)
+            this.assertTokenHereIs(guard.position, RightParenToken)
+            const trueBranch = this.parseStmt(guard.position + 1)
+            this.assertTokenHereIs(trueBranch.position, ElseToken)
+            const falseBranch = this.parseStmt(trueBranch.position + 1)
 
+            return new ParseResult( new IfStmt(guard.result, trueBranch.result, falseBranch.result), falseBranch.position );
         }
 
         // while (exp) stmt
