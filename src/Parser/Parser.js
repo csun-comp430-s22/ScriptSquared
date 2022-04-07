@@ -283,6 +283,15 @@ class Parser {
         return this.parseComparisonExp(position);
     }
 
+    // vardec ::= type var
+    parseVarDec(position) {
+        this.assertTokenHereIs(position, TypeToken)
+        const typeToken = this.getToken(position)
+        this.assertTokenHereIs(position + 1, VariableToken)
+        const variableToken = this.getToken(position + 1)
+
+        return new ParseResult( new VarDec(new Type(typeToken.value), new Variable(variableToken.value) ), position + 2 );
+    }
 
     // stmt ::= var = exp; | vardec = exp; |  
     //         { stmt* } |	// stmt’s separated by semi-colons
@@ -308,13 +317,12 @@ class Parser {
 
         // vardec = exp;
         else if (token instanceof TypeToken) {
-            this.assertTokenHereIs(position + 1, VariableToken)
-            const variable = this.getToken(position + 1)
-            this.assertTokenHereIs(position + 2, EqualsToken)
-            const exp = this.parseExp(position + 3)
+            const vardec = this.parseVarDec(position)
+            this.assertTokenHereIs(vardec.position, EqualsToken)
+            const exp = this.parseExp(vardec.position + 1)
             this.assertTokenHereIs(exp.position, SemiColonToken)
 
-            return new ParseResult( new VarDecEqualsExpStmt( new VarDec(new Type(token.value), new Variable(variable.value) ), exp.result ), exp.position + 1 );
+            return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
         }
 
         // { stmt* } 
