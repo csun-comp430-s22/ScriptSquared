@@ -421,6 +421,34 @@ class Parser {
         } 
     }
 
+    // access ::= public | private | protec
+    parseAccess(position) {
+
+    }
+
+    // methoddec ::= access type methodname(vardec*) { stmt } 
+    parseMethodDec(position) {
+
+    }
+
+    //instancedec ::= access vardec = exp;
+    parseInstanceDec(position) {
+
+    }
+
+    // classdec ::= class classname super classname {
+    //                  instancedec*;
+    //                  construc(vardec*) { super(exp*); stmt* }	// vardec separated by comma. 
+    //                  methoddec*
+    //              }
+    parseClassDec(position) {
+
+    }
+
+    // classdec* `thyEntryPoint` { stmt* }
+    parseProgram(position) {
+
+    }
     
 }
 
