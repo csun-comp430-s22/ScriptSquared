@@ -47,7 +47,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt } = require('./Statements');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
 const { Type } = require('./Type');
 
@@ -390,7 +390,12 @@ class Parser {
 
         // print(exp);
         else if (token instanceof PrintToken) {
+            this.assertTokenHereIs(position + 1, LeftParenToken)
+            const exp = this.parseExp(position + 2)
+            this.assertTokenHereIs(exp.position, RightParenToken)
+            this.assertTokenHereIs(exp.position + 1, SemiColonToken)
 
+            return new ParseResult( new PrintExpStmt(exp.result), exp.position + 2 );
         }
 
         // exp.methodname(exp*);
