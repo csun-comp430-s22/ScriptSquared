@@ -1,5 +1,6 @@
  
-class IntegerToken  {
+
+class IntegerToken {
     
     constructor(value) {
          
@@ -31,7 +32,9 @@ class StringToken  {
     }
 }
 
-class VoidToken  {
+class TypeToken {}
+
+class VoidToken extends TypeToken {
 
     constructor() {
          
@@ -39,8 +42,8 @@ class VoidToken  {
     }
 }
 
-// TODO: finsih
-class ClassNameToken  {
+// TODO: finish
+class ClassNameToken extends TypeToken {
 
     constructor(value) {
          
@@ -48,7 +51,7 @@ class ClassNameToken  {
     }
 }
 
-class IntegerTypeToken  {
+class IntegerTypeToken extends TypeToken {
 
     constructor() {
          
@@ -57,7 +60,7 @@ class IntegerTypeToken  {
 
 }
 
-class StringTypeToken  {
+class StringTypeToken extends TypeToken {
 
     constructor() {
          
@@ -65,7 +68,7 @@ class StringTypeToken  {
     }
 }
 
-class BooleanTypeToken  {
+class BooleanTypeToken extends TypeToken {
 
     constructor() {
          
@@ -80,6 +83,7 @@ module.exports = {
     TrueToken,
     FalseToken,
     StringToken,
+    TypeToken,
     VoidToken,
     ClassNameToken,
     IntegerTypeToken,

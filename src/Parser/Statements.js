@@ -2,6 +2,7 @@ const { Exp } = require("./Expressions");
 const { MethodName } = require("./MethodName")
 const { arraysEqual, arrayMatchType } = require("../utils");
 const { VarDec } = require("./VarDec");
+const { Variable } = require("./Variable");
 
 class Stmt {}
 
@@ -148,7 +149,7 @@ class ExpMethodExpStmt extends Stmt {
 
 class VarEqualsExpStmt extends Stmt {
     constructor(variable, exp){
-        if(!(variable instanceof VariableExp) || !(exp instanceof Exp)) {
+        if(!(variable instanceof Variable) || !(exp instanceof Exp)) {
             throw new EvalError("Incorrect type passed to VarEqualsExpStmt")
         }
         

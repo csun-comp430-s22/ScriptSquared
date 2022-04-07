@@ -36,7 +36,8 @@ const {
     FalseToken,
     StringToken,
     VoidToken,
-    ClassNameToken
+    ClassNameToken,   
+    TypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 
@@ -46,7 +47,9 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt } = require('./Statements');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt } = require('./Statements');
+const { VarDec } = require('./VarDec');
+const { Type } = require('./Type');
 
 class Parser {
 
@@ -296,12 +299,22 @@ class Parser {
 
         // var = exp;
         if (token instanceof VariableToken) {
+            this.assertTokenHereIs(position + 1, EqualsToken)
+            const exp = this.parseExp(position + 2)
+            this.assertTokenHereIs(exp.position, SemiColonToken)
 
+            return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
         }
 
         // vardec = exp;
-        else if (token instanceof Type) {
+        else if (token instanceof TypeToken) {
+            this.assertTokenHereIs(position + 1, VariableToken)
+            const variable = this.getToken(position + 1)
+            this.assertTokenHereIs(position + 2, EqualsToken)
+            const exp = this.parseExp(position + 3)
+            this.assertTokenHereIs(exp.position, SemiColonToken)
 
+            return new ParseResult( new VarDecEqualsExpStmt( new VarDec(new Type(token.value), new Variable(variable.value) ), exp.result ), exp.position + 1 );
         }
 
         // return exp; | return;
