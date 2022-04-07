@@ -47,7 +47,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt } = require('./Statements');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
 const { Type } = require('./Type');
 
@@ -320,6 +320,25 @@ class Parser {
         // { stmt* } 
         else if (token instanceof LeftCurlyToken) {
 
+            const stmtList = []
+            let currentPosition = position + 1
+            let shouldRun = true
+
+            while(shouldRun) {
+                try {
+
+                    const stmt = this.parseStmt(currentPosition)
+                    stmtList.push(stmt.result)
+                    currentPosition = stmt.position
+
+                } catch(e) {
+                    shouldRun = false
+                }
+            }
+
+            this.assertTokenHereIs(currentPosition, RightCurlyToken)
+
+            return new ParseResult( new BlockStmt(stmtList), currentPosition + 1 );
         }
 
         // return exp; | return;
