@@ -59,6 +59,11 @@ const { InstanceDec } = require('./InstanceDec');
 const { MethodDec } = require('./MethodDec');
 const { Program } = require('./Program');
 const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
+const ClassToken = require('../Lexer/Tokens/ClassToken');
+const { ClassDec } = require('./ClassDec');
+const SuperToken = require('../Lexer/Tokens/SuperToken');
+const { parseList } = require('../utils');
+const { Constructor } = require('./Constructor');
 
 class Parser {
 
@@ -537,7 +542,7 @@ class Parser {
     }
 
     // classdec ::= class classname super classname {
-    //                  instancedec*;
+    //                  instancedec*
     //                  construc(vardec*) { super(exp*); stmt* } 
     //                  methoddec*
     //              }
@@ -549,31 +554,89 @@ class Parser {
     //              }
 
     parseClassDec(position) {
-        /*
-        Assert position + 1 is classname -> className
-        if(className.position + 1 is super) {
-            Assert className.position + 2 is classname -> store superClassName
-        } else if (position + 2 is '{' ) {
+
+        this.assertTokenHereIs(position, ClassToken)
+        this.assertTokenHereIs(position + 1, ClassNameTypeToken)
+        const classNameToken = this.getToken(position + 1)
+        
+        // position at { or super
+        position = position + 2
+        let superClassNameToken = null
+        try {
+            this.assertTokenHereIs(position, SuperToken)
+            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
+            superClassNameToken = this.getToken(position + 1)
+            position = position + 2
+        } catch (e) {}
+
+        // position at {
+        this.assertTokenHereIs(position, LeftCurlyToken)
+
+        const result = this.parseList(position + 1, this.parseInstanceDec)
+        const instanceDecList = result.list
+        position = result.position
+
+        this.assertTokenHereIs(position, Constructor)
+        this.assertTokenHereIs(position + 1, LeftParenToken)
+        const vardecs = this.extractCommaSeperatedVardecs(position + 2)
+        position = vardecs.position
+        const vardecList = vardecs.vardecList
+        this.assertTokenHereIs(position, RightParenToken)
+
+        const stmtList = []
+        let superExpList = []
+        // Normal class
+        try {
+            const stmt = this.parseStmt(position + 1)
+            if (stmt.result instanceof BlockStmt) 
+                stmtList = stmt.result.stmtList
+            else 
+                stmtList.push(stmt.result)
             
+            position = stmt.position
+        } 
+        
+        // With super class
+        catch (e) {
+            this.assertTokenHereIs(position + 1, LeftCurlyToken)
+            this.assertTokenHereIs(position + 2, SuperToken)
+            this.assertTokenHereIs(position + 3, LeftParenToken)
+            const exps = this.extractCommaSeperatedExps(position + 4)
+            position = exps.position
+            superExpList = exps.expList
+            this.assertTokenHereIs(position, RightParenToken)
+            this.assertTokenHereIs(position + 1, SemiColonToken)
+            
+            const stmts = parseList(position + 2, this.parseStmt)
+            position = stmts.position
+            stmtList = stmts.list
+
+            this.assertTokenHereIs(position, RightCurlyToken)
+            position++
         }
-        */
-    }
+
+        const methodDecs = parseList(position, this.parseMethodDec)
+        const methodDecList = methodDecs.list
+        position = methodDecs.position
+
+        this.assertTokenHereIs(position, RightCurlyToken)
+        
+        return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 
+                                            new ClassNameType(superClassNameToken?.value),
+                                            instanceDecList,
+                                            new Constructor(vardecList, superExpList, stmtList),
+                                            methodDecList), 
+                                    position + 1)
+    }    
+
+    // TODO: replace EqualsToken with AssignmentToken
 
     // classdec* `thyEntryPoint` stmt
     parseProgram(position) {
-        const classDecList = []
-        let shouldRun = true
-        let currentPosition = position
-
-        while (shouldRun === true) {
-            try {
-                const classDec = this.parseClassDec(currentPosition)
-                currentPosition = classDec.position
-                classDecList.push(classDec.result)
-            } catch (e) {
-                shouldRun = false
-            }
-        }
+        
+        const result = parseList(position, this.parseClassDec)
+        const classDecList = result.list
+        currentPosition = result.position
 
         this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
         const stmt = this.parseStmt(currentPosition + 1)

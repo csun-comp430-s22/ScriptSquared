@@ -9,8 +9,7 @@ const { VarDec } = require("./VarDec")
 class MethodDec {
     constructor(accessModifier, type, methodName, varDecList, stmt) {
 
-        if (!(accessModifier instanceof AccessModifier) || !(type instanceof Type) || !(methodName instanceof MethodName) 
-        || arrayMatchType(varDecList, VarDec) || arrayMatchType(stmt, Stmt)) {
+        if (!(accessModifier instanceof AccessModifier) || !(type instanceof Type) || !(methodName instanceof MethodName) || !arrayMatchType(varDecList, VarDec) || !(stmt instanceof Stmt)) {
             throw new EvalError("Incorrect type passed to MethodDec");
         }
 
@@ -26,8 +25,8 @@ class MethodDec {
         && otherMethodDec.accessModifier.equals(this.accessModifier) 
 		&& otherMethodDec.type.equals(this.type) 
 		&& otherMethodDec.methodName.equals(this.methodName)
-		&& arraysEqual(varDecList,otherMethodDec.varDecList)
-		&& arraysEqual(stmt,otherMethodDec.stmt));
+		&& arraysEqual(this.varDecList, otherMethodDec.varDecList)
+		&& this.stmt.equals(otherMethodDec.stmt));
 	}
 }
 

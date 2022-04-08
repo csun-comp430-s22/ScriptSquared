@@ -1,12 +1,11 @@
 const { ClassDec } = require("./ClassDec");
 const { Stmt } = require("./Statements");
-const { arrayMatchType } = require("../utils");
 
 
 class Program {
 
     constructor(classDecList, stmt) {
-        if ( !(classDecList instanceof ClassDec) || !arrayMatchType(stmt, Stmt)) {
+        if ( !(classDecList instanceof ClassDec) || !(stmt instanceof Stmt)) {
             throw new EvalError("Incorrect type passed to ClassDec")
         }
 

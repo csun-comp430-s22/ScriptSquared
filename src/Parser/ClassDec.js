@@ -1,19 +1,25 @@
-const { Type } = require("./Type")
+const { ClassNameType } = require("./Type")
 const { arrayMatchType, arraysEqual } = require("../utils")
-const { Stmt } = require("./Statements")
 const { InstanceDec } = require("./InstanceDec")
 const { Constructor } = require("./Constructor")
 const MethodDec = require("./MethodDec")
 
-class ClassDec {
-    constructor(className, superClassName, stmtList, instanceDecList, constructor, methodDecList) {
 
-        if ( !(className instanceof Type) 
-                || className.value === "int" 
-                || className.value === "string" 
-                || className.value === "boolean" 
-                || className.value === "void"
-                || !arrayMatchType(stmtList, Stmt)
+// classdec ::= class classname super classname {
+//                  instancedec*;
+//                  construc(vardec*) { super(exp*); stmt* } 
+//                  methoddec*
+//              }
+//              |
+//              class classname {
+//                  instancedec*;
+//                  construc(vardec*) stmt	
+//                  methoddec*
+//              }
+class ClassDec {
+    constructor(classNameType, superClassName, instanceDecList, constructor, methodDecList) {
+
+        if ( !(classNameType instanceof ClassNameType) 
                 || !arrayMatchType(instanceDecList, InstanceDec)
                 || !(constructor instanceof Constructor)
                 || !arrayMatchType(methodDecList, MethodDec)) {
@@ -22,9 +28,8 @@ class ClassDec {
         }
 
 
-        this.className = className
+        this.classNameType = classNameType
         this.superClassName = superClassName
-        this.stmtList = stmtList
         this.instanceDecList = instanceDecList
         this.constructor = constructor
         this.methodDecList = methodDecList
@@ -32,9 +37,8 @@ class ClassDec {
 
     equals(other) {
         return (other instanceof ClassDec
-                    && this.className.equals(other.className)
+                    && this.classNameType.equals(other.classNameType)
                     && this.superClassName.equals(other.superClassName)
-                    && arraysEqual(this.stmtList, other.stmtList)
                     && arraysEqual(this.instanceDecList, other.instanceDecList)
                     && this.constructor.equals(other.constructor)
                     && arraysEqual(this.methodDecList, other.methodDecList));

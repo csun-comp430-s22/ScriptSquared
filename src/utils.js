@@ -24,8 +24,26 @@ function arrayMatchType(array, arrayType) {
     return true;
 }
 
+function parseList(position, parseFunction) {
+    const list = []
+    let shouldRun = true
+
+    while (shouldRun === true) {
+        try {
+            const result = parseFunction(position)
+            list.push(result.result)
+            position = result.position
+        } catch (e) {
+            shouldRun = false
+        }
+    }
+
+    return { list, position };
+}
+
 
 module.exports = {
     arraysEqual,
-    arrayMatchType
+    arrayMatchType,
+    parseList
 }
