@@ -28,7 +28,8 @@ const {
     ElseToken,
     WhileToken,
     BreakToken,
-    PrintToken
+    PrintToken,
+    ThisToken
  } = require("../Lexer/Tokens/StatementTokens")
 const { 
     IntegerToken,
@@ -46,6 +47,7 @@ const VariableToken = require("../Lexer/Tokens/VariableToken");
 const ClassToken = require("../Lexer/Tokens/ClassToken")
 const SuperToken = require("../Lexer/Tokens/SuperToken");
 const { NewToken } = require('../Lexer/Tokens/NewToken');
+const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 
 
 function expectTokenizes (input) {
@@ -363,6 +365,18 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new VariableToken("testVariable")])).toBe(true)
     })
 
+    test("ThisToken if 'this' is passed", () => {
+        
+        let result = expectTokenizes("this")
+        expect(toEqual(result, [new ThisToken()])).toBe(true)
+    })
+
+    test("ThyEntryPointToken if 'thyEntryPoint' is passed", () => {
+        
+        let result = expectTokenizes("thyEntryPoint")
+        expect(toEqual(result, [new ThyEntryPointToken()])).toBe(true)
+    })
+
 })
 
 
@@ -388,6 +402,14 @@ describe("Testing Invalid Inputs", () => {
         
         const result = () => {
             expectTokenizes("11@")
+        }
+        expect(result).toThrow(EvalError)
+    })
+
+    test('Using an invalid String: "Hello World', () => {
+        
+        const result = () => {
+            expectTokenizes('"Hello Wolrd')
         }
         expect(result).toThrow(EvalError)
     })
