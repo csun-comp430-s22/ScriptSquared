@@ -42,7 +42,6 @@ class VoidTypeToken extends TypeToken {
     }
 }
 
-// TODO: finish
 class ClassNameTypeToken extends TypeToken {
 
     constructor(value) {

@@ -45,10 +45,6 @@ class ClassDec {
     }
 }
 
-
-//TODO Think about how to incorparate instanceDecList* and methDecList*
-//TODO Look at profs function definitions in type checker repo
-
 module.exports = {
     ClassDec
 }

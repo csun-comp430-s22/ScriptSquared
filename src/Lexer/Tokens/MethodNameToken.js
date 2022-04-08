@@ -1,5 +1,4 @@
 
-// TODO: finish
 class MethodNameToken  {
 
     constructor(value) {
