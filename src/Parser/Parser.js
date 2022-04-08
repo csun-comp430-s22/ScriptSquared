@@ -57,6 +57,8 @@ const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = requ
 const { PublicModifier, PrivateModifier, ProtecModifier } = require('./AccessModifier');
 const { InstanceDec } = require('./InstanceDec');
 const { MethodDec } = require('./MethodDec');
+const { Program } = require('./Program');
+const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 
 class Parser {
 
@@ -536,16 +538,58 @@ class Parser {
 
     // classdec ::= class classname super classname {
     //                  instancedec*;
-    //                  construc(vardec*) { super(exp*); stmt* }	// vardec separated by comma. 
+    //                  construc(vardec*) { super(exp*); stmt* } 
     //                  methoddec*
     //              }
-    parseClassDec(position) {
+    //              |
+    //              class classname {
+    //                  instancedec*;
+    //                  construc(vardec*) stmt	
+    //                  methoddec*
+    //              }
 
+    parseClassDec(position) {
+        /*
+        Assert position + 1 is classname -> className
+        if(className.position + 1 is super) {
+            Assert className.position + 2 is classname -> store superClassName
+        } else if (position + 2 is '{' ) {
+            
+        }
+        */
     }
 
-    // classdec* `thyEntryPoint` { stmt* }
+    // classdec* `thyEntryPoint` stmt
     parseProgram(position) {
+        const classDecList = []
+        let shouldRun = true
+        let currentPosition = position
 
+        while (shouldRun === true) {
+            try {
+                const classDec = this.parseClassDec(currentPosition)
+                currentPosition = classDec.position
+                classDecList.push(classDec.result)
+            } catch (e) {
+                shouldRun = false
+            }
+        }
+
+        this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
+        const stmt = this.parseStmt(currentPosition + 1)
+
+        return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+    }
+
+    // Intended to be called on the top-level
+    parseProgram() {
+        const program = this.parseProgram(0)    //ParseResult
+        
+        if(program.position == tokens.size()) {
+            return program.result;
+        } else {
+            throw new ParseException("Remaining tokens at the end")
+        }
     }
     
 }
