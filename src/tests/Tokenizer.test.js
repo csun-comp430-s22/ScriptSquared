@@ -35,8 +35,8 @@ const {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken,
-    ClassNameToken,
+    VoidTypeToken,
+    ClassNameTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken
@@ -261,22 +261,22 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new StringToken("Hello World")])).toBe(true)
     })
 
-    test("VoidToken if a 'void' is passed", () => {
+    test("VoidTypeToken if a 'void' is passed", () => {
 
         let result = expectTokenizes('void')
-        expect(toEqual(result, [new VoidToken()])).toBe(true)
+        expect(toEqual(result, [new VoidTypeToken()])).toBe(true)
     })
 
-    test("ClassNameToken if a 'class [class name]' is passed", () => {
+    test("ClassNameTypeToken if a 'class [class name]' is passed", () => {
 
         let result = expectTokenizes('class myClass')
-        expect(toEqual(result, [new ClassToken(), new ClassNameToken("myClass")])).toBe(true)
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
-    test("ClassNameToken if a 'new [class name]' is passed", () => {
+    test("ClassNameTypeToken if a 'new [class name]' is passed", () => {
 
         let result = expectTokenizes('new myClass')
-        expect(toEqual(result, [new NewToken(), new ClassNameToken("myClass")])).toBe(true)
+        expect(toEqual(result, [new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
     test("MethodNameToken if a '' is passed", () => {

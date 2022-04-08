@@ -2,12 +2,8 @@
 class Type {}
 
 class IntType extends Type {
-    constructor(value) {
-        if (value !== "int") {
-            throw new EvalError("Incorrect type passed to IntType.Parser")
-        }
-
-        this.value = value
+    constructor() {
+        this.value = "int"
     }
 
     equals(other) {
@@ -17,12 +13,8 @@ class IntType extends Type {
 }
 
 class StringType extends Type {
-    constructor(value) {
-        if (value !== "string") {
-            throw new EvalError("Incorrect type passed to StringType.Parser")
-        }
-
-        this.value = value
+    constructor() {
+        this.value = "string"
     }
 
     equals(other) {
@@ -32,12 +24,8 @@ class StringType extends Type {
 }
 
 class BooleanType extends Type {
-    constructor(value) {
-        if (value !== "boolean") {
-            throw new EvalError("Incorrect type passed to BooleanType.Parser")
-        }
-
-        this.value = value
+    constructor() {
+        this.value = "boolean"
     }
 
     equals(other) {
@@ -47,12 +35,8 @@ class BooleanType extends Type {
 }
 
 class VoidType extends Type {
-    constructor(value) {
-        if (value !== "void") {
-            throw new EvalError("Incorrect type passed to VoidType.Parser")
-        }
-
-        this.value = value
+    constructor() {
+        this.value = "void"
     }
 
     equals(other) {

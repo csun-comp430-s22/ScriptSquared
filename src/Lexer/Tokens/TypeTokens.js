@@ -34,7 +34,7 @@ class StringToken  {
 
 class TypeToken {}
 
-class VoidToken extends TypeToken {
+class VoidTypeToken extends TypeToken {
 
     constructor() {
          
@@ -43,7 +43,7 @@ class VoidToken extends TypeToken {
 }
 
 // TODO: finish
-class ClassNameToken extends TypeToken {
+class ClassNameTypeToken extends TypeToken {
 
     constructor(value) {
          
@@ -84,8 +84,8 @@ module.exports = {
     FalseToken,
     StringToken,
     TypeToken,
-    VoidToken,
-    ClassNameToken,
+    VoidTypeToken,
+    ClassNameTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken

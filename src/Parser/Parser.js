@@ -35,9 +35,13 @@ const {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken,
-    ClassNameToken,   
-    TypeToken
+    VoidTypeToken,
+    ClassNameTypeToken,   
+    TypeToken,
+    StringTypeToken,
+    IntegerTypeToken,
+    BooleanTypeToken,
+    VoidTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 
@@ -49,7 +53,7 @@ const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
 const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
-const { Type } = require('./Type');
+const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = require('./Type');
 
 class Parser {
 
@@ -95,7 +99,37 @@ class Parser {
 
     // int | string | boolean | void | classname
     parseType(position) {
-        
+        this.assertTokenHereIs(position, TypeToken)
+        const typeToken = this.getToken(position)
+
+        // int
+        if (typeToken instanceof IntegerTypeToken) {
+            return new ParseResult( new IntType(), position + 1 );    
+        }
+
+        // string
+        else if (typeToken instanceof StringTypeToken) {
+            return new ParseResult( new StringType(), position + 1 );
+        }
+
+        // boolean
+        else if (typeToken instanceof BooleanTypeToken) {
+            return new ParseResult( new BooleanType(), position + 1 );
+        }
+
+        // void
+        else if (typeToken instanceof VoidTypeToken) {
+            return new ParseResult( new VoidType(), position + 1 );
+        }
+
+        // classname
+        else if (typeToken instanceof ClassNameTypeToken) {
+            return new ParseResult( new ClassNameType(typeToken.value), position + 1 );
+        }
+
+        else {
+            throw new EvalError("Expected type; recieved " + typeToken.value)
+        }
     }
 
     // primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
@@ -132,8 +166,8 @@ class Parser {
         }
         else if (token instanceof NewToken)
         {
-            this.assertTokenHereIs(position + 1, ClassNameToken)
-            let classNameToken = this.getToken(position + 1)
+            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
+            let ClassNameTypeToken = this.getToken(position + 1)
             this.assertTokenHereIs(position + 2, LeftParenToken)
 
 
@@ -143,7 +177,7 @@ class Parser {
 
             this.assertTokenHereIs(position, RightParenToken)
 
-            return new ParseResult(new NewClassExp(classNameToken.value, expList), position + 1);
+            return new ParseResult(new NewClassExp(ClassNameTypeToken.value, expList), position + 1);
         }
         
         else {
@@ -289,13 +323,13 @@ class Parser {
     }
 
     // vardec ::= type var
+    // TODO: use parseType
     parseVarDec(position) {
-        this.assertTokenHereIs(position, TypeToken)
-        const typeToken = this.getToken(position)
-        this.assertTokenHereIs(position + 1, VariableToken)
-        const variableToken = this.getToken(position + 1)
+        const type = this.parseType(position)
+        this.assertTokenHereIs(type.position, VariableToken)
+        const variableToken = this.getToken(type.position)
 
-        return new ParseResult( new VarDec(new Type(typeToken.value), new Variable(variableToken.value) ), position + 2 );
+        return new ParseResult( new VarDec(type.result, new Variable(variableToken.value) ), type.position + 1 );
     }
 
     // stmt ::= var = exp; | vardec = exp; |  

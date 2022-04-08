@@ -34,7 +34,7 @@ const {
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken,
+    VoidTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken
@@ -242,7 +242,7 @@ class Tokenizer {
             }
             else if (name === "void")
             {
-                return new VoidToken();
+                return new VoidTypeToken();
             }
             else if (name === "super")
             {
