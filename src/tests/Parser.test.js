@@ -92,6 +92,7 @@ function assertParseProgram(inputTokenList, expected) {
 }
 
 
+
 // Parse Type:= int | string | boolean | void | classname
 
 describe("Testing parseType", () => {
@@ -121,39 +122,44 @@ describe("Testing parseType", () => {
 describe("Testing parsePrimaryExp", () => {
 
     test("If input is of token Variable", () => {
-        let result = new Parser( new VariableToken("example"))
+        let parse = new Parser( new VariableToken("example"))
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new VariableExp("example"))).toBe(true)
     })
 
     test("If input is of token String", () => {
-        let result = new Parser( new StringToken("example"))
+        let parse = new Parser( new StringToken("example"))
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new StringExp("example"))).toBe(true)
     })
     
     test("If input is of token Integer", () => {
-        let result = new Parser( new IntegerToken(5))
+        let parse = new Parser( new IntegerToken(5))
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new IntegerExp(5))).toBe(true)
     })
 
     test("If input is of token False", () => {
-        let result = new Parser( new FalseToken())
+        let parse = new Parser( new FalseToken())
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new BooleanExp("false"))).toBe(true)
     })
 
     test("If input is of token True", () => {
-        let result = new Parser( new LeftParenToken())
+        let parse = new Parser( new LeftParenToken())
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new BooleanExp("true"))).toBe(true)
     })
     //TODO FINISH
     test("If input is of token LeftParen", () => {
         let parser = new Parser( [new LeftParenToken(), new IntegerToken(5), new RightParenToken()])
         let result = parser.parsePrimaryExp(0)
-        console.log(result)
-        //expect(toEqual(result, ]).toBe(true)
+        expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
     test("If input is NewToken", () => {
-        let result = new Parser( new VariableToken("example"))
+        let parse = new Parser( new VariableToken("example"))
+        let result = parser.parsePrimaryExp(0)
         expect(toEqual(result, new VariableToken("example"))).toBe(true)
     })
 

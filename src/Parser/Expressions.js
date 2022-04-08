@@ -14,7 +14,7 @@ class IntegerExp extends Exp {
     }
 
     equals(other) {
-        return ( (other instanceof IntegerExp) && (value === other.value) );
+        return ( (other instanceof IntegerExp) && (this.value === other.value) );
     }
 } 
 
@@ -27,7 +27,7 @@ class StringExp extends Exp {
     }
 
     equals(other) {
-        return ( (other instanceof StringExp) && (value === other.value) );
+        return ( (other instanceof StringExp) && (this.value === other.value) );
     }
 }
 
@@ -41,7 +41,7 @@ class BooleanExp extends Exp {
     }
 
     equals(other) {
-        return ( (other instanceof BooleanExp) && (value === other.value) );
+        return ( (other instanceof BooleanExp) && (this.value === other.value) );
     }
 }
 

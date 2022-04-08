@@ -88,23 +88,23 @@ describe("Testing arrayMatchType", () => {
     })
 })
 
-// describe("Testing parseList", () => {
+describe("Testing parseList", () => {
 
-//     test("Should return new position after parsing", () => {
-//         const result = expectParseStmt("int temp = 1; int temp2 = 2; int temp3 = 3;")
-//         console.log(result)
-//         expect().toBe(false)
-//     })
+    test("Should return new position after parsing", () => {
+        const result = expectParseStmt("int temp = 1; int temp2 = 2; int temp3 = 3;")
+        console.log(result)
+        expect().toBe(false)
+    })
 
-//     test("Should return a list of all parseResults", () => {
-//         expect().toBe(false)
-//     })
+    test("Should return a list of all parseResults", () => {
+        expect().toBe(false)
+    })
 
-//     test("Should return empty if nothing is parsed", () => {
-//         expect().toBe(false)
-//     })
+    test("Should return empty if nothing is parsed", () => {
+        expect().toBe(false)
+    })
 
-//     test("Should return empty if wrong parseFunction is passed", () => {
-//         expect().toBe(false)
-//     })
-// })
+    test("Should return empty if wrong parseFunction is passed", () => {
+        expect().toBe(false)
+    })
+})
