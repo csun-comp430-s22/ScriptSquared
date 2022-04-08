@@ -3,6 +3,7 @@ class Type {}
 
 class IntType extends Type {
     constructor() {
+        super()
         this.value = "int"
     }
 
@@ -14,6 +15,7 @@ class IntType extends Type {
 
 class StringType extends Type {
     constructor() {
+        super()
         this.value = "string"
     }
 
@@ -25,6 +27,7 @@ class StringType extends Type {
 
 class BooleanType extends Type {
     constructor() {
+        super()
         this.value = "boolean"
     }
 
@@ -36,6 +39,7 @@ class BooleanType extends Type {
 
 class VoidType extends Type {
     constructor() {
+        super()
         this.value = "void"
     }
 
@@ -47,9 +51,7 @@ class VoidType extends Type {
 
 class ClassNameType extends Type {
     constructor(value) {
-        if (!(value instanceof String)) {
-            throw new EvalError("Incorrect type passed to ClassNameType.Parser")
-        }
+        super()
 
         this.value = value
     }

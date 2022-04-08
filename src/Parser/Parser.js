@@ -71,7 +71,7 @@ class Parser {
     }
 
     getToken(position) {
-        if (position >= 0 && position < this.tokens.size()) {
+        if (position >= 0 && position < this.tokens.length) {
             return this.tokens[position]
         } else {
             throw new EvalError("Invalid token position: " + position)
@@ -81,7 +81,7 @@ class Parser {
     assertTokenHereIs(position, expectedType) {
         const recieved = this.getToken(position)
 
-        if (recieved instanceof expectedType) {
+        if (!(recieved instanceof expectedType)) {
             throw new EvalError("expected: " + expectedType + "; recieved: " + recieved)
         }
     }
@@ -169,23 +169,23 @@ class Parser {
         
         if (token instanceof VariableToken)
         {
-            return new ParseResult(new VariableExp(new Variable(VariableToken.value)), position + 1)
+            return new ParseResult(new VariableExp(new Variable(token.value)), position + 1)
         }
         else if (token instanceof StringToken)
         {
-            return new ParseResult(new StringExp(StringToken.value), position + 1)
+            return new ParseResult(new StringExp(token.value), position + 1)
         }
         else if (token instanceof IntegerToken)
         {
-            return new ParseResult(new IntegerExp(IntegerToken.value), position + 1)
+            return new ParseResult(new IntegerExp(token.value), position + 1)
         }
         else if (token instanceof TrueToken)
         {
-            return new ParseResult(new BooleanExp(TrueToken.value), position + 1)
+            return new ParseResult(new BooleanExp(token.value), position + 1)
         }
         else if (token instanceof FalseToken)
         {
-            return new ParseResult(new BooleanExp(TrueToken.value), position + 1)
+            return new ParseResult(new BooleanExp(token.value), position + 1)
         }
         else if (token instanceof LeftParenToken)
         {
@@ -210,7 +210,7 @@ class Parser {
         }
         
         else {
-            throw new EvalError("Expected primary expression; recieved " + token)
+            throw new EvalError("Expected primary expression; recieved " + token.value)
         }
         
     }
@@ -629,7 +629,7 @@ class Parser {
     }    
 
     // classdec* `thyEntryPoint` stmt
-    parseProgram(position) {
+    parseProgramObject(position) {
         
         const result = parseList(position, this.parseClassDec)
         const classDecList = result.list
@@ -643,7 +643,7 @@ class Parser {
 
     // Intended to be called on the top-level
     parseProgram() {
-        const program = this.parseProgram(0)    //ParseResult
+        const program = this.parseProgramObject(0)    //ParseResult
         
         if(program.position == tokens.size()) {
             return program.result;

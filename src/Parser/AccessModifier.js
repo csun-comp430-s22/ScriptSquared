@@ -3,6 +3,7 @@ class AccessModifier {}
 
 class PublicModifier extends AccessModifier {
     constructor() {
+        super()
         this.value = "public"
     }
 
@@ -14,6 +15,7 @@ class PublicModifier extends AccessModifier {
 
 class PrivateModifier extends AccessModifier {
     constructor() {
+        super()
         this.value = "private"
     }
 
@@ -25,6 +27,7 @@ class PrivateModifier extends AccessModifier {
 
 class ProtecModifier extends AccessModifier {
     constructor() {
+        super()
         this.value = "protec"
     }
 

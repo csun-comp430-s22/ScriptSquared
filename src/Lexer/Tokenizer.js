@@ -26,7 +26,8 @@ const {
     ElseToken,
     WhileToken,
     BreakToken,
-    PrintToken
+    PrintToken,
+    ThisToken
  } = require("../Lexer/tokens/Statementtokens")
 const { 
     IntegerToken,
@@ -46,6 +47,7 @@ const { NewToken } = require("../Lexer/tokens/NewToken")
 const { MethodName } = require("../Parser/MethodName");
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens");
 const MethodNameToken = require("./Tokens/MethodNameToken");
+const ThyEntryPointToken = require("./Tokens/ThyEntryPointToken");
 
 class Tokenizer {
 
@@ -171,6 +173,13 @@ class Tokenizer {
             else if (name === "super")
             {
                 return new SuperToken();
+            }
+            else if (name === "this") 
+            {
+                return new ThisToken();
+            }
+            else if (name === "thyEntryPoint") {
+                return new ThyEntryPointToken();
             }
             else if (name === "class")
             {

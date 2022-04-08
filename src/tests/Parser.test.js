@@ -146,8 +146,10 @@ describe("Testing parsePrimaryExp", () => {
     })
     //TODO FINISH
     test("If input is of token LeftParen", () => {
-        let result = new Parser( [new LeftParenToken(), new IntegerToken(5), new RightParenToken()])
-        expect(toEqual(result, new VariableToken("example"))).toBe(true)
+        let parser = new Parser( [new LeftParenToken(), new IntegerToken(5), new RightParenToken()])
+        let result = parser.parsePrimaryExp(0)
+        console.log(result)
+        //expect(toEqual(result, ]).toBe(true)
     })
 
     test("If input is NewToken", () => {
