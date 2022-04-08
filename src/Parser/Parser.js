@@ -55,6 +55,7 @@ const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, Ret
 const { VarDec } = require('./VarDec');
 const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = require('./Type');
 const { PublicModifier, PrivateModifier, ProtecModifier } = require('./AccessModifier');
+const { InstanceDec } = require('./InstanceDec');
 
 class Parser {
 
@@ -492,7 +493,13 @@ class Parser {
 
     //instancedec ::= access vardec = exp;
     parseInstanceDec(position) {
+        const accessMod = this.parseAccessModifier(position)
+        const vardec = this.parseVarDec(accessMod.position)
+        this.assertTokenHereIs(vardec.position, EqualsToken)
+        const exp = this.parseExp(vardec.position + 1)
+        this.assertTokenHereIs(exp.position, SemiColonToken)
 
+        return new ParseResult( new InstanceDec(accessMod.result, vardec.result, exp.result), exp.position + 1 );
     }
 
     // classdec ::= class classname super classname {
