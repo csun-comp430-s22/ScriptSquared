@@ -43,9 +43,9 @@ const {
  } = require("../Lexer/Tokens/TypeTokens")
 const MethodNameToken = require("../Lexer/Tokens/MethodNameToken")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
-const NewToken = require("../Lexer/Tokens/NewToken")
 const ClassToken = require("../Lexer/Tokens/ClassToken")
-const SuperToken = require("../Lexer/Tokens/SuperToken")
+const SuperToken = require("../Lexer/Tokens/SuperToken");
+const { NewToken } = require('../Lexer/Tokens/NewToken');
 
 
 function expectTokenizes (input) {
@@ -276,12 +276,14 @@ describe("A single token should equal", () => {
     test("ClassNameTypeToken if a 'new [class name]' is passed", () => {
 
         let result = expectTokenizes('new myClass')
+        console.log(result)
         expect(toEqual(result, [new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
     test("MethodNameToken if a '' is passed", () => {
 
-        let result = expectTokenizes('something')
+        let result = expectTokenizes('public myMethod(')
+        console.log(result)
         expect(toEqual(result, [new MethodNameToken("myMethod")])).toBe(true)
     })
 
@@ -428,7 +430,7 @@ describe("Testing More Complex Inputs", () => {
                 new IntegerToken(2),
                 new RightParenToken(),
                 new LeftCurlyToken(),
-                new IntegerTypeToken("int"),
+                new IntegerTypeToken(),
                 //------------------------
                 new VariableToken("var"),
                 new AssignmentToken(),
@@ -436,7 +438,7 @@ describe("Testing More Complex Inputs", () => {
                 new RightCurlyToken(),
                 new ElseToken(),
                 new LeftCurlyToken(),
-                new IntegerTypeToken("int"),
+                new IntegerTypeToken(),
                 //------------------------
                 new VariableToken("var"),
                 new AssignmentToken(),

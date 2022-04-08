@@ -37,7 +37,7 @@ class TypeToken {}
 class VoidTypeToken extends TypeToken {
 
     constructor() {
-         
+        super()
         this.value = "void"
     }
 }
@@ -46,7 +46,7 @@ class VoidTypeToken extends TypeToken {
 class ClassNameTypeToken extends TypeToken {
 
     constructor(value) {
-         
+        super()
         this.value = value
     }
 }
@@ -54,7 +54,7 @@ class ClassNameTypeToken extends TypeToken {
 class IntegerTypeToken extends TypeToken {
 
     constructor() {
-         
+        super()
         this.value = "int"
     }
 
@@ -63,7 +63,7 @@ class IntegerTypeToken extends TypeToken {
 class StringTypeToken extends TypeToken {
 
     constructor() {
-         
+        super()
         this.value = "string"
     }
 }
@@ -71,7 +71,7 @@ class StringTypeToken extends TypeToken {
 class BooleanTypeToken extends TypeToken {
 
     constructor() {
-         
+        super()
         this.value = "boolean"
     }
 }

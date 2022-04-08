@@ -39,10 +39,11 @@ const {
     StringTypeToken,
     BooleanTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
-const NewToken = require("../Lexer/Tokens/NewToken")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 const SuperToken = require("./Tokens/SuperToken")
 const ClassToken = require("./Tokens/ClassToken")
+const { NewToken } = require("../Lexer/Tokens/NewToken")
+const { MethodName } = require("../Parser/MethodName")
 
 
 class Tokenizer {
@@ -83,8 +84,7 @@ class Tokenizer {
             {
                 throw new EvalError("Invalid token! d u m b y")
             }
-
-            
+     
         return retval;
     }
 
@@ -311,3 +311,23 @@ class Tokenizer {
 }
 
 module.exports = Tokenizer;
+
+
+
+// TODO: Implement this in Lexer
+
+// class myClass {}
+// myClass test = new myClass()
+// public myClass someMethod() {}
+
+// Make a list of classNameTypes and add to it as you read 'class [name]'
+// when you expect a type but don't find a default, check this list
+
+
+// public int MethodName() {}
+// exp.MethodName();
+
+// Since methods will always be declared before use, we use similar approach
+// as classname and create a list of methodNames which we will keep track of.
+// Add a new methodname if its not any other token, and the next token is a '('
+// If none of the other tokens are recognized, check this list to see if its a method

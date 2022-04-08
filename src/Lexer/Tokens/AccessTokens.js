@@ -4,7 +4,7 @@ class AccessToken {}
 class PublicToken extends AccessToken {
     
     constructor() {
-         
+        super()
         this.value = "public"
     }
     
@@ -13,7 +13,7 @@ class PublicToken extends AccessToken {
 class PrivateToken extends AccessToken {
     
     constructor() {
-         
+        super()
         this.value = "private"
     }
 }
@@ -21,7 +21,7 @@ class PrivateToken extends AccessToken {
 class ProtecToken extends AccessToken {
     
     constructor() {
-         
+        super()
         this.value = "protec"
     }
 }
