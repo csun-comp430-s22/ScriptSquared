@@ -48,10 +48,6 @@ function expectParseStmt(string) {
     return result;
 }
 
-// const result = expectParseStmt("int temp = 1; int temp2 = 2; int temp3 = 3;")
-// console.log(result)
-    
-
 describe("Testing arraysEqual", () => {
 
     test("Should return true if all elements are same type and same value", () => {
@@ -91,7 +87,7 @@ describe("Testing arrayMatchType", () => {
 describe("Testing parseList", () => {
 
     test("Should return new position after parsing", () => {
-        const result = expectParseStmt("int temp = 1; int temp2 = 2; int temp3 = 3;")
+        const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;")
         console.log(result)
         expect().toBe(false)
     })

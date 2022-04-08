@@ -124,13 +124,13 @@ describe("Testing parsePrimaryExp", () => {
     test("If input is of token Variable", () => {
         let parse = new Parser( new VariableToken("example"))
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new VariableExp("example"))).toBe(true)
+        expect(result.equals(new ParseResult( new VariableExp("example"), 1 ))).toBe(true)
     })
 
     test("If input is of token String", () => {
         let parse = new Parser( new StringToken("example"))
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new StringExp("example"))).toBe(true)
+        expect(result.equals(new ParseResult( new StringExp("example"), 1 ))).toBe(true)
     })
     
     test("If input is of token Integer", () => {
