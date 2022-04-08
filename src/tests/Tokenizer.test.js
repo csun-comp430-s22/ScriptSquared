@@ -61,7 +61,7 @@ function toEqual(input, expected) {
         return false;
     
     for (let i = 0; i < input.length; i++) {
-        if ( input[i].constructor !== expected[i].constructor ) {
+        if ( (input[i].constructor !== expected[i].constructor) || (input[i].value !== expected[i].value) ) {
             return false;
         }
     }
@@ -261,6 +261,12 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new StringToken("Hello World")])).toBe(true)
     })
 
+    test("String if a string has a quote in it", () => {
+
+        let result = expectTokenizes('"Cat\'s"')
+        expect(toEqual(result, [new StringToken("Cat's")])).toBe(true)
+    })
+
     test("VoidTypeToken if a 'void' is passed", () => {
 
         let result = expectTokenizes('void')
@@ -275,16 +281,32 @@ describe("A single token should equal", () => {
 
     test("ClassNameTypeToken if a 'new [class name]' is passed", () => {
 
-        let result = expectTokenizes('new myClass')
-        console.log(result)
-        expect(toEqual(result, [new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
+        let result = expectTokenizes('class myClass; new myClass')
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("myClass"), new SemiColonToken(), new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
-    test("MethodNameToken if a '' is passed", () => {
+    test("Error Error if two classNameTokens with different names", () => {
 
-        let result = expectTokenizes('public myMethod(')
-        console.log(result)
-        expect(toEqual(result, [new MethodNameToken("myMethod")])).toBe(true)
+        let result = expectTokenizes('class myClass')
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("test")])).toBe(false)
+    })
+
+    test("MethodNameToken if a 'methodName()' is passed", () => {
+
+        let result = expectTokenizes('public myMethod()')
+        expect(toEqual(result, [new PublicToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])).toBe(true)
+    })
+
+    test("Error if two methodnameToken with different names", () => {
+
+        let result = expectTokenizes('public myMethod()')
+        expect(toEqual(result, [new PublicToken(), new MethodNameToken("test"), new LeftParenToken(), new RightParenToken()])).toBe(false)
+    })
+
+    test("MethodNameToken if a 'exp.methodName()' is passed", () => {
+
+        let result = expectTokenizes('test.myMethod()')
+        expect(toEqual(result, [new VariableToken("test"), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])).toBe(true)
     })
 
     test("IntegerTypeToken if a 'int' is passed", () => {

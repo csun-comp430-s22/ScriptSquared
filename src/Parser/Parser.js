@@ -41,7 +41,6 @@ const {
     StringTypeToken,
     IntegerTypeToken,
     BooleanTypeToken,
-    VoidTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 

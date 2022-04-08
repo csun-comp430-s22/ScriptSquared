@@ -1,54 +1,4 @@
-const Parser = require('../Parser/Parser')
-const { 
-    AccessModifier,
-    PublicModifier,
-    PrivateModifier,
-    ProtecModifier
-} = require('../Parser/AccessModifier')
-const ClassDec = require('../Parser/ClassDec')
-const Constructor = require('../Parser/Constructor')
-const {
-    Exp,
-    IntegerExp,
-    StringExp,
-    BooleanExp,
-    VariableExp,
-    ThisExp,
-    OpExp,
-    ExpMethodExp,
-    NewClassExp
-} = require('../Parser/Expressions')
-const InstanceDec = require('../Parser/InstanceDec')
-const MethodDec = require('../Parser/MethodDec')
-const MethodName = require('../Parser/MethodName')
-const {
-    Op,
-    PlusOp,
-    MinusOp,
-    MultiplyOp,
-    DivideOp,
-    GreaterThanOp,
-    LessThanOp,
-    GreaterThanEqualOp,
-    LessThanEqualOp,
-    EqualOp,
-    NotEqualOp,
-    DotOp
-} = require('../Parser/Operations')
-const Program = require('../Parser/Program')
-const {
-    Stmt,
-    IfStmt,
-    WhileStmt,
-    ReturnExpStmt,
-    ReturnStmt,
-    PrintExpStmt,
-    BreakStmt,
-    BlockStmt,
-    ExpMethodExpStmt,
-    VarEqualsExpStmt,
-    VarDecEqualsExpStmt
-} = require('../Parser/Statements')
+const { Parser } = require('../Parser/Parser')
 const {
     Type,
     IntType,
@@ -57,10 +7,7 @@ const {
     VoidType,
     ClassNameType
 } = require('../Parser/Type')
-const VarDec = require('../Parser/VarDec')
-const Variable = require('../Parser/Variable')
 const Tokenizer = require('../Lexer/Tokenizer')
-const { assertEqual } = require("../utils")
 const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
@@ -104,29 +51,27 @@ const {
     StringTypeToken,
     IntegerTypeToken,
     BooleanTypeToken,
-    VoidTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 
-const ParseResult = require("./ParseResult") 
+const ParseResult = require("../Parser/ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
-const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("./Operations");
-const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
-const { Variable } = require('./Variable');
+const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("../Parser/Operations");
+const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('../Parser/Expressions');
+const { Variable } = require('../Parser/Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
-const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('./Statements');
-const { VarDec } = require('./VarDec');
-const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = require('./Type');
-const { PublicModifier, PrivateModifier, ProtecModifier } = require('./AccessModifier');
-const { InstanceDec } = require('./InstanceDec');
-const { MethodDec } = require('./MethodDec');
-const { Program } = require('./Program');
+const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('../Parser/Statements');
+const { VarDec } = require('../Parser/VarDec');
+const { PublicModifier, PrivateModifier, ProtecModifier } = require('../Parser/AccessModifier');
+const { InstanceDec } = require('../Parser/InstanceDec');
+const { MethodDec } = require('../Parser/MethodDec');
+const { Program } = require('../Parser/Program');
 const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 const ClassToken = require('../Lexer/Tokens/ClassToken');
-const { ClassDec } = require('./ClassDec');
+const { ClassDec } = require('../Parser/ClassDec');
 const SuperToken = require('../Lexer/Tokens/SuperToken');
-const { parseList } = require('../utils');
-const { Constructor } = require('./Constructor');
+const { parseList, arraysEqual } = require('../utils');
+const { Constructor } = require('../Parser/Constructor');
 
 function assertParses(inputTokenList, expected) {
 
@@ -213,5 +158,3 @@ describe("Testing parsePrimaryExp", () => {
 
 
 })
-
-Describe

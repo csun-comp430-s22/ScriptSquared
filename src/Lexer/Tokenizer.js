@@ -1,4 +1,3 @@
-const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
@@ -7,7 +6,7 @@ const {
     DotToken,
     SemiColonToken,
     CommaToken
-} = require("./Tokens/SymbolToken")
+} = require("./tokens/SymbolToken")
 const { 
     PlusToken,
     MinusToken,
@@ -20,7 +19,7 @@ const {
     LessThanEqualToken,
     LessThanToken,
     AssignmentToken
- } = require("../Lexer/Tokens/OperatorTokens")
+ } = require("../Lexer/tokens/Operatortokens")
 const { 
     ReturnToken,
     IfToken,
@@ -28,7 +27,7 @@ const {
     WhileToken,
     BreakToken,
     PrintToken
- } = require("../Lexer/Tokens/StatementTokens")
+ } = require("../Lexer/tokens/Statementtokens")
 const { 
     IntegerToken,
     TrueToken,
@@ -37,14 +36,16 @@ const {
     VoidTypeToken,
     IntegerTypeToken,
     StringTypeToken,
-    BooleanTypeToken
- } = require("../Lexer/Tokens/TypeTokens")
-const VariableToken = require("../Lexer/Tokens/VariableToken");
-const SuperToken = require("./Tokens/SuperToken")
-const ClassToken = require("./Tokens/ClassToken")
-const { NewToken } = require("../Lexer/Tokens/NewToken")
-const { MethodName } = require("../Parser/MethodName")
-
+    BooleanTypeToken,
+    ClassNameTypeToken
+ } = require("../Lexer/tokens/Typetokens")
+const VariableToken = require("../Lexer/tokens/VariableToken");
+const SuperToken = require("./tokens/SuperToken")
+const ClassToken = require("./tokens/ClassToken")
+const { NewToken } = require("../Lexer/tokens/NewToken")
+const { MethodName } = require("../Parser/MethodName");
+const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens");
+const MethodNameToken = require("./Tokens/MethodNameToken");
 
 class Tokenizer {
 
@@ -52,18 +53,20 @@ class Tokenizer {
         this.input = input
         this.offset = 0
         this.inputLength = input.length
+        this.tokens = []
+        this.classNameTypeList = []
+        // this.methodNameTypeList = []
     }
 
     tokenize () {
-        const tokens = []
         let token = this.tokenizeSingle()
 
         while (token !== null) {
-            tokens.push(token)
+            this.tokens.push(token)
             token = this.tokenizeSingle()
         } 
 
-        return tokens;
+        return this.tokens;
     }
 
     skipWhiteSpace () {
@@ -86,6 +89,158 @@ class Tokenizer {
             }
      
         return retval;
+    }
+
+    tryTokenizeVariableOrKeyword () {
+        this.skipWhiteSpace()
+        let name = ""
+        
+        if (this.offset < this.inputLength && this.isLetter(this.input.charAt(this.offset))) {
+            name += this.input.charAt(this.offset)
+            this.offset++    
+
+            while (this.offset < this.inputLength && this.isLetterOrDigit(this.input.charAt(this.offset))) {
+                name += this.input.charAt(this.offset)
+                this.offset++   
+            }
+
+            if (name === "true")    
+            {
+                return new TrueToken();
+            }
+            else if (name === "false")    
+            {
+                return new FalseToken();
+            }
+            else if (name === "if")    
+            {
+                return new IfToken();
+            }
+            else if (name === "else")    
+            {
+                return new ElseToken();
+            }
+            else if (name === "while")
+            {
+                return new WhileToken();
+            }
+            else if (name === "print")
+            {
+                return new PrintToken();
+            }
+            else if (name === "break")
+            {
+                return new BreakToken();
+            }
+            else if (name === "return")
+            {
+                return new ReturnToken();
+            }
+            else if (name === "public")
+            {
+                return new PublicToken();
+            }
+            else if (name === "private")
+            {
+                return new PrivateToken();
+            }
+            else if (name === "protec")
+            {
+                return new ProtecToken();
+            } 
+            else if (name === "new") 
+            {
+                return new NewToken();
+            } 
+            else if (name === "int")
+            {
+                return new IntegerTypeToken();
+            }
+            else if (name === "string")
+            {
+                return new StringTypeToken();
+            }
+            else if (name === "boolean")
+            {
+                return new BooleanTypeToken();
+            }
+            else if (name === "void")
+            {
+                return new VoidTypeToken();
+            }
+            else if (name === "super")
+            {
+                return new SuperToken();
+            }
+            else if (name === "class")
+            {
+                return new ClassToken();
+            }
+            else if (this.tokens[this.tokens.length - 1] instanceof ClassToken) {
+                this.classNameTypeList.push(name)
+                return new ClassNameTypeToken(name);
+            }   
+            else if (this.classNameTypeList.includes(name)) {
+                return new ClassNameTypeToken(name);
+            }         
+            else if (this.input.charAt(this.offset) === "(") {
+                return new MethodNameToken(name);
+            }
+            else
+            {
+                return new VariableToken(name);
+            }
+            
+        } else { return null; }
+        
+    }
+    
+    isLetter(c) {
+        return /[a-zA-Z]/.test(c);
+    }
+
+    isLetterOrDigit (c) {
+        return /[a-zA-Z\d]/.test(c);
+    }
+
+    tryTokenizeInteger () {
+        this.skipWhiteSpace()
+
+        let number = ""
+
+        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) ) ) {
+            number += this.input.charAt(this.offset)
+            this.offset++
+        }
+
+        if (number !== "") {
+            return new IntegerToken(parseInt(number));
+        }
+        else {
+            return null;
+        }
+    }
+
+    tryTokenizeString () {
+        this.skipWhiteSpace()
+
+        let string = ""
+
+        if (this.input.charAt(this.offset) !== '"')
+            return null;
+
+        this.offset++
+        while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) !== '"') ) {
+            string += this.input.charAt(this.offset)
+            this.offset++
+        }
+
+        if (this.input.charAt(this.offset) === '"') {
+            this.offset++
+            return new StringToken(string);
+        } else {
+            return null;
+        }
     }
 
     tryTokenizeSymbol () {
@@ -166,168 +321,17 @@ class Tokenizer {
         
         return retval;
     }
-
-    tryTokenizeVariableOrKeyword () {
-        this.skipWhiteSpace()
-        let name = ""
-        
-        if (this.offset < this.inputLength && this.isLetter(this.input.charAt(this.offset))) {
-            name += this.input.charAt(this.offset)
-            this.offset++    
-
-            while (this.offset < this.inputLength && this.isLetterOrDigit(this.input.charAt(this.offset))) {
-                name += this.input.charAt(this.offset)
-                this.offset++   
-            }
-            
-            if (name === "true")    
-            {
-                return new TrueToken();
-            }
-            else if (name === "false")    
-            {
-                return new FalseToken();
-            }
-            else if (name === "if")    
-            {
-                return new IfToken();
-            }
-            else if (name === "else")    
-            {
-                return new ElseToken();
-            }
-            else if (name === "while")
-            {
-                return new WhileToken();
-            }
-            else if (name === "print")
-            {
-                return new PrintToken();
-            }
-            else if (name === "break")
-            {
-                return new BreakToken();
-            }
-            else if (name === "return")
-            {
-                return new ReturnToken();
-            }
-            else if (name === "public")
-            {
-                return new PublicToken();
-            }
-            else if (name === "private")
-            {
-                return new PrivateToken();
-            }
-            else if (name === "protec")
-            {
-                return new ProtecToken();
-            } 
-            else if (name === "new") 
-            {
-                return new NewToken();
-            } 
-            else if (name === "int")
-            {
-                return new IntegerTypeToken();
-            }
-            else if (name === "string")
-            {
-                return new StringTypeToken();
-            }
-            else if (name === "boolean")
-            {
-                return new BooleanTypeToken();
-            }
-            else if (name === "void")
-            {
-                return new VoidTypeToken();
-            }
-            else if (name === "super")
-            {
-                return new SuperToken();
-            }
-            else if (name === "class")
-            {
-                return new ClassToken();
-            }
-            else
-            {
-                return new VariableToken(name);
-            }
-            
-        } else { return null; }
-        
-    }
-    
-    isLetter(c) {
-        return /[a-zA-Z]/.test(c);
-    }
-
-    isLetterOrDigit (c) {
-        return /[a-zA-Z\d]/.test(c);
-    }
-
-    tryTokenizeInteger () {
-        this.skipWhiteSpace()
-
-        let number = ""
-
-        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) ) ) {
-            number += this.input.charAt(this.offset)
-            this.offset++
-        }
-
-        if (number !== "") {
-            return new IntegerToken(parseInt(number));
-        }
-        else {
-            return null;
-        }
-    }
-
-    tryTokenizeString () {
-        this.skipWhiteSpace()
-
-        let string = ""
-
-        if (this.input.charAt(this.offset) !== '"')
-            return null;
-
-        this.offset++
-        while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) !== '"') ) {
-            string += this.input.charAt(this.offset)
-            this.offset++
-        }
-
-        if (this.input.charAt(this.offset) === '"') {
-            this.offset++
-            return new StringToken(string);
-        } else {
-            return null;
-        }
-    }
 }
 
+//TODO: remove
+// function expectTokenizes (input) {
+
+//     const tokenizer = new Tokenizer(input)
+//     const result = tokenizer.tokenize()
+//     return result;
+// }
+
+// expectTokenizes("class myClass; new myClass")
+
+
 module.exports = Tokenizer;
-
-
-
-// TODO: Implement this in Lexer
-
-// class myClass {}
-// myClass test = new myClass()
-// public myClass someMethod() {}
-
-// Make a list of classNameTypes and add to it as you read 'class [name]'
-// when you expect a type but don't find a default, check this list
-
-
-// public int MethodName() {}
-// exp.MethodName();
-
-// Since methods will always be declared before use, we use similar approach
-// as classname and create a list of methodNames which we will keep track of.
-// Add a new methodname if its not any other token, and the next token is a '('
-// If none of the other tokens are recognized, check this list to see if its a method
