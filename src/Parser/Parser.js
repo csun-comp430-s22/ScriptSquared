@@ -1,5 +1,5 @@
 const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
-const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
+const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
@@ -54,6 +54,7 @@ const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
 const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('./Statements');
 const { VarDec } = require('./VarDec');
 const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = require('./Type');
+const { PublicModifier, PrivateModifier, ProtecModifier } = require('./AccessModifier');
 
 class Parser {
 
@@ -323,7 +324,6 @@ class Parser {
     }
 
     // vardec ::= type var
-    // TODO: use parseType
     parseVarDec(position) {
         const type = this.parseType(position)
         this.assertTokenHereIs(type.position, VariableToken)
@@ -461,8 +461,28 @@ class Parser {
     }
 
     // access ::= public | private | protec
-    parseAccess(position) {
+    parseAccessModifier(position) {
+        this.assertTokenHereIs(position, AccessToken)
+        const accessToken = this.getToken(position)
 
+        // public
+        if (accessToken instanceof PublicToken) {
+            return new ParseResult( new PublicModifier(), position + 1 );    
+        }
+
+        // private
+        else if (accessToken instanceof PrivateToken) {
+            return new ParseResult( new PrivateModifier(), position + 1 );
+        }
+
+        // protec
+        else if (accessToken instanceof ProtecToken) {
+            return new ParseResult( new ProtecModifier(), position + 1 );
+        }
+
+        else {
+            throw new EvalError("expected AccessToken; recieved " + accessToken.value)
+        }
     }
 
     // methoddec ::= access type methodname(vardec*) { stmt } 

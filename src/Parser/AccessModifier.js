@@ -1,22 +1,43 @@
 
-class AccessModifier {
+class AccessModifier {}
 
-    constructor(value) {
-        
-        if (!(value instanceof String)) {
-            throw new EvalError("Incorrect type passed to AccessModifier.Parser")
-        }
-
-        this.value = value
+class PublicModifier extends AccessModifier {
+    constructor() {
+        this.value = "public"
     }
 
     equals(other) {
-        return (other instanceof AccessModifier
+        return (other instanceof PublicModifier
+            && this.value === other.value)
+    }
+}
+
+class PrivateModifier extends AccessModifier {
+    constructor() {
+        this.value = "private"
+    }
+
+    equals(other) {
+        return (other instanceof PrivateModifier
+            && this.value === other.value)
+    }
+}
+
+class ProtecModifier extends AccessModifier {
+    constructor() {
+        this.value = "protec"
+    }
+
+    equals(other) {
+        return (other instanceof ProtecModifier
             && this.value === other.value)
     }
 }
 
 
 module.exports = {
-	AccessModifier
+	AccessModifier,
+    PublicModifier,
+    PrivateModifier,
+    ProtecModifier
 }

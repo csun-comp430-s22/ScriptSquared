@@ -1,5 +1,7 @@
  
-class PublicToken   {
+class AccessToken {}
+
+class PublicToken extends AccessToken {
     
     constructor() {
          
@@ -8,7 +10,7 @@ class PublicToken   {
     
 }
 
-class PrivateToken  {
+class PrivateToken extends AccessToken {
     
     constructor() {
          
@@ -16,7 +18,7 @@ class PrivateToken  {
     }
 }
 
-class ProtecToken  {
+class ProtecToken extends AccessToken {
     
     constructor() {
          
@@ -26,6 +28,7 @@ class ProtecToken  {
 
 
 module.exports = {
+    AccessToken,
     PublicToken,
     PrivateToken,
     ProtecToken
