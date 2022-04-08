@@ -5,12 +5,12 @@ const { MethodName } = require("./MethodName")
 const { Type } = require("./Type")
 const { VarDec } = require("./VarDec")
 
-// ex. access type methodname(vardec*) {stmt}
+// ex. access type methodname(vardec*) stmt
 class MethodDec {
-    constructor(accessModifier, type, methodName, varDecList, stmtList) {
+    constructor(accessModifier, type, methodName, varDecList, stmt) {
 
         if (!(accessModifier instanceof AccessModifier) || !(type instanceof Type) || !(methodName instanceof MethodName) 
-        || arrayMatchType(varDecList, VarDec) || arrayMatchType(stmtList, Stmt)) {
+        || arrayMatchType(varDecList, VarDec) || arrayMatchType(stmt, Stmt)) {
             throw new EvalError("Incorrect type passed to MethodDec");
         }
 
@@ -18,7 +18,7 @@ class MethodDec {
         this.type = type
         this.methodName = methodName
 		this.varDecList = varDecList
-		this.stmtList = stmtList
+		this.stmt = stmt
 	}
 
     equals(otherMethodDec) {
@@ -27,8 +27,10 @@ class MethodDec {
 		&& otherMethodDec.type.equals(this.type) 
 		&& otherMethodDec.methodName.equals(this.methodName)
 		&& arraysEqual(varDecList,otherMethodDec.varDecList)
-		&& arraysEqual(stmtList,otherMethodDec.stmtList));
+		&& arraysEqual(stmt,otherMethodDec.stmt));
 	}
 }
 
-module.exports = MethodDec
+module.exports = {
+    MethodDec
+}

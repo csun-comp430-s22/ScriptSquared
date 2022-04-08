@@ -56,6 +56,7 @@ const { VarDec } = require('./VarDec');
 const { Type, IntType, StringType, BooleanType, VoidType, ClassNameType } = require('./Type');
 const { PublicModifier, PrivateModifier, ProtecModifier } = require('./AccessModifier');
 const { InstanceDec } = require('./InstanceDec');
+const { MethodDec } = require('./MethodDec');
 
 class Parser {
 
@@ -80,12 +81,12 @@ class Parser {
     }
 
     extractCommaSeperatedExps(position) {
-        let expList = []
+        const expList = []
         let shouldRun = true
 
         while (shouldRun === true) {
             try {
-                let expParam = this.parseExp(position)
+                const expParam = this.parseExp(position)
                 position = expParam.position
                 expList.push(expParam.result)
                 this.assertTokenHereIs(position, CommaToken)
@@ -97,6 +98,26 @@ class Parser {
         }
 
         return { expList, position }
+    }
+
+    extractCommaSeperatedVardecs(position) {
+        const vardecList = []
+        let shouldRun = true
+
+        while(shouldRun === true) {
+            try {
+                const vardec = this.parseVarDec(position)
+                position = vardec.position
+                vardecList.push(vardec.result)
+                this.assertTokenHereIs(position, CommaToken)
+                position++
+
+            } catch (e) {
+                shouldRun = false
+            }
+        }
+
+        return { vardecList, position }
     }
 
     // int | string | boolean | void | classname
@@ -486,9 +507,20 @@ class Parser {
         }
     }
 
-    // methoddec ::= access type methodname(vardec*) { stmt } 
+    // methoddec ::= access type methodname(vardec*) stmt 
     parseMethodDec(position) {
+        const accessMod = this.parseAccessModifier(position)
+        const type = this.parseType(accessMod.position)
+        this.assertTokenHereIs(type.position, MethodNameToken)
+        const methodNameToken = this.getToken(type.position)
+        this.assertTokenHereIs(type.position + 1, LeftParenToken)
 
+        const result = this.extractCommaSeperatedVardecs(type.position + 2)
+
+        this.assertTokenHereIs(result.position, RightParenToken)
+        const stmt = this.parseStmt(result.position + 1)
+
+        return new ParseResult( new MethodDec(accessMod.result, type.result, methodNameToken.value, result.vardecList, stmt.result), stmt.position);
     }
 
     //instancedec ::= access vardec = exp;
