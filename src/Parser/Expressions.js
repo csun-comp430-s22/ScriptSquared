@@ -1,4 +1,6 @@
 const { arraysEqual } = require("../utils");
+const { MethodName } = require("./MethodName");
+const { ClassNameType } = require("./Type");
 const { Variable } = require("./Variable");
 
 class Exp {}
@@ -7,11 +9,12 @@ class Exp {}
 class IntegerExp extends Exp { 
 
     constructor(value) {
+        super()
         this.value = value
     }
 
     equals(other) {
-        return ( (other instanceof IntegerExp) && (value === other.value) );
+        return ( (other instanceof IntegerExp) && (this.value === other.value) );
     }
 } 
 
@@ -19,11 +22,12 @@ class IntegerExp extends Exp {
 class StringExp extends Exp {
 
     constructor(value) {
+        super()
         this.value = value
     }
 
     equals(other) {
-        return ( (other instanceof StringExp) && (value === other.value) );
+        return ( (other instanceof StringExp) && (this.value === other.value) );
     }
 }
 
@@ -32,11 +36,12 @@ class StringExp extends Exp {
 class BooleanExp extends Exp {
 
     constructor(value) {
+        super()
         this.value = value
     }
 
     equals(other) {
-        return ( (other instanceof BooleanExp) && (value === other.value) );
+        return ( (other instanceof BooleanExp) && (this.value === other.value) );
     }
 }
 
@@ -44,6 +49,7 @@ class BooleanExp extends Exp {
 class VariableExp extends Exp {
 
     constructor(variable) {
+        super()
 
         if (!(variable instanceof Variable)) {
             throw new EvalError("Incorrect type passed to VariableExp")
@@ -60,6 +66,7 @@ class VariableExp extends Exp {
 class ThisExp extends Exp {
     
     constructor(value) {
+        super()
         this.value = value
     }
 
@@ -72,6 +79,7 @@ class ThisExp extends Exp {
 class OpExp extends Exp {
 
     constructor(leftExp, op, rightExp) {
+        super()
 
         if ( !(leftExp instanceof Exp && op instanceof Op && rightExp instanceof Exp) )
             throw new EvalError("Incorrect type passed to OpExp")
@@ -91,8 +99,9 @@ class OpExp extends Exp {
 class ExpMethodExp extends Exp {
 
     constructor(parentExp, methodName, parameterExpsArray) {
+        super()
         
-        if ( !(parentExp instanceof Exp && methodName instanceof String && parameterExpsArray instanceof Array) )
+        if ( !(parentExp instanceof Exp && methodName instanceof MethodName && arrayMatchType(parameterExpsArray, Exp)) ) 
             throw new EvalError("Incorrect type passed to ExpMethodExp")
 
         this.parentExp = parentExp
@@ -111,7 +120,8 @@ class ExpMethodExp extends Exp {
 class NewClassExp extends Exp {
 
     constructor(className, parameterExpsArray) {
-        if ( !(className instanceof String) && !(parameterExpsArray instanceof Array) )
+        super()
+        if ( !(className instanceof ClassNameType) && !(parameterExpsArray instanceof Array) )
             throw new EvalError("Incorrect type passed to NewClassExp")
 
         this.className = className
@@ -119,7 +129,7 @@ class NewClassExp extends Exp {
     }
 
     equals(other) {
-        return ( (other.className === this.className && arraysEqual(this.parameterExpsArray, other.parameterExpsArray)) )
+        return ( (this.className.equals(other.className) && arraysEqual(this.parameterExpsArray, other.parameterExpsArray)) )
     }
 }
 

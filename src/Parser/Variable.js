@@ -2,10 +2,6 @@ class Variable {
 
     constructor(value) {
 
-        if (!(value instanceof String)) {
-            throw new EvalError("Incorrect type passed to Variable")
-        }
-
         this.value = value
     }
 

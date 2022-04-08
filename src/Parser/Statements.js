@@ -2,12 +2,15 @@ const { Exp } = require("./Expressions");
 const { MethodName } = require("./MethodName")
 const { arraysEqual, arrayMatchType } = require("../utils");
 const { VarDec } = require("./VarDec");
+const { Variable } = require("./Variable");
 
 class Stmt {}
 
+// if (exp) stmt else stmt
 class IfStmt extends Stmt {
 
     constructor(guardExp, trueBranch, falseBranch) {
+        super()
 
         if (!(guardExp instanceof Exp) || !(trueBranch instanceof Stmt) || !(falseBranch instanceof Stmt) ) {
             throw new EvalError("Incorrect type passed to IfStmt")
@@ -26,10 +29,11 @@ class IfStmt extends Stmt {
     }
 }
 
-
+// while (exp) stmt
 class WhileStmt extends Stmt {
 
     constructor(guardExp, loopStmt) {
+        super()
 
         if ( !(guardExp instanceof Exp) || !(loopStmt instanceof Stmt) ) {
             throw new EvalError("Incorrect type passed to WhileStmt")
@@ -46,10 +50,12 @@ class WhileStmt extends Stmt {
     }
 }
 
+// return exp;
 class ReturnExpStmt extends Stmt {
 
-    constructor(returnExp)
-    {
+    constructor(returnExp) {
+        super()
+
         if( !(returnExp instanceof Exp))
         {
             throw new EvalError("Incorrect type passed to ReturnExpStmt")
@@ -65,6 +71,7 @@ class ReturnExpStmt extends Stmt {
     }
 }
 
+// return;
 class ReturnStmt extends Stmt {
     
     equals(otherReturnStmt) {
@@ -72,8 +79,11 @@ class ReturnStmt extends Stmt {
     }
 }
 
+// print(exp);
 class PrintExpStmt extends Stmt {
     constructor(exp) {
+        super()
+
         if( !(exp instanceof Exp)) {
             throw new EvalError("Incorrect type passed to PrintExpStmt")
         }
@@ -86,6 +96,7 @@ class PrintExpStmt extends Stmt {
     }
 }
 
+// break;
 class BreakStmt extends Stmt {
     
     equals(otherBreakStmt) {
@@ -93,9 +104,11 @@ class BreakStmt extends Stmt {
     }
 }
 
+// { stmt* }
 class BlockStmt extends Stmt {
     
     constructor(stmtList) {
+        super()
 
         if (!(arrayMatchType(stmtList, Stmt))) {
             throw new EvalError("Incorrect type passed to BlockStmt")
@@ -110,28 +123,33 @@ class BlockStmt extends Stmt {
     }
 }
 
+// exp.methodname(exp*);
 class ExpMethodExpStmt extends Stmt {
-    constructor(parentExp, methodName, expList) {
+    constructor(parentExp, methodName, parameterExpsArray) {
+        super()
         
-        if ( !(parentExp instanceof Exp) || !(methodName instanceof MethodName) || !(arrayMatchType(expList, Exp)) ) {
+        if ( !(parentExp instanceof Exp) || !(methodName instanceof MethodName) || !(arrayMatchType(parameterExpsArray, Exp)) ) {
             throw new EvalError("Incorrect type passed to ExpMethodExpStmt")
         }
 
         this.parentExp = parentExp
         this.methodName = methodName
-        this.expList = expList
+        this.parameterExpsArray = parameterExpsArray
     } 
 
     equals(otherExpMethodExpStmt) {
         return (otherExpMethodExpStmt instanceof ExpMethodExpStmt
                     && this.parentExp.equals(otherExpMethodExpStmt.parentExp)
-                    && arraysEqual(this.expList, otherExpMethodExpStmt.expList));
+                    && arraysEqual(this.parameterExpsArray, otherExpMethodExpStmt.parameterExpsArray));
     }
 }
 
+// var = exp;
 class VarEqualsExpStmt extends Stmt {
     constructor(variable, exp){
-        if(!(variable instanceof VariableExp) || !(exp instanceof Exp)) {
+        super()
+
+        if(!(variable instanceof Variable) || !(exp instanceof Exp)) {
             throw new EvalError("Incorrect type passed to VarEqualsExpStmt")
         }
         
@@ -146,8 +164,11 @@ class VarEqualsExpStmt extends Stmt {
     }
 }
 
+// vardec = exp; 
 class VarDecEqualsExpStmt extends Stmt {
     constructor(vardec, exp){
+        super()
+
         if(!(vardec instanceof VarDec) || !(exp instanceof Exp)) {
             throw new EvalError("Incorrect type passed to VarDecEqualsExpStmt")
         }

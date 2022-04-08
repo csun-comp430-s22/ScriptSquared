@@ -28,24 +28,26 @@ const {
     ElseToken,
     WhileToken,
     BreakToken,
-    PrintToken
+    PrintToken,
+    ThisToken
  } = require("../Lexer/Tokens/StatementTokens")
 const { 
     IntegerToken,
     TrueToken,
     FalseToken,
     StringToken,
-    VoidToken,
-    ClassNameToken,
-    MethodNameToken,
+    VoidTypeToken,
+    ClassNameTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken
  } = require("../Lexer/Tokens/TypeTokens")
+const MethodNameToken = require("../Lexer/Tokens/MethodNameToken")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
-const NewToken = require("../Lexer/Tokens/NewToken")
 const ClassToken = require("../Lexer/Tokens/ClassToken")
-const SuperToken = require("../Lexer/Tokens/SuperToken")
+const SuperToken = require("../Lexer/Tokens/SuperToken");
+const { NewToken } = require('../Lexer/Tokens/NewToken');
+const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 
 
 function expectTokenizes (input) {
@@ -61,7 +63,7 @@ function toEqual(input, expected) {
         return false;
     
     for (let i = 0; i < input.length; i++) {
-        if ( input[i].constructor !== expected[i].constructor ) {
+        if ( (input[i].constructor !== expected[i].constructor) || (input[i].value !== expected[i].value) ) {
             return false;
         }
     }
@@ -261,28 +263,52 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new StringToken("Hello World")])).toBe(true)
     })
 
-    test("VoidToken if a 'void' is passed", () => {
+    test("String if a string has a quote in it", () => {
+
+        let result = expectTokenizes('"Cat\'s"')
+        expect(toEqual(result, [new StringToken("Cat's")])).toBe(true)
+    })
+
+    test("VoidTypeToken if a 'void' is passed", () => {
 
         let result = expectTokenizes('void')
-        expect(toEqual(result, [new VoidToken()])).toBe(true)
+        expect(toEqual(result, [new VoidTypeToken()])).toBe(true)
     })
 
-    test("ClassNameToken if a 'class [class name]' is passed", () => {
+    test("ClassNameTypeToken if a 'class [class name]' is passed", () => {
 
         let result = expectTokenizes('class myClass')
-        expect(toEqual(result, [new ClassToken(), new ClassNameToken("myClass")])).toBe(true)
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
-    test("ClassNameToken if a 'new [class name]' is passed", () => {
+    test("ClassNameTypeToken if a 'new [class name]' is passed", () => {
 
-        let result = expectTokenizes('new myClass')
-        expect(toEqual(result, [new NewToken(), new ClassNameToken("myClass")])).toBe(true)
+        let result = expectTokenizes('class myClass; new myClass')
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("myClass"), new SemiColonToken(), new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
-    test("MethodNameToken if a '' is passed", () => {
+    test("Error Error if two classNameTokens with different names", () => {
 
-        let result = expectTokenizes('something')
-        expect(toEqual(result, [new MethodNameToken("myMethod")])).toBe(true)
+        let result = expectTokenizes('class myClass')
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("test")])).toBe(false)
+    })
+
+    test("MethodNameToken if a 'methodName()' is passed", () => {
+
+        let result = expectTokenizes('public myMethod()')
+        expect(toEqual(result, [new PublicToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])).toBe(true)
+    })
+
+    test("Error if two methodnameToken with different names", () => {
+
+        let result = expectTokenizes('public myMethod()')
+        expect(toEqual(result, [new PublicToken(), new MethodNameToken("test"), new LeftParenToken(), new RightParenToken()])).toBe(false)
+    })
+
+    test("MethodNameToken if a 'exp.methodName()' is passed", () => {
+
+        let result = expectTokenizes('test.myMethod()')
+        expect(toEqual(result, [new VariableToken("test"), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])).toBe(true)
     })
 
     test("IntegerTypeToken if a 'int' is passed", () => {
@@ -339,6 +365,18 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new VariableToken("testVariable")])).toBe(true)
     })
 
+    test("ThisToken if 'this' is passed", () => {
+        
+        let result = expectTokenizes("this")
+        expect(toEqual(result, [new ThisToken()])).toBe(true)
+    })
+
+    test("ThyEntryPointToken if 'thyEntryPoint' is passed", () => {
+        
+        let result = expectTokenizes("thyEntryPoint")
+        expect(toEqual(result, [new ThyEntryPointToken()])).toBe(true)
+    })
+
 })
 
 
@@ -364,6 +402,14 @@ describe("Testing Invalid Inputs", () => {
         
         const result = () => {
             expectTokenizes("11@")
+        }
+        expect(result).toThrow(EvalError)
+    })
+
+    test('Using an invalid String: "Hello World', () => {
+        
+        const result = () => {
+            expectTokenizes('"Hello Wolrd')
         }
         expect(result).toThrow(EvalError)
     })
@@ -428,7 +474,7 @@ describe("Testing More Complex Inputs", () => {
                 new IntegerToken(2),
                 new RightParenToken(),
                 new LeftCurlyToken(),
-                new IntegerTypeToken("int"),
+                new IntegerTypeToken(),
                 //------------------------
                 new VariableToken("var"),
                 new AssignmentToken(),
@@ -436,7 +482,7 @@ describe("Testing More Complex Inputs", () => {
                 new RightCurlyToken(),
                 new ElseToken(),
                 new LeftCurlyToken(),
-                new IntegerTypeToken("int"),
+                new IntegerTypeToken(),
                 //------------------------
                 new VariableToken("var"),
                 new AssignmentToken(),

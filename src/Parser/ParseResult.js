@@ -9,7 +9,7 @@ class ParseResult {
     equals(other) {
         return (other instanceof ParseResult
             && this.result.equals(other.result)
-            && this.position === position)
+            && this.position === other.position)
     }
 }
 

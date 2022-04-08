@@ -3,10 +3,6 @@ class MethodName {
 	
 	constructor(value)
 	{
-        if (!(value instanceof String)) {
-            throw new EvalError("Incorrect type passed to MethodName.Parser")
-        }
-
         this.value = value
 	}
 

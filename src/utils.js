@@ -1,11 +1,11 @@
-//Checks if two arrays have the same entities, and returns True if so.
+//Checks if two arrays have the same elements, and returns True if so.
 function arraysEqual(arrayOne, arrayTwo) {
 
     if (arrayOne.length !== arrayTwo.length)
         return false;
     
     for (let i = 0; i < arrayOne.length; i++) {
-        if ( arrayOne[i].constructor !== arrayTwo[i].constructor ) {
+        if ( arrayOne[i].equals(arrayTwo[i]) === false ) {
             return false;
         }
     }
@@ -24,8 +24,28 @@ function arrayMatchType(array, arrayType) {
     return true;
 }
 
+// Parse a series of the same things using a provided function 
+// ex) instanceDec*  -  the only thing seperating the things is whitespace
+function parseList(position, parseFunction) {
+    const list = []
+    let shouldRun = true
+
+    while (shouldRun === true) {
+        try {
+            const result = parseFunction(position)
+            list.push(result.result)
+            position = result.position
+        } catch (e) {
+            shouldRun = false
+        }
+    }
+
+    return { list, position };
+}
+
 
 module.exports = {
     arraysEqual,
-    arrayMatchType
+    arrayMatchType,
+    parseList
 }

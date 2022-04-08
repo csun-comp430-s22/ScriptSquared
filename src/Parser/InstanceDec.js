@@ -2,6 +2,8 @@ const { AccessModifier } = require("./AccessModifier");
 const { Exp } = require("./Expressions");
 const { VarDec } = require("./Vardec");
 
+
+
 class InstanceDec {
 
     constructor(accessModifier, vardec, expression) {

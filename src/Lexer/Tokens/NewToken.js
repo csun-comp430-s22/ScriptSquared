@@ -7,4 +7,6 @@ class NewToken  {
     }
 }
 
-module.exports = NewToken
+module.exports = {
+    NewToken
+}
