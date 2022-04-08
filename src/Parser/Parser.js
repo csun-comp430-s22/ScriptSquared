@@ -1,4 +1,3 @@
-const AssignmentToken = require('../Lexer/Tokens/AssignmentToken');
 const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
@@ -19,7 +18,8 @@ const {
     GreaterThanEqualToken,
     GreaterThanToken,
     LessThanEqualToken,
-    LessThanToken
+    LessThanToken,
+    AssignmentToken
  } = require("../Lexer/Tokens/OperatorTokens")
 const { 
     ReturnToken,
@@ -376,7 +376,7 @@ class Parser {
 
         // var = exp;
         if (token instanceof VariableToken) {
-            this.assertTokenHereIs(position + 1, EqualsToken)
+            this.assertTokenHereIs(position + 1, AssignmentToken)
             const exp = this.parseExp(position + 2)
             this.assertTokenHereIs(exp.position, SemiColonToken)
 
@@ -386,7 +386,7 @@ class Parser {
         // vardec = exp;
         else if (token instanceof TypeToken) {
             const vardec = this.parseVarDec(position)
-            this.assertTokenHereIs(vardec.position, EqualsToken)
+            this.assertTokenHereIs(vardec.position, AssignmentToken)
             const exp = this.parseExp(vardec.position + 1)
             this.assertTokenHereIs(exp.position, SemiColonToken)
 
@@ -534,7 +534,7 @@ class Parser {
     parseInstanceDec(position) {
         const accessMod = this.parseAccessModifier(position)
         const vardec = this.parseVarDec(accessMod.position)
-        this.assertTokenHereIs(vardec.position, EqualsToken)
+        this.assertTokenHereIs(vardec.position, AssignmentToken)
         const exp = this.parseExp(vardec.position + 1)
         this.assertTokenHereIs(exp.position, SemiColonToken)
 
@@ -628,8 +628,6 @@ class Parser {
                                             methodDecList), 
                                     position + 1)
     }    
-
-    // TODO: replace EqualsToken with AssignmentToken
 
     // classdec* `thyEntryPoint` stmt
     parseProgram(position) {
