@@ -93,6 +93,11 @@ class Parser {
         return { expList, position }
     }
 
+    // int | string | boolean | void | classname
+    parseType(position) {
+        
+    }
+
     // primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
     parsePrimaryExp(position)
     {
