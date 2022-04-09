@@ -98,57 +98,64 @@ function assertParseProgram(inputTokenList, expected) {
 describe("Testing parseType", () => {
 
     test("If input is of token type int", () => {
-        let result = new Parser( new IntegerTypeToken)
-        expect(toEqual(result, IntType)).toBe(true)
+        let parser = new Parser( [new IntegerTypeToken])
+        let result = parser.parseType(0)
+        expect(result.equals( new ParseResult(new IntType(), 1))).toBe(true)
     } )
     test("If input is of token type string", () => {
-        let result = new Parser( new StringTypeToken)
-        expect(toEqual(result, StringType)).toBe(true)
+        let parser = new Parser( [new StringTypeToken])
+        let result = parser.parseType(0)
+        expect(result.equals( new ParseResult( new StringType(), 1))).toBe(true)
     } )
     test("If input is of token type boolean", () => {
-        let result = new Parser( new BooleanTypeToken)
-        expect(toEqual(result, BooleanType)).toBe(true)
+        let parser = new Parser( [new BooleanTypeToken])
+        let result = parser.parseType(0)
+        expect(result.equals(new ParseResult(new BooleanType(), 1))).toBe(true)
     } )
     test("If input is of token type void", () => {
-        let result = new Parser( new  VoidTypeToken)
-        expect(toEqual(result, VoidType)).toBe(true)
+        let parser = new Parser( [new VoidTypeToken])
+        let result = parser.parseType(0)
+        expect(result.equals(new ParseResult(new VoidType(), 1))).toBe(true)
     } )
     test("If input is of token type classname", () => {
-        let result = new Parser( new ClassNameTypeToken("example class"))
-        expect(toEqual(result, new ClassNameType("example class"))).toBe(true)
+        let parser = new Parser( [new ClassNameTypeToken("example class")])
+        let result = parser.parseType(0)
+        expect(result.equals( new ParseResult(new ClassNameType("example class"), 1))).toBe(true)
     } )
 })
 
 describe("Testing parsePrimaryExp", () => {
 
     test("If input is of token Variable", () => {
-        let parser = new Parser( new VariableToken("example"))
+        let parser = new Parser( [new VariableToken("var")])
         let result = parser.parsePrimaryExp(0)
-        expect(result.equals(new ParseResult( new VariableExp("example"), 1 ))).toBe(true)
+        console.log(result)
+        expect( result.equals( new ParseResult( new VariableExp(new Variable("var")), 1))).toBe(true)
+
     })
 
     test("If input is of token String", () => {
-        let parser = new Parser( new StringToken("example"))
+        let parser = new Parser( [new StringToken("example")])
         let result = parser.parsePrimaryExp(0)
-        expect(result.equals(new ParseResult( new StringExp("example"), 1 ))).toBe(true)
+        expect(result.equals( new ParseResult(new StringExp("example"), 1))).toBe(true)
     })
     
     test("If input is of token Integer", () => {
-        let parser = new Parser( new IntegerToken(5))
+        let parser = new Parser( [new IntegerToken(5)])
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new IntegerExp(5))).toBe(true)
+        expect(result.equals( new ParseResult(new IntegerExp(5), 1))).toBe(true)
     })
 
     test("If input is of token False", () => {
-        let parser = new Parser( new FalseToken())
+        let parser = new Parser( [new FalseToken()])
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new BooleanExp("false"))).toBe(true)
+        expect(result.equals(new ParseResult(new BooleanExp("false"), 1))).toBe(true)
     })
 
     test("If input is of token True", () => {
-        let parser = new Parser( new LeftParenToken())
+        let parser = new Parser( [new TrueToken()])
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new BooleanExp("true"))).toBe(true)
+        expect(result.equals(new ParseResult(new BooleanExp("true"), 1))).toBe(true)
     })
     //TODO FINISH
     test("If input is of token LeftParen", () => {
@@ -157,11 +164,15 @@ describe("Testing parsePrimaryExp", () => {
         expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
+    //TODO
+    /*
     test("If input is NewToken", () => {
-        let parser = new Parser( new VariableToken("example"))
+        let parser = new Parser( [new NewToken()])
         let result = parser.parsePrimaryExp(0)
-        expect(toEqual(result, new VariableToken("example"))).toBe(true)
+        //expect(toEqual(result, new ParseResult( new VariableToken("example"), 1))).toBe(true)
+        //expect(result.equals(new ParseResult( new New, 1))).toBe(true)
     })
+    */
 
 
 
