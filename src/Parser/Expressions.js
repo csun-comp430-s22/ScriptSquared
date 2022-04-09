@@ -55,7 +55,9 @@ class VariableExp extends Exp {
             throw new EvalError("Incorrect type passed to VariableExp")
         }
 
-        this.variable = variable
+        // changing this to see how it works with tester, currently it is VarExp -> Var -> value 
+        //this.variable = variable
+        this.value = variable.value // <<<- this fixed it!
     }
 
     equals(other) {
