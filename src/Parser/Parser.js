@@ -81,7 +81,6 @@ class Parser {
     assertTokenHereIs(position, expectedType) {
         const recieved = this.getToken(position)
 
-        let test = recieved instanceof expectedType
         if (!(recieved instanceof expectedType)) {
             throw new EvalError("expected: " + expectedType + "; recieved: " + recieved)
         }
@@ -165,7 +164,7 @@ class Parser {
     // primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
     parsePrimaryExp(position)
     {
-        const token = getToken(position)
+        const token = this.getToken(position)
         let shouldRun = true
         
         if (token instanceof VariableToken)
