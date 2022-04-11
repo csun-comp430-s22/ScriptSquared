@@ -132,6 +132,7 @@ describe("Testing parseType", () => {
     } )
 })
 
+// primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
 describe("Testing parsePrimaryExp", () => {
 
     test("If input is of token Variable", () => {
@@ -176,18 +177,21 @@ describe("Testing parsePrimaryExp", () => {
         expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
-    //TODO
-    /*
     test("If input is NewToken", () => {
         let parser = new Parser( [new NewToken()])
         let result = parser.parsePrimaryExp(0)
         //expect(toEqual(result, new ParseResult( new VariableToken("example"), 1))).toBe(true)
         //expect(result.equals(new ParseResult( new New, 1))).toBe(true)
     })
-    */
+    
 
 
 
+})
+
+// method_exp ::= primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )*
+describe("Testing paresMethodExp", () => {
+    test("")
 })
 
 describe("Testing parseAccessModifier", () => {
@@ -212,6 +216,7 @@ describe("Testing parseAccessModifier", () => {
         expect(result.equals(new ParseResult(new ProtecModifier(), 1))).toBe(true)
     })
 })
+
 
 // methoddec ::= access type methodname(vardec*) stmt 
 // describe("Testing parseMethodDec", () => {
