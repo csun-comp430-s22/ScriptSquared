@@ -72,6 +72,7 @@ const { ClassDec } = require('../Parser/ClassDec');
 const SuperToken = require('../Lexer/Tokens/SuperToken');
 const { parseList, arraysEqual } = require('../utils');
 const { Constructor } = require('../Parser/Constructor');
+const { MethodName } = require('../Parser/MethodName')
 
 function assertParses(inputTokenList, expected) {
 
@@ -91,10 +92,17 @@ function assertParseProgram(inputTokenList, expected) {
     assertEqual(expected, parser.parseProgram())
 }
 
+function expectTokenizes (input) {
+    const tokenizer = new Tokenizer(input)
+    const result = tokenizer.tokenize()
+    return result;
+}
 
+// let string = expectTokenizes("public int methodName() int temp = 1;")
+// let parser = new Parser(string)
+// let result = parser.parseMethodDec(0)
 
 // Parse Type:= int | string | boolean | void | classname
-
 describe("Testing parseType", () => {
 
     test("If input is of token type int", () => {
@@ -124,56 +132,110 @@ describe("Testing parseType", () => {
     } )
 })
 
+// primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
 describe("Testing parsePrimaryExp", () => {
 
     test("If input is of token Variable", () => {
-        let parser = new Parser( [new VariableToken("var")])
+        let string = expectTokenizes("var")
+        let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
-        console.log(result)
         expect( result.equals( new ParseResult( new VariableExp(new Variable("var")), 1))).toBe(true)
 
     })
 
     test("If input is of token String", () => {
-        let parser = new Parser( [new StringToken("example")])
+        let string = expectTokenizes('"Hello World"')
+        let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
-        expect(result.equals( new ParseResult(new StringExp("example"), 1))).toBe(true)
+        expect(result.equals( new ParseResult(new StringExp("Hello World"), 1))).toBe(true)
     })
     
     test("If input is of token Integer", () => {
-        let parser = new Parser( [new IntegerToken(5)])
+        let string = expectTokenizes("5")
+        let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
         expect(result.equals( new ParseResult(new IntegerExp(5), 1))).toBe(true)
     })
 
     test("If input is of token False", () => {
-        let parser = new Parser( [new FalseToken()])
+        let string = expectTokenizes("false")
+        let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
         expect(result.equals(new ParseResult(new BooleanExp("false"), 1))).toBe(true)
     })
 
     test("If input is of token True", () => {
-        let parser = new Parser( [new TrueToken()])
+        let string = expectTokenizes("true")
+        let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
         expect(result.equals(new ParseResult(new BooleanExp("true"), 1))).toBe(true)
     })
-    //TODO FINISH
+    
     test("If input is of token LeftParen", () => {
         let parser = new Parser( [new LeftParenToken(), new IntegerToken(5), new RightParenToken()])
         let result = parser.parsePrimaryExp(0)
         expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
-    //TODO
-    /*
     test("If input is NewToken", () => {
         let parser = new Parser( [new NewToken()])
         let result = parser.parsePrimaryExp(0)
         //expect(toEqual(result, new ParseResult( new VariableToken("example"), 1))).toBe(true)
         //expect(result.equals(new ParseResult( new New, 1))).toBe(true)
     })
-    */
+    
 
 
 
 })
+
+// method_exp ::= primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )*
+describe("Testing paresMethodExp", () => {
+    test("")
+})
+
+describe("Testing parseAccessModifier", () => {
+    test("If input is of token PublicToken", () => {
+        let string = expectTokenizes("public")
+        let parser = new Parser(string)
+        let result = parser.parseAccessModifier(0)
+        expect(result.equals(new ParseResult(new PublicModifier(), 1))).toBe(true)
+    })
+
+    test("If input is of token PrivateToken", () => {
+        let string = expectTokenizes("private")
+        let parser = new Parser(string)
+        let result = parser.parseAccessModifier(0)
+        expect(result.equals(new ParseResult(new PrivateModifier(), 1))).toBe(true)
+    })
+
+    test("If input is of token ProtecToken", () => {
+        let string = expectTokenizes("protec")
+        let parser = new Parser(string)
+        let result = parser.parseAccessModifier(0)
+        expect(result.equals(new ParseResult(new ProtecModifier(), 1))).toBe(true)
+    })
+})
+
+
+// methoddec ::= access type methodname(vardec*) stmt 
+// describe("Testing parseMethodDec", () => {
+//     let string = expectTokenizes("public int methodName() int temp = 1;")
+//     let parser = new Parser(string)
+//     let result = parser.parseMethodDec(0)
+//     expect(result.equals(new ParseResult(
+//         new MethodDec(new PublicModifier(), new IntType(), new MethodName(methodName), [], new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp")), new IntegerExp(1))),
+//         7
+//     ))).toBe(false)
+// })
+
+// instancedec ::= access vardec = exp;
+// describe("Testing parseInstanceDec", () => {
+//     let string = expectTokenizes("public string temp = 1;")
+//     let parser = new Parser(string)
+//     let result = parser.parseMethodDec(0)
+//     expect(result.equals(new ParseResult(
+//         new InstanceDec(new PublicModifier(), new VarDec(new StringType(), new Variable("temp")), new IntegerExp(1)),
+//         6
+//     )))
+// })
