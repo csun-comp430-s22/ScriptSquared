@@ -41,10 +41,6 @@ const {
     ThisToken
  } = require("../Lexer/Tokens/StatementTokens")
 const { 
-    IntegerToken,
-    TrueToken,
-    FalseToken,
-    StringToken,
     VoidTypeToken,
     ClassNameTypeToken,   
     TypeToken,
@@ -53,7 +49,6 @@ const {
     BooleanTypeToken,
  } = require("../Lexer/Tokens/TypeTokens")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
-
 const ParseResult = require("../Parser/ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("../Parser/Operations");
@@ -73,6 +68,7 @@ const SuperToken = require('../Lexer/Tokens/SuperToken');
 const { parseList, arraysEqual } = require('../utils');
 const { Constructor } = require('../Parser/Constructor');
 const { MethodName } = require('../Parser/MethodName')
+const { IntegerToken, TrueToken, FalseToken, StringToken } = require('../Lexer/Tokens/ExpressionTypeTokens')
 
 function assertParses(inputTokenList, expected) {
 
@@ -98,9 +94,10 @@ function expectTokenizes (input) {
     return result;
 }
 
-// let string = expectTokenizes("public int methodName() int temp = 1;")
-// let parser = new Parser(string)
-// let result = parser.parseMethodDec(0)
+let parser = new Parser( [new IntegerTypeToken])
+let result = parser.parseType(0)
+result.equals( new ParseResult(new IntType(), 1))
+
 
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
@@ -190,9 +187,9 @@ describe("Testing parsePrimaryExp", () => {
 })
 
 // method_exp ::= primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )*
-describe("Testing paresMethodExp", () => {
-    test("")
-})
+// describe("Testing paresMethodExp", () => {
+//     test("")
+// })
 
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
@@ -239,3 +236,233 @@ describe("Testing parseAccessModifier", () => {
 //         6
 //     )))
 // })
+
+
+describe("Testing assertTokenHereIs", () => {
+    describe("Access Tokens", () => {
+        test("PublicToken", () => {
+            const parser = new Parser([new PublicToken()])
+            expect(parser.assertTokenHereIs(0, AccessToken)).toBe(true)
+        })
+
+        test("PrivateToken", () => {
+            const parser = new Parser([new PrivateToken()])
+            expect(parser.assertTokenHereIs(0, AccessToken)).toBe(true)
+        })
+
+        test("ProtecToken", () => {
+            const parser = new Parser([new ProtecToken()])
+            expect(parser.assertTokenHereIs(0, AccessToken)).toBe(true)
+        })
+    })
+
+    test("ClassToken", () => {
+        const parser = new Parser([new ClassToken()])
+        expect(parser.assertTokenHereIs(0, ClassToken)).toBe(true)
+    })
+
+    describe("ExpressionTypeTokens", () => {
+        test("IntegerToken", () => {
+            const parser = new Parser([new IntegerToken()])
+            expect(parser.assertTokenHereIs(0, IntegerToken)).toBe(true)
+        })
+
+        test("TrueToken", () => {
+            const parser = new Parser([new TrueToken()])
+            expect(parser.assertTokenHereIs(0, TrueToken)).toBe(true)
+        })
+
+        test("FalseToken", () => {
+            const parser = new Parser([new FalseToken()])
+            expect(parser.assertTokenHereIs(0, FalseToken)).toBe(true)
+        })
+
+        test("StringToken", () => {
+            const parser = new Parser([new StringToken()])
+            expect(parser.assertTokenHereIs(0, StringToken)).toBe(true)
+        })
+    })
+
+    test("MethodNameToken", () => {
+        const parser = new Parser([new MethodNameToken()])
+        expect(parser.assertTokenHereIs(0, MethodNameToken)).toBe(true)
+    })
+
+    test("NewToken", () => {
+        const parser = new Parser([new NewToken()])
+        expect(parser.assertTokenHereIs(0, NewToken)).toBe(true)
+    })
+
+    describe("OperatorTokens", () => {
+        test("PlusToken", () => {
+            const parser = new Parser([new PlusToken()])
+            expect(parser.assertTokenHereIs(0, PlusToken)).toBe(true)
+        })
+
+        test("MinusToken", () => {
+            const parser = new Parser([new MinusToken()])
+            expect(parser.assertTokenHereIs(0, MinusToken)).toBe(true)
+        })
+
+        test("MultiplyToken", () => {
+            const parser = new Parser([new MultiplyToken()])
+            expect(parser.assertTokenHereIs(0, MultiplyToken)).toBe(true)
+        })
+
+        test("DivideToken", () => {
+            const parser = new Parser([new DivideToken()])
+            expect(parser.assertTokenHereIs(0, DivideToken)).toBe(true)
+        })
+
+        test("EqualsToken", () => {
+            const parser = new Parser([new EqualsToken()])
+            expect(parser.assertTokenHereIs(0, EqualsToken)).toBe(true)
+        })
+
+        test("NotEqualsToken", () => {
+            const parser = new Parser([new NotEqualsToken()])
+            expect(parser.assertTokenHereIs(0, NotEqualsToken)).toBe(true)
+        })
+
+        test("GreaterThanEqualToken", () => {
+            const parser = new Parser([new GreaterThanEqualToken()])
+            expect(parser.assertTokenHereIs(0, GreaterThanEqualToken)).toBe(true)
+        })
+
+        test("GreaterThanToken", () => {
+            const parser = new Parser([new GreaterThanToken()])
+            expect(parser.assertTokenHereIs(0, GreaterThanToken)).toBe(true)
+        })
+
+        test("LessThanEqualToken", () => {
+            const parser = new Parser([new LessThanEqualToken()])
+            expect(parser.assertTokenHereIs(0, LessThanEqualToken)).toBe(true)
+        })
+
+        test("LessThanToken", () => {
+            const parser = new Parser([new LessThanToken()])
+            expect(parser.assertTokenHereIs(0, LessThanToken)).toBe(true)
+        })
+
+        test("AssignmentToken", () => {
+            const parser = new Parser([new AssignmentToken()])
+            expect(parser.assertTokenHereIs(0, AssignmentToken)).toBe(true)
+        })
+    })
+
+    describe("StatementTokens", () => {
+        test("ReturnToken", () => {
+            const parser = new Parser([new ReturnToken()])
+            expect(parser.assertTokenHereIs(0, ReturnToken)).toBe(true)
+        })
+
+        test("IfToken", () => {
+            const parser = new Parser([new IfToken()])
+            expect(parser.assertTokenHereIs(0, IfToken)).toBe(true)
+        })
+
+        test("ElseToken", () => {
+            const parser = new Parser([new ElseToken()])
+            expect(parser.assertTokenHereIs(0, ElseToken)).toBe(true)
+        })
+
+        test("WhileToken", () => {
+            const parser = new Parser([new WhileToken()])
+            expect(parser.assertTokenHereIs(0, WhileToken)).toBe(true)
+        })
+
+        test("BreakToken", () => {
+            const parser = new Parser([new BreakToken()])
+            expect(parser.assertTokenHereIs(0, BreakToken)).toBe(true)
+        })
+        
+        test("PrintToken", () => {
+            const parser = new Parser([new PrintToken()])
+            expect(parser.assertTokenHereIs(0, PrintToken)).toBe(true)
+        })
+
+        test("ThisToken", () => {
+            const parser = new Parser([new ThisToken()])
+            expect(parser.assertTokenHereIs(0, ThisToken)).toBe(true)
+        })
+    })
+
+    test("SuperToken", () => {
+        const parser = new Parser([new SuperToken()])
+        expect(parser.assertTokenHereIs(0, SuperToken)).toBe(true)
+    })
+
+    describe("SymbolTokens", () => {
+        test("LeftCurlyToken", () => {
+            const parser = new Parser([new LeftCurlyToken()])
+            expect(parser.assertTokenHereIs(0, LeftCurlyToken)).toBe(true)
+        })
+
+        test("RightCurlyToken", () => {
+            const parser = new Parser([new RightCurlyToken()])
+            expect(parser.assertTokenHereIs(0, RightCurlyToken)).toBe(true)
+        })
+
+        test("LeftParenToken", () => {
+            const parser = new Parser([new LeftParenToken()])
+            expect(parser.assertTokenHereIs(0, LeftParenToken)).toBe(true)
+        })
+
+        test("RightParenToken", () => {
+            const parser = new Parser([new RightParenToken()])
+            expect(parser.assertTokenHereIs(0, RightParenToken)).toBe(true)
+        })
+
+        test("SemiColonToken", () => {
+            const parser = new Parser([new SemiColonToken()])
+            expect(parser.assertTokenHereIs(0, SemiColonToken)).toBe(true)
+        })
+
+        test("DotToken", () => {
+            const parser = new Parser([new DotToken()])
+            expect(parser.assertTokenHereIs(0, DotToken)).toBe(true)
+        })
+
+        test("CommaToken", () => {
+            const parser = new Parser([new CommaToken()])
+            expect(parser.assertTokenHereIs(0, CommaToken)).toBe(true)
+        })
+    })
+
+    test("ThyEntryPointToken", () => {
+        const parser = new Parser([new ThyEntryPointToken()])
+        expect(parser.assertTokenHereIs(0, ThyEntryPointToken)).toBe(true)
+    })
+
+    describe("TypeTokens", () => {
+        test("VoidTypeToken", () => {
+            const parser = new Parser([new VoidTypeToken()])
+            expect(parser.assertTokenHereIs(0, TypeToken)).toBe(true)
+        })
+
+        test("ClassNameTypeToken", () => {
+            const parser = new Parser([new ClassNameTypeToken()])
+            expect(parser.assertTokenHereIs(0, TypeToken)).toBe(true)
+        })
+
+        test("IntegerTypeToken", () => {
+            const parser = new Parser([new IntegerTypeToken()])
+            expect(parser.assertTokenHereIs(0, TypeToken)).toBe(true)
+        })
+
+        test("StringTypeToken", () => {
+            const parser = new Parser([new StringTypeToken()])
+            expect(parser.assertTokenHereIs(0, TypeToken)).toBe(true)
+        })
+
+        test("BooleanTypeToken", () => {
+            const parser = new Parser([new BooleanTypeToken()])
+            expect(parser.assertTokenHereIs(0, TypeToken)).toBe(true)
+        })
+    })
+
+    test("VariableToken", () => {
+        const parser = new Parser([new VariableToken()])
+        expect(parser.assertTokenHereIs(0, VariableToken)).toBe(true)
+    })
+})

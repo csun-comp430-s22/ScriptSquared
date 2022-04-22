@@ -1,4 +1,4 @@
-const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens")
+const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens");
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
@@ -7,7 +7,7 @@ const {
     SemiColonToken,
     DotToken,
     CommaToken,
-} = require("../Lexer/Tokens/SymbolToken")
+} = require("../Lexer/Tokens/SymbolToken");
 const { 
     PlusToken,
     MinusToken,
@@ -20,7 +20,7 @@ const {
     LessThanEqualToken,
     LessThanToken,
     AssignmentToken
- } = require("../Lexer/Tokens/OperatorTokens")
+ } = require("../Lexer/Tokens/OperatorTokens");
 const { 
     ReturnToken,
     IfToken,
@@ -29,21 +29,9 @@ const {
     BreakToken,
     PrintToken,
     ThisToken
- } = require("../Lexer/Tokens/StatementTokens")
-const { 
-    IntegerToken,
-    TrueToken,
-    FalseToken,
-    StringToken,
-    VoidTypeToken,
-    ClassNameTypeToken,   
-    TypeToken,
-    StringTypeToken,
-    IntegerTypeToken,
-    BooleanTypeToken,
- } = require("../Lexer/Tokens/TypeTokens")
+ } = require("../Lexer/Tokens/StatementTokens");
+const { VoidTypeToken, ClassNameTypeToken, TypeToken, StringTypeToken, IntegerTypeToken, BooleanTypeToken } = require("../Lexer/Tokens/TypeTokens");
 const VariableToken = require("../Lexer/Tokens/VariableToken");
-
 const ParseResult = require("./ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("./Operations");
@@ -61,8 +49,10 @@ const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 const ClassToken = require('../Lexer/Tokens/ClassToken');
 const { ClassDec } = require('./ClassDec');
 const SuperToken = require('../Lexer/Tokens/SuperToken');
-const { parseList } = require('../utils');
+const { parseList, instance_of } = require('../utils');
 const { Constructor } = require('./Constructor');
+const { IntegerToken, TrueToken, FalseToken, StringToken } = require("../Lexer/Tokens/ExpressionTypeTokens");
+const { MethodName } = require("./MethodName");
 
 class Parser {
 
@@ -81,9 +71,11 @@ class Parser {
     assertTokenHereIs(position, expectedType) {
         const recieved = this.getToken(position)
 
-        if (!(recieved instanceof expectedType)) {
+        if (!instance_of(recieved, expectedType)) {
             throw new EvalError("expected: " + expectedType + "; recieved: " + recieved)
         }
+
+        return true;
     }
 
     extractCommaSeperatedExps(position) {
@@ -95,7 +87,7 @@ class Parser {
                 const expParam = this.parseExp(position)
                 position = expParam.position
                 expList.push(expParam.result)
-                this.assertTokenHereIs(position, CommaToken)
+                this.assertTokenHereIs(position, new CommaToken())
                 position++
                 
             } catch (e) {
@@ -115,7 +107,7 @@ class Parser {
                 const vardec = this.parseVarDec(position)
                 position = vardec.position
                 vardecList.push(vardec.result)
-                this.assertTokenHereIs(position, CommaToken)
+                this.assertTokenHereIs(position, new CommaToken())
                 position++
 
             } catch (e) {
@@ -128,31 +120,31 @@ class Parser {
 
     // int | string | boolean | void | classname
     parseType(position) {
-        this.assertTokenHereIs(position, TypeToken)
+        this.assertTokenHereIs(position, new TypeToken())
         const typeToken = this.getToken(position)
 
         // int
-        if (typeToken instanceof IntegerTypeToken) {
+        if (typeToken.value === "int") {
             return new ParseResult( new IntType(), position + 1 );    
         }
 
         // string
-        else if (typeToken instanceof StringTypeToken) {
+        else if (typeToken.value === "string") {
             return new ParseResult( new StringType(), position + 1 );
         }
 
         // boolean
-        else if (typeToken instanceof BooleanTypeToken) {
+        else if (typeToken.value === "boolean") {
             return new ParseResult( new BooleanType(), position + 1 );
         }
 
         // void
-        else if (typeToken instanceof VoidTypeToken) {
+        else if (typeToken.value === "void") {
             return new ParseResult( new VoidType(), position + 1 );
         }
 
         // classname
-        else if (typeToken instanceof ClassNameTypeToken) {
+        else if (instance_of(typeToken, ClassNameType)) {
             return new ParseResult( new ClassNameType(typeToken.value), position + 1 );
         }
 
@@ -167,46 +159,46 @@ class Parser {
         const token = this.getToken(position)
         let shouldRun = true
         
-        if (token instanceof VariableToken)
+        if (instance_of(token, VariableToken))
         {
             return new ParseResult(new VariableExp(new Variable(token.value)), position + 1)
         }
-        else if (token instanceof StringToken)
+        else if (instance_of(token, StringToken))
         {
             return new ParseResult(new StringExp(token.value), position + 1)
         }
-        else if (token instanceof IntegerToken)
+        else if (instance_of(token, IntegerToken))
         {
             return new ParseResult(new IntegerExp(token.value), position + 1)
         }
-        else if (token instanceof TrueToken)
+        else if (instance_of(token, TrueToken))
         {
             return new ParseResult(new BooleanExp(token.value), position + 1)
         }
-        else if (token instanceof FalseToken)
+        else if (instance_of(token, FalseToken))
         {
             return new ParseResult(new BooleanExp(token.value), position + 1)
         }
-        else if (token instanceof LeftParenToken)
+        else if (instance_of(token, LeftParenToken))
         {
             let inParens = this.parseExp(position + 1)
-            this.assertTokenHereIs(inParens.position, RightParenToken)
+            this.assertTokenHereIs(inParens.position, new RightParenToken())
             return new ParseResult(inParens.result, inParens.position + 1)
         }
-        else if (token instanceof NewToken)
+        else if (instance_of(token, NewToken))
         {
-            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
-            let ClassNameTypeToken = this.getToken(position + 1)
-            this.assertTokenHereIs(position + 2, LeftParenToken)
+            this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
+            let classNameTypeToken = this.getToken(position + 1)
+            this.assertTokenHereIs(position + 2, new LeftParenToken())
 
 
             const result = this.extractCommaSeperatedExps(position + 3)
             position = result.position
             const expList = result.expList
 
-            this.assertTokenHereIs(position, RightParenToken)
+            this.assertTokenHereIs(position, new RightParenToken())
 
-            return new ParseResult(new NewClassExp(ClassNameTypeToken.value, expList), position + 1);
+            return new ParseResult(new NewClassExp(classNameTypeToken.value, expList), position + 1);
         }
         
         else {
@@ -222,16 +214,16 @@ class Parser {
 
         while(shouldRun === true) {
             try {
-                this.assertTokenHereIs(current.position, DotToken)
-                this.assertTokenHereIs(current.position + 1, MethodNameToken)
+                this.assertTokenHereIs(current.position, new DotToken())
+                this.assertTokenHereIs(current.position + 1, new MethodNameToken())
                 const methodNameToken = this.getToken(current.position + 1)
-                this.assertTokenHereIs(current.position + 2, LeftParenToken)
+                this.assertTokenHereIs(current.position + 2, new LeftParenToken())
                 
                 const result = this.extractCommaSeperatedExps(position + 3)
                 position = result.position
                 const expList = result.expList
 
-                this.assertTokenHereIs(position, RightParenToken)
+                this.assertTokenHereIs(position, new RightParenToken())
                 
                 current = new ParseResult(new ExpMethodExp(current.result, methodNameToken.value, expList), position + 1)
             } catch (e) {
@@ -246,10 +238,10 @@ class Parser {
     parseMultDivOp(position) {
         const token = this.getToken(position)
 
-        if (token instanceof MultiplyToken) {
+        if (instance_of(token, MultiplyToken)) {
             return new ParseResult(new MultiplyOp(), position + 1)
         }
-        if (token instanceof DivideToken) {
+        if (instance_of(token, DivideToken)) {
             return new ParseResult(new DivideOp(), position + 1)
         }
         throw new EvalError("Expected * or -; recieved: " + token)
@@ -277,10 +269,10 @@ class Parser {
     parseAddSubOp(position) {
         const token = this.getToken(position)
 
-        if(token instanceof PlusToken) {
+        if(instance_of(token, PlusToken)) {
             return new ParseResult(new PlusOp(), position + 1)
         }
-        if (token instanceof MinusToken) {
+        if (instance_of(token, MinusToken)) {
             return new ParseResult(new MinusOp(), position + 1)
         }
         throw new EvalError("Expected + or -; recieved: " + token)
@@ -309,22 +301,22 @@ class Parser {
     parseComparisonOp(position) {
         const token = this.getToken(position)
 
-        if (token instanceof EqualsToken) {
+        if (instance_of(token, EqualsToken)) {
             return new ParseResult(new EqualOp(), position + 1)
         }
-        if (token instanceof NotEqualsToken) {
+        if (instance_of(token, NotEqualsToken)) {
             return new ParseResult(new NotEqualOp(), position + 1)
         }
-        if (token instanceof GreaterThanEqualToken) {
+        if (instance_of(token, GreaterThanEqualToken)) {
             return new ParseResult(new GreaterThanEqualOp(), position + 1)
         }
-        if (token instanceof LessThanEqualToken) {
+        if (instance_of(token, LessThanEqualToken)) {
             return new ParseResult(new LessThanEqualOp(), position + 1)
         }
-        if (token instanceof LessThanToken) {
+        if (instance_of(token, LessThanToken)) {
             return new ParseResult(new LessThanOp(), position + 1)
         }
-        if (token instanceof GreaterThanToken) {
+        if (instance_of(token, GreaterThanToken)) {
             return new ParseResult(new GreaterThanOp(), position + 1)
         }
         throw new EvalError("Expected '==' or '!=' or '>=' or '<=' or '>' or '<'; recieved: " + token)
@@ -345,7 +337,7 @@ class Parser {
 
     // exp ::= comparison_exp | this 
     parseExp(position) {
-        if (this.getToken(position) instanceof ThisToken)
+        if (instance_of(this.getToken(position), ThisToken))
             return; // TODO: return 'this' object
 
         return this.parseComparisonExp(position);
@@ -354,7 +346,7 @@ class Parser {
     // vardec ::= type var
     parseVarDec(position) {
         const type = this.parseType(position)
-        this.assertTokenHereIs(type.position, VariableToken)
+        this.assertTokenHereIs(type.position, new VariableToken())
         const variableToken = this.getToken(type.position)
 
         return new ParseResult( new VarDec(type.result, new Variable(variableToken.value) ), type.position + 1 );
@@ -374,26 +366,27 @@ class Parser {
         const token = this.getToken(position)
 
         // var = exp;
-        if (token instanceof VariableToken) {
-            this.assertTokenHereIs(position + 1, AssignmentToken)
+        if (instance_of(token, VariableToken)) {
+            this.assertTokenHereIs(position + 1, new AssignmentToken())
             const exp = this.parseExp(position + 2)
-            this.assertTokenHereIs(exp.position, SemiColonToken)
+            this.assertTokenHereIs(exp.position, new SemiColonToken())
 
             return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
         }
 
         // vardec = exp;
-        else if (token instanceof TypeToken) {
+        else if (instance_of(token, IntegerTypeToken) || instance_of(token, VoidTypeToken) || instance_of(token, ClassNameTypeToken) ||
+                 instance_of(token, StringTypeToken) || instance_of(token, BooleanTypeToken)) {
             const vardec = this.parseVarDec(position)
-            this.assertTokenHereIs(vardec.position, AssignmentToken)
+            this.assertTokenHereIs(vardec.position, new AssignmentToken())
             const exp = this.parseExp(vardec.position + 1)
-            this.assertTokenHereIs(exp.position, SemiColonToken)
+            this.assertTokenHereIs(exp.position, new SemiColonToken())
 
             return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
         }
 
         // { stmt* } 
-        else if (token instanceof LeftCurlyToken) {
+        else if (instance_of(token, LeftCurlyToken)) {
 
             const stmtList = []
             let currentPosition = position + 1
@@ -411,64 +404,64 @@ class Parser {
                 }
             }
 
-            this.assertTokenHereIs(currentPosition, RightCurlyToken)
+            this.assertTokenHereIs(currentPosition, new RightCurlyToken())
 
             return new ParseResult( new BlockStmt(stmtList), currentPosition + 1 );
         }
 
         // return exp; | return;
-        else if (token instanceof ReturnToken) {
+        else if (instance_of(token, ReturnToken)) {
 
             // return;
             try {
-                this.assertTokenHereIs(position + 1, SemiColonToken)
+                this.assertTokenHereIs(position + 1, new SemiColonToken())
                 return new ParseResult(new ReturnStmt(), position + 2);
 
             } 
             // return exp;
             catch (e) {
                 const exp = this.parseExp(position + 1)
-                this.assertTokenHereIs(exp.position, SemiColonToken)
+                this.assertTokenHereIs(exp.position, new SemiColonToken())
 
                 return new ParseResult(new ReturnExpStmt(exp.result), exp.position + 1);
             }
         }
 
         // if (exp) stmt else stmt
-        else if (token instanceof IfToken) {
-            this.assertTokenHereIs(position + 1, LeftParenToken)
+        else if (instance_of(token, IfToken)) {
+            this.assertTokenHereIs(position + 1, new LeftParenToken())
             const guard = this.parseExp(position + 2)
-            this.assertTokenHereIs(guard.position, RightParenToken)
+            this.assertTokenHereIs(guard.position, new RightParenToken())
             const trueBranch = this.parseStmt(guard.position + 1)
-            this.assertTokenHereIs(trueBranch.position, ElseToken)
+            this.assertTokenHereIs(trueBranch.position, new ElseToken())
             const falseBranch = this.parseStmt(trueBranch.position + 1)
 
             return new ParseResult( new IfStmt(guard.result, trueBranch.result, falseBranch.result), falseBranch.position );
         }
 
         // while (exp) stmt
-        else if (token instanceof WhileToken) {
-            this.assertTokenHereIs(position + 1, LeftParenToken)
+        else if (instance_of(token, WhileToken)) {
+            this.assertTokenHereIs(position + 1, new LeftParenToken())
             const guard = this.parseExp(position + 2)
-            this.assertTokenHereIs(guard.position, RightParenToken)
+            this.assertTokenHereIs(guard.position, new RightParenToken())
             const stmt = this.parseStmt(guard.position + 1)
 
             return new ParseResult( new WhileStmt( guard.result, stmt.result ), stmt.position );
         }
 
         // break;
-        else if (token instanceof BreakToken) {
-            this.assertTokenHereIs(position + 1, SemiColonToken)
+        else if (instance_of(token, BreakToken)) {
+            this.assertTokenHereIs(position + 1, new SemiColonToken())
 
             return new ParseResult( new BreakStmt(), position + 2 );
         }
 
         // print(exp);
-        else if (token instanceof PrintToken) {
-            this.assertTokenHereIs(position + 1, LeftParenToken)
+        else if (instance_of(token, PrintToken)) {
+            this.assertTokenHereIs(position + 1, new LeftParenToken())
             const exp = this.parseExp(position + 2)
-            this.assertTokenHereIs(exp.position, RightParenToken)
-            this.assertTokenHereIs(exp.position + 1, SemiColonToken)
+            this.assertTokenHereIs(exp.position, new RightParenToken())
+            this.assertTokenHereIs(exp.position + 1, new SemiColonToken())
 
             return new ParseResult( new PrintExpStmt(exp.result), exp.position + 2 );
         }
@@ -477,10 +470,10 @@ class Parser {
         else {
             const exp = this.parseExp(position)
 
-            if ( !(exp.result instanceof ExpMethodExp) ) 
+            if ( !(instance_of(exp.result, ExpMethodExp)) ) 
                 throw new EvalError("expected ExpMethodExp;")
             
-            this.assertTokenHereIs(exp.position, SemiColonToken)
+            this.assertTokenHereIs(exp.position, new SemiColonToken())
             return new ParseResult(new ExpMethodExpStmt(exp.result.parentExp,
                                                         exp.result.methodName,
                                                         exp.result.parameterExpsArray), 
@@ -490,21 +483,20 @@ class Parser {
 
     // access ::= public | private | protec
     parseAccessModifier(position) {
-        this.assertTokenHereIs(position, AccessToken)
         const accessToken = this.getToken(position)
 
         // public
-        if (accessToken instanceof PublicToken) {
+        if (instance_of(accessToken, PublicToken)) {
             return new ParseResult( new PublicModifier(), position + 1 );    
         }
 
         // private
-        else if (accessToken instanceof PrivateToken) {
+        else if (instance_of(accessToken, PrivateToken)) {
             return new ParseResult( new PrivateModifier(), position + 1 );
         }
 
         // protec
-        else if (accessToken instanceof ProtecToken) {
+        else if (instance_of(accessToken, ProtecToken)) {
             return new ParseResult( new ProtecModifier(), position + 1 );
         }
 
@@ -517,25 +509,25 @@ class Parser {
     parseMethodDec(position) {
         const accessMod = this.parseAccessModifier(position)
         const type = this.parseType(accessMod.position)
-        this.assertTokenHereIs(type.position, MethodNameToken)
+        this.assertTokenHereIs(type.position, new MethodNameToken())
         const methodNameToken = this.getToken(type.position)
-        this.assertTokenHereIs(type.position + 1, LeftParenToken)
+        this.assertTokenHereIs(type.position + 1, new LeftParenToken())
 
         const result = this.extractCommaSeperatedVardecs(type.position + 2)
 
-        this.assertTokenHereIs(result.position, RightParenToken)
+        this.assertTokenHereIs(result.position, new RightParenToken())
         const stmt = this.parseStmt(result.position + 1)
 
-        return new ParseResult( new MethodDec(accessMod.result, type.result, methodNameToken.value, result.vardecList, stmt.result), stmt.position);
+        return new ParseResult( new MethodDec(accessMod.result, type.result, new MethodName(methodNameToken.value), result.vardecList, stmt.result), stmt.position);
     }
 
     //instancedec ::= access vardec = exp;
     parseInstanceDec(position) {
         const accessMod = this.parseAccessModifier(position)
         const vardec = this.parseVarDec(accessMod.position)
-        this.assertTokenHereIs(vardec.position, AssignmentToken)
+        this.assertTokenHereIs(vardec.position, new AssignmentToken())
         const exp = this.parseExp(vardec.position + 1)
-        this.assertTokenHereIs(exp.position, SemiColonToken)
+        this.assertTokenHereIs(exp.position, new SemiColonToken())
 
         return new ParseResult( new InstanceDec(accessMod.result, vardec.result, exp.result), exp.position + 1 );
     }
@@ -554,40 +546,40 @@ class Parser {
 
     parseClassDec(position) {
 
-        this.assertTokenHereIs(position, ClassToken)
-        this.assertTokenHereIs(position + 1, ClassNameTypeToken)
+        this.assertTokenHereIs(position, new ClassToken())
+        this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
         const classNameToken = this.getToken(position + 1)
         
         // position at { or super
         position = position + 2
         let superClassNameToken = null
         try {
-            this.assertTokenHereIs(position, SuperToken)
-            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
+            this.assertTokenHereIs(position, new SuperToken())
+            this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
             superClassNameToken = this.getToken(position + 1)
             position = position + 2
         } catch (e) {}
 
         // position at {
-        this.assertTokenHereIs(position, LeftCurlyToken)
+        this.assertTokenHereIs(position, new LeftCurlyToken())
 
         const result = this.parseList(position + 1, this.parseInstanceDec)
         const instanceDecList = result.list
         position = result.position
 
-        this.assertTokenHereIs(position, Constructor)
-        this.assertTokenHereIs(position + 1, LeftParenToken)
+        this.assertTokenHereIs(position, new Constructor())
+        this.assertTokenHereIs(position + 1, new LeftParenToken())
         const vardecs = this.extractCommaSeperatedVardecs(position + 2)
         position = vardecs.position
         const vardecList = vardecs.vardecList
-        this.assertTokenHereIs(position, RightParenToken)
+        this.assertTokenHereIs(position, new RightParenToken())
 
         const stmtList = []
         let superExpList = []
         // Normal class
         try {
             const stmt = this.parseStmt(position + 1)
-            if (stmt.result instanceof BlockStmt) 
+            if (instance_of(stmt.result, BlockStmt)) 
                 stmtList = stmt.result.stmtList
             else 
                 stmtList.push(stmt.result)
@@ -597,20 +589,20 @@ class Parser {
         
         // With super class
         catch (e) {
-            this.assertTokenHereIs(position + 1, LeftCurlyToken)
-            this.assertTokenHereIs(position + 2, SuperToken)
-            this.assertTokenHereIs(position + 3, LeftParenToken)
+            this.assertTokenHereIs(position + 1, new LeftCurlyToken())
+            this.assertTokenHereIs(position + 2, new SuperToken())
+            this.assertTokenHereIs(position + 3, new LeftParenToken())
             const exps = this.extractCommaSeperatedExps(position + 4)
             position = exps.position
             superExpList = exps.expList
-            this.assertTokenHereIs(position, RightParenToken)
-            this.assertTokenHereIs(position + 1, SemiColonToken)
+            this.assertTokenHereIs(position, new RightParenToken())
+            this.assertTokenHereIs(position + 1, new SemiColonToken())
             
             const stmts = parseList(position + 2, this.parseStmt)
             position = stmts.position
             stmtList = stmts.list
 
-            this.assertTokenHereIs(position, RightCurlyToken)
+            this.assertTokenHereIs(position, new RightCurlyToken())
             position++
         }
 
@@ -618,7 +610,7 @@ class Parser {
         const methodDecList = methodDecs.list
         position = methodDecs.position
 
-        this.assertTokenHereIs(position, RightCurlyToken)
+        this.assertTokenHereIs(position, new RightCurlyToken())
         
         return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 
                                             new ClassNameType(superClassNameToken?.value),
@@ -635,7 +627,7 @@ class Parser {
         const classDecList = result.list
         currentPosition = result.position
 
-        this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
+        this.assertTokenHereIs(currentPosition, new ThyEntryPointToken())
         const stmt = this.parseStmt(currentPosition + 1)
 
         return new ParseResult( new Program(classDecList, stmt.result), stmt.position );

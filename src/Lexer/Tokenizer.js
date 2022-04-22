@@ -30,16 +30,13 @@ const {
     ThisToken
  } = require("../Lexer/tokens/Statementtokens")
 const { 
-    IntegerToken,
-    TrueToken,
-    FalseToken,
-    StringToken,
     VoidTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken,
     ClassNameTypeToken
  } = require("../Lexer/tokens/Typetokens")
+const { IntegerToken, TrueToken, FalseToken, StringToken } = require("../Lexer/Tokens/ExpressionTypeTokens") 
 const VariableToken = require("../Lexer/tokens/VariableToken");
 const SuperToken = require("./tokens/SuperToken")
 const ClassToken = require("./tokens/ClassToken")
