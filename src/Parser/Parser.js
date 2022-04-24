@@ -199,7 +199,7 @@ class Parser {
 
             this.assertTokenHereIs(position, RightParenToken)
 
-            return new ParseResult(new NewClassExp(classNameTypeToken.value, expList), position + 1);
+            return new ParseResult(new NewClassExp(new ClassNameType(classNameTypeToken.value), expList), position + 1);
         }
         
         else {

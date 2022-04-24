@@ -94,6 +94,10 @@ function expectTokenizes (input) {
     return result;
 }
 
+let parser = new Parser([new NewToken(), new ClassNameTypeToken("myClass"), new LeftParenToken(), new IntegerToken(5), new CommaToken(), new IntegerToken(6), new CommaToken(), new TrueToken(), new RightParenToken()])
+let result = parser.parsePrimaryExp(0)
+
+
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 
@@ -132,7 +136,6 @@ describe("Testing parsePrimaryExp", () => {
         let parser = new Parser(string)
         let result = parser.parsePrimaryExp(0)
         expect( result.equals( new ParseResult( new VariableExp(new Variable("var")), 1))).toBe(true)
-
     })
 
     test("If input is of token String", () => {
@@ -169,11 +172,10 @@ describe("Testing parsePrimaryExp", () => {
         expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
-    //TODO: Finish
-    test("If input is NewToken", () => {
-        let parser = new Parser( [new NewToken()])
-        let result = parser.parseExp(0)
-        expect(result.equals(new ParseResult( new NewClassExp, 1))).toBe(true)
+    test("If input is of token NewToken", () => {
+        let parser = new Parser([new NewToken(), new ClassNameTypeToken("myClass"), new LeftParenToken(), new IntegerToken(5), new CommaToken(), new IntegerToken(6), new CommaToken(), new TrueToken(), new RightParenToken()])
+        let result = parser.parsePrimaryExp(0)
+        expect( result.equals( new ParseResult( new NewClassExp(new ClassNameType("myClass"), [new IntegerExp(5), new IntegerExp(6), new BooleanExp('true')]), 9))).toBe(true)
     })
 })
 
