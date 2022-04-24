@@ -564,7 +564,7 @@ class Parser {
         // position at {
         this.assertTokenHereIs(position, new LeftCurlyToken())
 
-        const result = parseList(position + 1, this.parseInstanceDec)
+        const result = parseList(position + 1, this.parseInstanceDec.bind(this))
         const instanceDecList = result.list
         position = result.position
 
@@ -599,7 +599,7 @@ class Parser {
             this.assertTokenHereIs(position, new RightParenToken())
             this.assertTokenHereIs(position + 1, new SemiColonToken())
             
-            const stmts = parseList(position + 2, this.parseStmt)
+            const stmts = parseList(position + 2, this.parseStmt.bind(this))
             position = stmts.position
             stmtList = stmts.list
 
@@ -607,7 +607,7 @@ class Parser {
             position++
         }
 
-        const methodDecs = parseList(position, this.parseMethodDec)
+        const methodDecs = parseList(position, this.parseMethodDec.bind(this))
         const methodDecList = methodDecs.list
         position = methodDecs.position
 
@@ -624,7 +624,7 @@ class Parser {
     // classdec* `thyEntryPoint` stmt
     parseProgramObject(position) {
         
-        const result = parseList(position, this.parseClassDec)
+        const result = parseList(position, this.parseClassDec.bind(this))
         const classDecList = result.list
         currentPosition = result.position
 
