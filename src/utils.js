@@ -47,7 +47,6 @@ function instance_of(token, type) {
 
     // let test = token.__proto__.__proto__.constructor.name
 
-    let temp = token
     let tokenProto = token.__proto__
     while(true) {
         if (tokenProto === null)

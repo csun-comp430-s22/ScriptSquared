@@ -1,5 +1,5 @@
 const { ClassNameType } = require("./Type")
-const { arrayMatchType, arraysEqual } = require("../utils")
+const { arrayMatchType, arraysEqual, instance_of } = require("../utils")
 const { InstanceDec } = require("./InstanceDec")
 const { Constructor } = require("./Constructor")
 const MethodDec = require("./MethodDec")
@@ -19,10 +19,10 @@ const MethodDec = require("./MethodDec")
 class ClassDec {
     constructor(classNameType, superClassName, instanceDecList, constructor, methodDecList) {
 
-        if ( !(classNameType instanceof ClassNameType) 
-                || superClassName instanceof ClassNameType
+        if ( !(instance_of(classNameType, ClassNameType)) 
+                || !instance_of(superClassName, ClassNameType)
                 || !arrayMatchType(instanceDecList, InstanceDec)
-                || !(constructor instanceof Constructor)
+                || !(instance_of(constructor, Constructor))
                 || !arrayMatchType(methodDecList, MethodDec)) {
                     
             throw new EvalError("Incorrect type passed to ClassDec")
@@ -37,7 +37,8 @@ class ClassDec {
     }
 
     equals(other) {
-        return (other instanceof ClassDec
+
+        return (instance_of(other, ClassDec)
                     && this.classNameType.equals(other.classNameType)
                     && this.superClassName.equals(other.superClassName)
                     && arraysEqual(this.instanceDecList, other.instanceDecList)

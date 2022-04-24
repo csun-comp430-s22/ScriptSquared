@@ -46,6 +46,7 @@ const SuperToken = require("../Lexer/Tokens/SuperToken");
 const { NewToken } = require('../Lexer/Tokens/NewToken');
 const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 const { IntegerToken, TrueToken, FalseToken, StringToken } = require('../Lexer/Tokens/ExpressionTypeTokens');
+const ConstructorToken = require('../Lexer/Tokens/ConstructorToken');
 
 
 
@@ -381,6 +382,12 @@ describe("A single token should equal", () => {
         
         let result = expectTokenizes("thyEntryPoint")
         expect(toEqual(result, [new ThyEntryPointToken()])).toBe(true)
+    })
+
+    test("ConstructorToken if 'construc' is passed", () => {
+
+        let result = expectTokenizes("construc")
+        expect(toEqual(result, [new ConstructorToken()])).toBe(true)
     })
 
 })

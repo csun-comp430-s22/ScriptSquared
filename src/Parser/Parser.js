@@ -53,6 +53,7 @@ const { parseList, instance_of } = require('../utils');
 const { Constructor } = require('./Constructor');
 const { IntegerToken, TrueToken, FalseToken, StringToken } = require("../Lexer/Tokens/ExpressionTypeTokens");
 const { MethodName } = require("./MethodName");
+const ConstructorToken = require("../Lexer/Tokens/ConstructorToken");
 
 class Parser {
 
@@ -87,7 +88,7 @@ class Parser {
                 const expParam = this.parseExp(position)
                 position = expParam.position
                 expList.push(expParam.result)
-                this.assertTokenHereIs(position, new CommaToken())
+                this.assertTokenHereIs(position, CommaToken)
                 position++
                 
             } catch (e) {
@@ -107,7 +108,7 @@ class Parser {
                 const vardec = this.parseVarDec(position)
                 position = vardec.position
                 vardecList.push(vardec.result)
-                this.assertTokenHereIs(position, new CommaToken())
+                this.assertTokenHereIs(position, CommaToken)
                 position++
 
             } catch (e) {
@@ -120,7 +121,7 @@ class Parser {
 
     // int | string | boolean | void | classname
     parseType(position) {
-        this.assertTokenHereIs(position, new TypeToken())
+        this.assertTokenHereIs(position, TypeToken)
         const typeToken = this.getToken(position)
 
         // int
@@ -182,21 +183,21 @@ class Parser {
         else if (instance_of(token, LeftParenToken))
         {
             let inParens = this.parseExp(position + 1)
-            this.assertTokenHereIs(inParens.position, new RightParenToken())
+            this.assertTokenHereIs(inParens.position, RightParenToken)
             return new ParseResult(inParens.result, inParens.position + 1)
         }
         else if (instance_of(token, NewToken))
         {
-            this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
+            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
             let classNameTypeToken = this.getToken(position + 1)
-            this.assertTokenHereIs(position + 2, new LeftParenToken())
+            this.assertTokenHereIs(position + 2, LeftParenToken)
 
 
             const result = this.extractCommaSeperatedExps(position + 3)
             position = result.position
             const expList = result.expList
 
-            this.assertTokenHereIs(position, new RightParenToken())
+            this.assertTokenHereIs(position, RightParenToken)
 
             return new ParseResult(new NewClassExp(classNameTypeToken.value, expList), position + 1);
         }
@@ -214,16 +215,16 @@ class Parser {
 
         while(shouldRun === true) {
             try {
-                this.assertTokenHereIs(current.position, new DotToken())
-                this.assertTokenHereIs(current.position + 1, new MethodNameToken())
+                this.assertTokenHereIs(current.position, DotToken)
+                this.assertTokenHereIs(current.position + 1, MethodNameToken)
                 const methodNameToken = this.getToken(current.position + 1)
-                this.assertTokenHereIs(current.position + 2, new LeftParenToken())
+                this.assertTokenHereIs(current.position + 2, LeftParenToken)
                 
                 const result = this.extractCommaSeperatedExps(position + 3)
                 position = result.position
                 const expList = result.expList
 
-                this.assertTokenHereIs(position, new RightParenToken())
+                this.assertTokenHereIs(position, RightParenToken)
                 
                 current = new ParseResult(new ExpMethodExp(current.result, methodNameToken.value, expList), position + 1)
             } catch (e) {
@@ -347,7 +348,7 @@ class Parser {
     // vardec ::= type var
     parseVarDec(position) {
         const type = this.parseType(position)
-        this.assertTokenHereIs(type.position, new VariableToken())
+        this.assertTokenHereIs(type.position, VariableToken)
         const variableToken = this.getToken(type.position)
 
         return new ParseResult( new VarDec(type.result, new Variable(variableToken.value) ), type.position + 1 );
@@ -368,9 +369,9 @@ class Parser {
 
         // var = exp;
         if (instance_of(token, VariableToken)) {
-            this.assertTokenHereIs(position + 1, new AssignmentToken())
+            this.assertTokenHereIs(position + 1, AssignmentToken)
             const exp = this.parseExp(position + 2)
-            this.assertTokenHereIs(exp.position, new SemiColonToken())
+            this.assertTokenHereIs(exp.position, SemiColonToken)
 
             return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
         }
@@ -379,9 +380,9 @@ class Parser {
         else if (instance_of(token, IntegerTypeToken) || instance_of(token, VoidTypeToken) || instance_of(token, ClassNameTypeToken) ||
                  instance_of(token, StringTypeToken) || instance_of(token, BooleanTypeToken)) {
             const vardec = this.parseVarDec(position)
-            this.assertTokenHereIs(vardec.position, new AssignmentToken())
+            this.assertTokenHereIs(vardec.position, AssignmentToken)
             const exp = this.parseExp(vardec.position + 1)
-            this.assertTokenHereIs(exp.position, new SemiColonToken())
+            this.assertTokenHereIs(exp.position, SemiColonToken)
 
             return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
         }
@@ -405,7 +406,7 @@ class Parser {
                 }
             }
 
-            this.assertTokenHereIs(currentPosition, new RightCurlyToken())
+            this.assertTokenHereIs(currentPosition, RightCurlyToken)
 
             return new ParseResult( new BlockStmt(stmtList), currentPosition + 1 );
         }
@@ -415,14 +416,14 @@ class Parser {
 
             // return;
             try {
-                this.assertTokenHereIs(position + 1, new SemiColonToken())
+                this.assertTokenHereIs(position + 1, SemiColonToken)
                 return new ParseResult(new ReturnStmt(), position + 2);
 
             } 
             // return exp;
             catch (e) {
                 const exp = this.parseExp(position + 1)
-                this.assertTokenHereIs(exp.position, new SemiColonToken())
+                this.assertTokenHereIs(exp.position, SemiColonToken)
 
                 return new ParseResult(new ReturnExpStmt(exp.result), exp.position + 1);
             }
@@ -430,11 +431,11 @@ class Parser {
 
         // if (exp) stmt else stmt
         else if (instance_of(token, IfToken)) {
-            this.assertTokenHereIs(position + 1, new LeftParenToken())
+            this.assertTokenHereIs(position + 1, LeftParenToken)
             const guard = this.parseExp(position + 2)
-            this.assertTokenHereIs(guard.position, new RightParenToken())
+            this.assertTokenHereIs(guard.position, RightParenToken)
             const trueBranch = this.parseStmt(guard.position + 1)
-            this.assertTokenHereIs(trueBranch.position, new ElseToken())
+            this.assertTokenHereIs(trueBranch.position, ElseToken)
             const falseBranch = this.parseStmt(trueBranch.position + 1)
 
             return new ParseResult( new IfStmt(guard.result, trueBranch.result, falseBranch.result), falseBranch.position );
@@ -442,9 +443,9 @@ class Parser {
 
         // while (exp) stmt
         else if (instance_of(token, WhileToken)) {
-            this.assertTokenHereIs(position + 1, new LeftParenToken())
+            this.assertTokenHereIs(position + 1, LeftParenToken)
             const guard = this.parseExp(position + 2)
-            this.assertTokenHereIs(guard.position, new RightParenToken())
+            this.assertTokenHereIs(guard.position, RightParenToken)
             const stmt = this.parseStmt(guard.position + 1)
 
             return new ParseResult( new WhileStmt( guard.result, stmt.result ), stmt.position );
@@ -452,17 +453,17 @@ class Parser {
 
         // break;
         else if (instance_of(token, BreakToken)) {
-            this.assertTokenHereIs(position + 1, new SemiColonToken())
+            this.assertTokenHereIs(position + 1, SemiColonToken)
 
             return new ParseResult( new BreakStmt(), position + 2 );
         }
 
         // print(exp);
         else if (instance_of(token, PrintToken)) {
-            this.assertTokenHereIs(position + 1, new LeftParenToken())
+            this.assertTokenHereIs(position + 1, LeftParenToken)
             const exp = this.parseExp(position + 2)
-            this.assertTokenHereIs(exp.position, new RightParenToken())
-            this.assertTokenHereIs(exp.position + 1, new SemiColonToken())
+            this.assertTokenHereIs(exp.position, RightParenToken)
+            this.assertTokenHereIs(exp.position + 1, SemiColonToken)
 
             return new ParseResult( new PrintExpStmt(exp.result), exp.position + 2 );
         }
@@ -474,7 +475,7 @@ class Parser {
             if ( !(instance_of(exp.result, ExpMethodExp)) ) 
                 throw new EvalError("expected ExpMethodExp;")
             
-            this.assertTokenHereIs(exp.position, new SemiColonToken())
+            this.assertTokenHereIs(exp.position, SemiColonToken)
             return new ParseResult(new ExpMethodExpStmt(exp.result.parentExp,
                                                         exp.result.methodName,
                                                         exp.result.parameterExpsArray), 
@@ -510,13 +511,13 @@ class Parser {
     parseMethodDec(position) {
         const accessMod = this.parseAccessModifier(position)
         const type = this.parseType(accessMod.position)
-        this.assertTokenHereIs(type.position, new MethodNameToken())
+        this.assertTokenHereIs(type.position, MethodNameToken)
         const methodNameToken = this.getToken(type.position)
-        this.assertTokenHereIs(type.position + 1, new LeftParenToken())
+        this.assertTokenHereIs(type.position + 1, LeftParenToken)
 
         const result = this.extractCommaSeperatedVardecs(type.position + 2)
 
-        this.assertTokenHereIs(result.position, new RightParenToken())
+        this.assertTokenHereIs(result.position, RightParenToken)
         const stmt = this.parseStmt(result.position + 1)
 
         return new ParseResult( new MethodDec(accessMod.result, type.result, new MethodName(methodNameToken.value), result.vardecList, stmt.result), stmt.position);
@@ -526,9 +527,9 @@ class Parser {
     parseInstanceDec(position) {
         const accessMod = this.parseAccessModifier(position)
         const vardec = this.parseVarDec(accessMod.position)
-        this.assertTokenHereIs(vardec.position, new AssignmentToken())
+        this.assertTokenHereIs(vardec.position, AssignmentToken)
         const exp = this.parseExp(vardec.position + 1)
-        this.assertTokenHereIs(exp.position, new SemiColonToken())
+        this.assertTokenHereIs(exp.position, SemiColonToken)
 
         return new ParseResult( new InstanceDec(accessMod.result, vardec.result, exp.result), exp.position + 1 );
     }
@@ -547,35 +548,35 @@ class Parser {
 
     parseClassDec(position) {
 
-        this.assertTokenHereIs(position, new ClassToken())
-        this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
+        this.assertTokenHereIs(position, ClassToken)
+        this.assertTokenHereIs(position + 1, ClassNameTypeToken)
         const classNameToken = this.getToken(position + 1)
         
         // position at { or super
         position = position + 2
         let superClassNameToken = null
         try {
-            this.assertTokenHereIs(position, new SuperToken())
-            this.assertTokenHereIs(position + 1, new ClassNameTypeToken())
+            this.assertTokenHereIs(position, SuperToken)
+            this.assertTokenHereIs(position + 1, ClassNameTypeToken)
             superClassNameToken = this.getToken(position + 1)
             position = position + 2
         } catch (e) {}
 
         // position at {
-        this.assertTokenHereIs(position, new LeftCurlyToken())
+        this.assertTokenHereIs(position, LeftCurlyToken)
 
         const result = parseList(position + 1, this.parseInstanceDec.bind(this))
         const instanceDecList = result.list
         position = result.position
 
-        this.assertTokenHereIs(position, Constructor)
-        this.assertTokenHereIs(position + 1, new LeftParenToken())
+        this.assertTokenHereIs(position, ConstructorToken)
+        this.assertTokenHereIs(position + 1, LeftParenToken)
         const vardecs = this.extractCommaSeperatedVardecs(position + 2)
         position = vardecs.position
         const vardecList = vardecs.vardecList
-        this.assertTokenHereIs(position, new RightParenToken())
+        this.assertTokenHereIs(position, RightParenToken)
 
-        const stmtList = []
+        let stmtList = []
         let superExpList = []
         // Normal class
         try {
@@ -590,20 +591,20 @@ class Parser {
         
         // With super class
         catch (e) {
-            this.assertTokenHereIs(position + 1, new LeftCurlyToken())
-            this.assertTokenHereIs(position + 2, new SuperToken())
-            this.assertTokenHereIs(position + 3, new LeftParenToken())
+            this.assertTokenHereIs(position + 1, LeftCurlyToken)
+            this.assertTokenHereIs(position + 2, SuperToken)
+            this.assertTokenHereIs(position + 3, LeftParenToken)
             const exps = this.extractCommaSeperatedExps(position + 4)
             position = exps.position
             superExpList = exps.expList
-            this.assertTokenHereIs(position, new RightParenToken())
-            this.assertTokenHereIs(position + 1, new SemiColonToken())
+            this.assertTokenHereIs(position, RightParenToken)
+            this.assertTokenHereIs(position + 1, SemiColonToken)
             
             const stmts = parseList(position + 2, this.parseStmt.bind(this))
             position = stmts.position
             stmtList = stmts.list
 
-            this.assertTokenHereIs(position, new RightCurlyToken())
+            this.assertTokenHereIs(position, RightCurlyToken)
             position++
         }
 
@@ -611,7 +612,7 @@ class Parser {
         const methodDecList = methodDecs.list
         position = methodDecs.position
 
-        this.assertTokenHereIs(position, new RightCurlyToken())
+        this.assertTokenHereIs(position, RightCurlyToken)
         
         return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 
                                             new ClassNameType(superClassNameToken?.value),
@@ -628,7 +629,7 @@ class Parser {
         const classDecList = result.list
         currentPosition = result.position
 
-        this.assertTokenHereIs(currentPosition, new ThyEntryPointToken())
+        this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
         const stmt = this.parseStmt(currentPosition + 1)
 
         return new ParseResult( new Program(classDecList, stmt.result), stmt.position );

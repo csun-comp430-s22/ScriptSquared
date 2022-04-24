@@ -94,6 +94,20 @@ function expectTokenizes (input) {
     return result;
 }
 
+let string = expectTokenizes("class myClass super myClass { public int temp = 0; construc(boolean yeet) { super(); } }")
+let parser = new Parser(string)
+let result = parser.parseClassDec(0)
+
+let test = result.equals(new ParseResult(
+    new ClassDec(new ClassNameType("myClass"), 
+                 new ClassNameType("myClass"),
+                 [new InstanceDec(new PublicModifier(), new VarDec(new IntType, (new Variable("temp"))), new IntegerExp(0))],
+                 new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], []),
+                 [])
+    ,
+    23
+))
+
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 
@@ -247,9 +261,10 @@ describe("Testing parseClassDec", () => {
         let result = parser.parseClassDec(0)
         expect(result.equals(new ParseResult(
             new ClassDec(new ClassNameType("myClass"), 
-                         new ClassNameType("testClass"),
-                         new InstanceDec(new PublicModifier(), new VarDec(new IntType, (new Variable("temp"))), new IntegerExp(0)),
-                         new Constructor([new VarDec(new BooleanType, new Variable("yeet"))], [], []))
+                         new ClassNameType("myClass"),
+                         [new InstanceDec(new PublicModifier(), new VarDec(new IntType, (new Variable("temp"))), new IntegerExp(0))],
+                         new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], []),
+                         [])
             ,
             23
         ))).toBe(true)

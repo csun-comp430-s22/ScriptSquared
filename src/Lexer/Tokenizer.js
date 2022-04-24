@@ -45,6 +45,7 @@ const { MethodName } = require("../Parser/MethodName");
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens");
 const MethodNameToken = require("./Tokens/MethodNameToken");
 const ThyEntryPointToken = require("./Tokens/ThyEntryPointToken");
+const ConstructorToken = require("./Tokens/ConstructorToken")
 
 class Tokenizer {
 
@@ -177,6 +178,9 @@ class Tokenizer {
             }
             else if (name === "thyEntryPoint") {
                 return new ThyEntryPointToken();
+            }
+            else if (name === "construc") {
+                return new ConstructorToken();
             }
             else if (name === "class")
             {
