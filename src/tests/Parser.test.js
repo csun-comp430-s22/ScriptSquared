@@ -94,10 +94,6 @@ function expectTokenizes (input) {
     return result;
 }
 
-let string = expectTokenizes("class myClass super myClass { public int temp = 0; construc(boolean yeet) { super(); } }")
-        let parser = new Parser(string)
-        let result = parser.parseClassDec(0)
-
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 

@@ -48,9 +48,8 @@ function expectParseStmt(string) {
     return result;
 }
 
-let parser = new Parser()
-const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
-console.log(result)
+const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt.bind(this))
+
 
 describe("Testing arraysEqual", () => {
 
@@ -92,7 +91,7 @@ describe("Testing parseList", () => {
 
     test("Should return new position after parsing", () => {
         let parser = new Parser()
-        const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
+        const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt.bind(this))
         // console.log(result)
         expect().toBe(false)
     })
