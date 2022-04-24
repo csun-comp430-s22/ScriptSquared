@@ -50,6 +50,11 @@ function expectParseStmt(string) {
     return result;
 }
 
+const string = "int temp = 1; int temp2 = 2; int temp3 = 3;"
+let tokens = expectTokenizes(string)
+let parser = new Parser(tokens)
+const {list, position} = parseList(0, parser.parseStmt.bind(parser))
+
 
 describe("Testing arraysEqual", () => {
 
@@ -109,11 +114,8 @@ describe("Testing parseList", () => {
     })
 
     test("Should return empty if nothing is parsed", () => {
-
-        expect().toBe(false)
-    })
-
-    test("Should return empty if wrong parseFunction is passed", () => {
-        expect().toBe(false)
+        let parser = new Parser([])
+        const {list, position} = parseList(0, parser.parseStmt.bind(parser))
+        expect(arraysEqual(list, [])).toBe(true)
     })
 })
