@@ -94,7 +94,6 @@ function expectTokenizes (input) {
     return result;
 }
 
-
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 
@@ -170,18 +169,35 @@ describe("Testing parsePrimaryExp", () => {
         expect(result.equals(new ParseResult( new IntegerExp(5), 3))).toBe(true)
     })
 
+    //TODO: Finish
     test("If input is NewToken", () => {
         let parser = new Parser( [new NewToken()])
         let result = parser.parseExp(0)
-        // expect(result.equals(new ParseResult( new NewClassExp, 1))).toBe(true)
+        expect(result.equals(new ParseResult( new NewClassExp, 1))).toBe(true)
     })
 })
 
-// TODO: 
 // method_exp ::= primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )*
-// describe("Testing paresMethodExp", () => {
-//     test("")
-// })
+describe("Testing paresMethodExp", () => {
+    test("Single primary_exp", () => {
+        let tokens = expectTokenizes('"myString"')
+        let parser = new Parser(tokens)
+        let result = parser.parseMethodExp(0)
+        expect(result.equals( new ParseResult(new StringExp("myString"), 1) )).toBe(true)
+    })
+
+    test("primary_exp.methodname()", () => {
+        let parser = new Parser([new IntegerToken(5), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])
+        let result = parser.parseMethodExp(0)
+        expect(result.equals( new ParseResult(new ExpMethodExp(new IntegerExp(5), new MethodName("myMethod"), []), 5) )).toBe(true)
+    })
+
+    test("primary_exp.methodname().methodname()", () => {
+        let parser = new Parser([new IntegerToken(5), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken(), new DotToken(), new MethodNameToken("secondMethod"), new LeftParenToken(), new RightParenToken()])
+        let result = parser.parseMethodExp(0)
+        expect(result.equals( new ParseResult(new ExpMethodExp( new ExpMethodExp(new IntegerExp(5), new MethodName("myMethod"), []), new MethodName("secondMethod"), []), 9) )).toBe(true)
+    })
+})
 
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
@@ -272,8 +288,6 @@ describe("Testing parseClassDec", () => {
         ))).toBe(true)
     })
 })
-
-
 
 
 describe("Testing assertTokenHereIs", () => {

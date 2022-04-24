@@ -220,13 +220,13 @@ class Parser {
                 const methodNameToken = this.getToken(current.position + 1)
                 this.assertTokenHereIs(current.position + 2, LeftParenToken)
                 
-                const result = this.extractCommaSeperatedExps(position + 3)
+                const result = this.extractCommaSeperatedExps(current.position + 3)
                 position = result.position
                 const expList = result.expList
 
                 this.assertTokenHereIs(position, RightParenToken)
                 
-                current = new ParseResult(new ExpMethodExp(current.result, methodNameToken.value, expList), position + 1)
+                current = new ParseResult(new ExpMethodExp(current.result, new MethodName(methodNameToken.value), expList), position + 1)
             } catch (e) {
                 shouldRun = false
             }
