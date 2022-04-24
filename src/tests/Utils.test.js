@@ -1,6 +1,8 @@
 const Tokenizer = require("../Lexer/Tokenizer");
 const { PublicModifier } = require("../Parser/AccessModifier");
+const { IntegerExp } = require("../Parser/Expressions");
 const { Parser } = require("../Parser/Parser");
+const { VarDecEqualsExpStmt } = require("../Parser/Statements");
 const { IntType, StringType, BooleanType, VoidType } = require("../Parser/Type");
 const { VarDec } = require("../Parser/Vardec");
 const { Variable } = require("../Parser/Variable");
@@ -48,8 +50,6 @@ function expectParseStmt(string) {
     return result;
 }
 
-const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt.bind(this))
-
 
 describe("Testing arraysEqual", () => {
 
@@ -89,18 +89,27 @@ describe("Testing arrayMatchType", () => {
 
 describe("Testing parseList", () => {
 
+    const string = "int temp = 1; int temp2 = 2; int temp3 = 3;"
+    const expected = [new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp")), new IntegerExp(1)),
+                      new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp2")), new IntegerExp(2)),
+                      new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp3")), new IntegerExp(3))]
+
     test("Should return new position after parsing", () => {
-        let parser = new Parser()
-        const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt.bind(this))
-        // console.log(result)
-        expect().toBe(false)
+        let tokens = expectTokenizes(string)
+        let parser = new Parser(tokens)
+        const {list, position} = parseList(0, parser.parseStmt.bind(parser))
+        expect(position).toBe(15)
     })
 
     test("Should return a list of all parseResults", () => {
-        expect().toBe(false)
+        let tokens = expectTokenizes(string)
+        let parser = new Parser(tokens)
+        const {list, position} = parseList(0, parser.parseStmt.bind(parser))
+        expect(arraysEqual(list, expected)).toBe(true)
     })
 
     test("Should return empty if nothing is parsed", () => {
+
         expect().toBe(false)
     })
 
