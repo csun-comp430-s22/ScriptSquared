@@ -15,7 +15,7 @@ function arraysEqual(arrayOne, arrayTwo) {
 
 //Takens an array and a type, and returns True if every item in the array matches that type.
 function arrayMatchType(array, arrayType) {
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < array?.length; i++) {
         if(!(array[i] instanceof arrayType)){
             return false;
         }

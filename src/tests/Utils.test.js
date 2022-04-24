@@ -48,64 +48,64 @@ function expectParseStmt(string) {
     return result;
 }
 
-// let parser = new Parser()
-// const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
-// console.log(result)
+let parser = new Parser()
+const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
+console.log(result)
 
-// describe("Testing arraysEqual", () => {
+describe("Testing arraysEqual", () => {
 
-//     test("Should return true if all elements are same type and same value", () => {
-//         expect(arraysEqual(vardecList, vardecListSame)).toBe(true)
-//     })
+    test("Should return true if all elements are same type and same value", () => {
+        expect(arraysEqual(vardecList, vardecListSame)).toBe(true)
+    })
 
-//     describe("Should return false if values are different", () => {
-//         test("Vardec with different variable", () => {
-//             expect(arraysEqual(vardecList, vardecListDifferent1)).toBe(false)
-//         })
+    describe("Should return false if values are different", () => {
+        test("Vardec with different variable", () => {
+            expect(arraysEqual(vardecList, vardecListDifferent1)).toBe(false)
+        })
 
-//         test("Vardec with different type", () => {
-//             expect(arraysEqual(vardecList, vardecListDifferent2)).toBe(false)
-//         })
-//     })
+        test("Vardec with different type", () => {
+            expect(arraysEqual(vardecList, vardecListDifferent2)).toBe(false)
+        })
+    })
 
-//     test("Should return false if types are different", () => {
-//         expect(arraysEqual(vardecList, vardecListDifferent3)).toBe(false)
-//     })
+    test("Should return false if types are different", () => {
+        expect(arraysEqual(vardecList, vardecListDifferent3)).toBe(false)
+    })
 
-//     test("Should return false if arrays are different sizes", () => {
-//         expect(arraysEqual(vardecList, [])).toBe(false)
-//     })
-// })
+    test("Should return false if arrays are different sizes", () => {
+        expect(arraysEqual(vardecList, [])).toBe(false)
+    })
+})
 
-// describe("Testing arrayMatchType", () => {
+describe("Testing arrayMatchType", () => {
 
-//     test("Should return true if all elements in array are of same type", () => {
-//         expect(arrayMatchType(vardecList, VarDec)).toBe(true)
-//     })
+    test("Should return true if all elements in array are of same type", () => {
+        expect(arrayMatchType(vardecList, VarDec)).toBe(true)
+    })
 
-//     test("Should return false if any one of the elements is of different type", () => {
-//         expect(arrayMatchType(vardecListDifferent3, VarDec)).toBe(false)
-//     })
-// })
+    test("Should return false if any one of the elements is of different type", () => {
+        expect(arrayMatchType(vardecListDifferent3, VarDec)).toBe(false)
+    })
+})
 
-// describe("Testing parseList", () => {
+describe("Testing parseList", () => {
 
-//     test("Should return new position after parsing", () => {
-//         let parser = new Parser()
-//         const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
-//         // console.log(result)
-//         expect().toBe(false)
-//     })
+    test("Should return new position after parsing", () => {
+        let parser = new Parser()
+        const result = parseList("int temp = 1; int temp2 = 2; int temp3 = 3;", parser.parseStmt)
+        // console.log(result)
+        expect().toBe(false)
+    })
 
-//     test("Should return a list of all parseResults", () => {
-//         expect().toBe(false)
-//     })
+    test("Should return a list of all parseResults", () => {
+        expect().toBe(false)
+    })
 
-//     test("Should return empty if nothing is parsed", () => {
-//         expect().toBe(false)
-//     })
+    test("Should return empty if nothing is parsed", () => {
+        expect().toBe(false)
+    })
 
-//     test("Should return empty if wrong parseFunction is passed", () => {
-//         expect().toBe(false)
-//     })
-// })
+    test("Should return empty if wrong parseFunction is passed", () => {
+        expect().toBe(false)
+    })
+})

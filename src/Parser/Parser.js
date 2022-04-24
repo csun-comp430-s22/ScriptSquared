@@ -337,7 +337,8 @@ class Parser {
 
     // exp ::= comparison_exp | this 
     parseExp(position) {
-        if (instance_of(this.getToken(position), ThisToken))
+        const token = this.getToken(position)
+        if (instance_of(token, NewToken))
             return; // TODO: return 'this' object
 
         return this.parseComparisonExp(position);
@@ -563,11 +564,11 @@ class Parser {
         // position at {
         this.assertTokenHereIs(position, new LeftCurlyToken())
 
-        const result = this.parseList(position + 1, this.parseInstanceDec)
+        const result = parseList(position + 1, this.parseInstanceDec)
         const instanceDecList = result.list
         position = result.position
 
-        this.assertTokenHereIs(position, new Constructor())
+        this.assertTokenHereIs(position, Constructor)
         this.assertTokenHereIs(position + 1, new LeftParenToken())
         const vardecs = this.extractCommaSeperatedVardecs(position + 2)
         position = vardecs.position

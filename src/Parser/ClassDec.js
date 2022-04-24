@@ -20,6 +20,7 @@ class ClassDec {
     constructor(classNameType, superClassName, instanceDecList, constructor, methodDecList) {
 
         if ( !(classNameType instanceof ClassNameType) 
+                || superClassName instanceof ClassNameType
                 || !arrayMatchType(instanceDecList, InstanceDec)
                 || !(constructor instanceof Constructor)
                 || !arrayMatchType(methodDecList, MethodDec)) {

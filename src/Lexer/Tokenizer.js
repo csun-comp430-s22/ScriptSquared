@@ -214,7 +214,10 @@ class Tokenizer {
 
         let number = ""
 
-        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) ) ) {
+        let temp = this.input.charAt(this.offset)
+        parseInt(temp)
+
+        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) >= 0) ) {
             number += this.input.charAt(this.offset)
             this.offset++
         }
