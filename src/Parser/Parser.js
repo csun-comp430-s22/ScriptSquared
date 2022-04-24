@@ -124,27 +124,27 @@ class Parser {
         const typeToken = this.getToken(position)
 
         // int
-        if (typeToken.value === "int") {
+        if (instance_of(typeToken, IntegerTypeToken)) {
             return new ParseResult( new IntType(), position + 1 );    
         }
 
         // string
-        else if (typeToken.value === "string") {
+        else if (instance_of(typeToken, StringTypeToken)) {
             return new ParseResult( new StringType(), position + 1 );
         }
 
         // boolean
-        else if (typeToken.value === "boolean") {
+        else if (instance_of(typeToken, BooleanTypeToken)) {
             return new ParseResult( new BooleanType(), position + 1 );
         }
 
         // void
-        else if (typeToken.value === "void") {
+        else if (instance_of(typeToken, VoidTypeToken)) {
             return new ParseResult( new VoidType(), position + 1 );
         }
 
         // classname
-        else if (instance_of(typeToken, ClassNameType)) {
+        else if (instance_of(typeToken, ClassNameTypeToken)) {
             return new ParseResult( new ClassNameType(typeToken.value), position + 1 );
         }
 

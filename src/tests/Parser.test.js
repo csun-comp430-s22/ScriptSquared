@@ -94,9 +94,9 @@ function expectTokenizes (input) {
     return result;
 }
 
-let parser = new Parser( [new IntegerTypeToken])
+let parser = new Parser( [new ClassNameTypeToken("example class")])
 let result = parser.parseType(0)
-result.equals( new ParseResult(new IntType(), 1))
+result.equals( new ParseResult(new ClassNameType("example class"), 1))
 
 
 // Parse Type:= int | string | boolean | void | classname
