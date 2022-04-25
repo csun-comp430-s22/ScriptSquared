@@ -1,4 +1,4 @@
-const { arraysEqual, instance_of } = require("../utils");
+const { arraysEqual, instance_of, arrayMatchType } = require("../utils");
 const { MethodName } = require("./MethodName");
 const { Op } = require("./Operations");
 const { ClassNameType } = require("./Type");
@@ -104,7 +104,7 @@ class ExpMethodExp extends Exp {
     constructor(parentExp, methodName, parameterExpsArray) {
         super()
 
-        if ( !instance_of(parentExp, Exp) || !instance_of(methodName, MethodName) || !arraysEqual(parameterExpsArray, Exp) ) 
+        if ( !instance_of(parentExp, Exp) || !instance_of(methodName, MethodName) || !arrayMatchType(parameterExpsArray, Exp) ) 
             throw new EvalError("Incorrect type passed to ExpMethodExp")
 
         this.parentExp = parentExp

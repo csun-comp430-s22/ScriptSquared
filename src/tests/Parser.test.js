@@ -94,7 +94,6 @@ function expectTokenizes (input) {
     return result;
 }
 
-
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 
@@ -440,6 +439,25 @@ test("Test Print Statement", () => {
 })
 
 // exp.methodname(exp*);
+describe("Test exp.methodname(exp*)", () => {
+    test("exp.methodname()", () => {
+        let parser = new Parser([new IntegerToken(1), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken(), new SemiColonToken()])
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new ExpMethodExpStmt(new IntegerExp(1), new MethodName("myMethod"), []), 6))).toBe(true)
+    })
+
+    test("exp.methodname(exp)", () => {
+        let parser = new Parser([new IntegerToken(1), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new FalseToken(), new RightParenToken(), new SemiColonToken()])
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new ExpMethodExpStmt(new IntegerExp(1), new MethodName("myMethod"), [new BooleanExp('false')]), 7))).toBe(true)
+    })
+
+    test("exp.methodname(exp, exp)", () => {
+        let parser = new Parser([new IntegerToken(1), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new FalseToken(), new CommaToken(), new StringToken('test'), new RightParenToken(), new SemiColonToken()])
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new ExpMethodExpStmt(new IntegerExp(1), new MethodName("myMethod"), [new BooleanExp('false'), new StringExp('test')]), 9))).toBe(true)
+    })
+})
 
 // additive_exp ::= multiplitive_exp (additive_op multiplitive_exp)*
 describe("Testing parseAccessModifier", () => {
