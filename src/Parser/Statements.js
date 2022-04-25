@@ -1,6 +1,6 @@
 const { Exp } = require("./Expressions");
 const { MethodName } = require("./MethodName")
-const { arraysEqual, arrayMatchType } = require("../utils");
+const { arraysEqual, arrayMatchType, instance_of } = require("../utils");
 const { VarDec } = require("./VarDec");
 const { Variable } = require("./Variable");
 
@@ -12,7 +12,7 @@ class IfStmt extends Stmt {
     constructor(guardExp, trueBranch, falseBranch) {
         super()
 
-        if (!(guardExp instanceof Exp) || !(trueBranch instanceof Stmt) || !(falseBranch instanceof Stmt) ) {
+        if (!(guardExp instanceof Exp) || !(trueBranch instanceof Stmt) || !(falseBranch instanceof Stmt || falseBranch === undefined) ) {
             throw new EvalError("Incorrect type passed to IfStmt")
         }
 
@@ -23,9 +23,9 @@ class IfStmt extends Stmt {
 
     equals(otherIfStmt) {
         return(otherIfStmt instanceof IfStmt
-                    && this.guardExp.equals(otherIfStmt.trueBranch) 
+                    && this.guardExp.equals(otherIfStmt.guardExp) 
                     && this.trueBranch.equals(otherIfStmt.trueBranch) 
-                    && this.falseBranch.equal(otherIfStmt.falseBranch));
+                    && (this.falseBranch === undefined || this.falseBranch.equals(otherIfStmt.falseBranch)));
     }
 }
 
@@ -66,7 +66,7 @@ class ReturnExpStmt extends Stmt {
 
     equals(otherReturnExpStmt)
     {
-        return (otherReturnExpStmt instanceof ReturnExpStmt
+        return (instance_of(otherReturnExpStmt, ReturnExpStmt)
             && this.returnExp.equals(otherReturnExpStmt.returnExp));
     }
 }

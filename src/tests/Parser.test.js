@@ -399,6 +399,21 @@ describe("Testing return statements", () => {
 })
 
 // if (exp) stmt else stmt
+describe("Testing If statement", () => {
+    test("Only True Branch", () => {
+        let string = expectTokenizes("if (true) return;")
+        let parser = new Parser(string)
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new IfStmt(new BooleanExp("true"), new ReturnStmt(), undefined), 6))).toBe(true)
+    })
+
+    test("True and False Branch", () => {
+        let string = expectTokenizes("if (true) return; else return 1;")
+        let parser = new Parser(string)
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new IfStmt(new BooleanExp("true"), new ReturnStmt(), new ReturnExpStmt(new IntegerExp(1))), 10))).toBe(true)
+    })
+})
 
 // while (exp) stmt
 

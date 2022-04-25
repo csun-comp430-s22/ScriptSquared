@@ -435,10 +435,18 @@ class Parser {
             const guard = this.parseExp(position + 2)
             this.assertTokenHereIs(guard.position, RightParenToken)
             const trueBranch = this.parseStmt(guard.position + 1)
-            this.assertTokenHereIs(trueBranch.position, ElseToken)
-            const falseBranch = this.parseStmt(trueBranch.position + 1)
 
-            return new ParseResult( new IfStmt(guard.result, trueBranch.result, falseBranch.result), falseBranch.position );
+            let falseBranch
+            try {
+                this.assertTokenHereIs(trueBranch.position, ElseToken)
+                falseBranch = this.parseStmt(trueBranch.position + 1)
+                position = falseBranch.position
+            } catch (e) {
+                falseBranch = undefined
+                position = trueBranch.position
+            }
+
+            return new ParseResult( new IfStmt(guard.result, trueBranch.result, falseBranch?.result), position );
         }
 
         // while (exp) stmt
