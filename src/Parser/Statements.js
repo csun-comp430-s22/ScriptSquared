@@ -92,7 +92,7 @@ class PrintExpStmt extends Stmt {
 
     equals(otherPrintExpStmt) {
         return (otherPrintExpStmt instanceof PrintExpStmt
-            && this.printExp.equal(otherPrintExpStmt.printExp))
+            && this.printExp.equals(otherPrintExpStmt.printExp))
     }
 }
 

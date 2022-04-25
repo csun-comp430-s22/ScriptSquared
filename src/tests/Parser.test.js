@@ -424,7 +424,7 @@ test("Test While Statement", () => {
 })
 
 // break;
-test("Test While Statement", () => {
+test("Test Break Statement", () => {
     let string = expectTokenizes("break;")
     let parser = new Parser(string)
     let result = parser.parseStmt(0)
@@ -432,6 +432,12 @@ test("Test While Statement", () => {
 })
 
 // print(exp);
+test("Test Print Statement", () => {
+    let string = expectTokenizes("print(1 + 1);")
+    let parser = new Parser(string)
+    let result = parser.parseStmt(0)
+    expect(result.equals(new ParseResult(new PrintExpStmt(new OpExp(new IntegerExp(1), new PlusOp(), new IntegerExp(1))), 7))).toBe(true)
+})
 
 // exp.methodname(exp*);
 
