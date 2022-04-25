@@ -304,6 +304,83 @@ describe("Testing parseAddSubExp", () => {
     })
 })
 
+// comparison_exp ::= additive_exp | additive_exp (‘>’ | ‘<’ | ‘>=’ | ‘<=’ | ‘==’ | ‘!=”)  additive_exp
+describe("Testing parseComparisonExp", () => {
+    describe("Single additive_exp", () => {
+        test("Addition/Subtration", () => {
+            let tokens = expectTokenizes('1 + 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new PlusOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+        
+        test("Multiplication/Division", () => {
+            let tokens = expectTokenizes('1 * 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new MultiplyOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Method Call", () => {
+            let parser = new Parser([new IntegerToken(5), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new ExpMethodExp(new IntegerExp(5), new MethodName("myMethod"), []), 5) )).toBe(true)
+        })
+
+        test("Primary Exp", () => {
+            let tokens = expectTokenizes('1')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new IntegerExp(1), 1) )).toBe(true)
+        })
+    })
+
+    describe("additive_exp additive_op additive_exp", () => {
+        test("Greater Than", () => {
+            let tokens = expectTokenizes('2 > 1')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(2), new GreaterThanOp(), new IntegerExp(1)), 3) )).toBe(true)
+        })
+
+        test("Less Than", () => {
+            let tokens = expectTokenizes('1 < 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new LessThanOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Greater Than Equal to", () => {
+            let tokens = expectTokenizes('2 >= 1')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(2), new GreaterThanEqualOp(), new IntegerExp(1)), 3) )).toBe(true)
+        })
+
+        test("Less Than Equal to", () => {
+            let tokens = expectTokenizes('1 <= 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new LessThanEqualOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Equal to", () => {
+            let tokens = expectTokenizes('1 == 1')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new EqualOp(), new IntegerExp(1)), 3) )).toBe(true)
+        })
+
+        test("Not Equal to", () => {
+            let tokens = expectTokenizes('2 != 1')
+            let parser = new Parser(tokens)
+            let result = parser.parseComparisonExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(2), new NotEqualOp(), new IntegerExp(1)), 3) )).toBe(true)
+        })
+    })
+})
+
+// additive_exp ::= multiplitive_exp (additive_op multiplitive_exp)*
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
         let string = expectTokenizes("public")
