@@ -416,6 +416,12 @@ describe("Testing If statement", () => {
 })
 
 // while (exp) stmt
+test("Test While Statement", () => {
+    let string = expectTokenizes("while (true) return;")
+    let parser = new Parser(string)
+    let result = parser.parseStmt(0)
+    expect(result.equals(new ParseResult(new WhileStmt(new BooleanExp('true'), new ReturnStmt()), 6))).toBe(true)
+})
 
 // break;
 
