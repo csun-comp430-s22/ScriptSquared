@@ -635,7 +635,7 @@ class Parser {
         
         const result = parseList(position, this.parseClassDec.bind(this))
         const classDecList = result.list
-        currentPosition = result.position
+        const currentPosition = result.position
 
         this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
         const stmt = this.parseStmt(currentPosition + 1)
@@ -647,8 +647,8 @@ class Parser {
     parseProgram() {
         const program = this.parseProgramObject(0)    //ParseResult
         
-        if(program.position == tokens.size()) {
-            return program.result;
+        if(program.position == this.tokens.length) {
+            return new ParseResult(program.result, program.position);
         } else {
             throw new ParseException("Remaining tokens at the end")
         }

@@ -94,6 +94,7 @@ function expectTokenizes (input) {
     return result;
 }
 
+
 // Parse Type:= int | string | boolean | void | classname
 describe("Testing parseType", () => {
 
@@ -548,6 +549,23 @@ describe("Testing parseClassDec", () => {
     })
 })
 
+// classdec* `thyEntryPoint` stmt
+test("Testing thyEntryPoint", () => {
+    let string = expectTokenizes("class myClass super myClass { public int temp = 0; construc(boolean yeet) { super(); } } thyEntryPoint { int var = 1; }")
+    let parser = new Parser(string)
+    let result = parser.parseProgram(0)
+    expect(result.equals(new ParseResult(
+        new Program([
+            new ClassDec(new ClassNameType("myClass"), 
+                         new ClassNameType("myClass"),
+                         [new InstanceDec(new PublicModifier(), new VarDec(new IntType, (new Variable("temp"))), new IntegerExp(0))],
+                         new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], []),
+                         [])
+        ], new BlockStmt([new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")), new IntegerExp(1))]))
+        ,
+        31
+    ))).toBe(true)
+})
 
 describe("Testing assertTokenHereIs", () => {
     describe("Access Tokens", () => {
