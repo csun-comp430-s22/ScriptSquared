@@ -1,3 +1,4 @@
+const { instance_of } = require("../utils");
 const { AccessModifier } = require("./AccessModifier");
 const { Exp } = require("./Expressions");
 const { VarDec } = require("./Vardec");
@@ -8,7 +9,7 @@ class InstanceDec {
 
     constructor(accessModifier, vardec, expression) {
 
-        if ( !(accessModifier instanceof AccessModifier) || !(vardec instanceof VarDec) || !(expression instanceof Exp)) {
+        if ( !(instance_of(accessModifier, AccessModifier)) || !(instance_of(vardec, VarDec)) || !(instance_of(expression, Exp))) {
             throw new EvalError("Incorrect type passed to InstanceDec")
         }
 

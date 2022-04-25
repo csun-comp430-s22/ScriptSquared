@@ -1,80 +1,81 @@
+const { instance_of } = require("../utils");
 
 class Op {}
 
 class PlusOp extends Op {
 
     equals(other) {
-        return other instanceof PlusOp;
+        return instance_of(other, PlusOp);
     }
 }
 
 class MinusOp extends Op {
 
     equals(other) {
-        return other instanceof MinusOp;
+        return instance_of(other, MinusOp);
     }
 }
 
 class MultiplyOp extends Op {
 
     equals(other) {
-        return other instanceof MultiplyOp;
+        return instance_of(other, MultiplyOp);
     }
 }
 
 class DivideOp extends Op {
 
     equals(other) {
-        return other instanceof DivideOp;
+        return instance_of(other, DivideOp);
     }
 }
 
 class GreaterThanOp extends Op {
 
     equals(other) {
-        return other instanceof GreaterThanOp;
+        return instance_of(other, GreaterThanOp);
     }
 }
 
 class LessThanOp extends Op {
 
     equals(other) {
-        return other instanceof LessThanOp;
+        return instance_of(other, LessThanOp);
     }
 }
 
 class GreaterThanEqualOp extends Op {
 
     equals(other) {
-        return other instanceof GreaterThanEqualOp;
+        return instance_of(other, GreaterThanEqualOp);
     }
 }
 
 class LessThanEqualOp extends Op {
 
     equals(other) {
-        return other instanceof LessThanEqualOp; 
+        return instance_of(other, LessThanEqualOp); 
     }
 }
 
 class EqualOp extends Op {
 
     equals(other) {
-        return other instanceof EqualsOp;
+        return instance_of(other, EqualOp);
     }
 }
 
 class NotEqualOp extends Op {
 
     equals(other) {
-        return other instanceof NotEqualOp;
+        return instance_of(other, NotEqualOp);
     }
 }
 
 class DotOp extends Op {
 
     equals(other) {
-        return other instanceof DotOp;
+        return instance_of(other, DotOp);
     }
 }
 

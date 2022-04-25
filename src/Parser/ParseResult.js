@@ -1,3 +1,4 @@
+const { instance_of } = require("../utils");
 
 class ParseResult {
 
@@ -7,7 +8,7 @@ class ParseResult {
     }
 
     equals(other) {
-        return (other instanceof ParseResult
+        return (instance_of(other, ParseResult)
             && this.result.equals(other.result)
             && this.position === other.position)
     }

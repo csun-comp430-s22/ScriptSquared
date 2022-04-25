@@ -30,16 +30,13 @@ const {
     ThisToken
  } = require("../Lexer/tokens/Statementtokens")
 const { 
-    IntegerToken,
-    TrueToken,
-    FalseToken,
-    StringToken,
     VoidTypeToken,
     IntegerTypeToken,
     StringTypeToken,
     BooleanTypeToken,
     ClassNameTypeToken
  } = require("../Lexer/tokens/Typetokens")
+const { IntegerToken, TrueToken, FalseToken, StringToken } = require("../Lexer/Tokens/ExpressionTypeTokens") 
 const VariableToken = require("../Lexer/tokens/VariableToken");
 const SuperToken = require("./tokens/SuperToken")
 const ClassToken = require("./tokens/ClassToken")
@@ -48,6 +45,7 @@ const { MethodName } = require("../Parser/MethodName");
 const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens");
 const MethodNameToken = require("./Tokens/MethodNameToken");
 const ThyEntryPointToken = require("./Tokens/ThyEntryPointToken");
+const ConstructorToken = require("./Tokens/ConstructorToken")
 
 class Tokenizer {
 
@@ -181,6 +179,9 @@ class Tokenizer {
             else if (name === "thyEntryPoint") {
                 return new ThyEntryPointToken();
             }
+            else if (name === "construc") {
+                return new ConstructorToken();
+            }
             else if (name === "class")
             {
                 return new ClassToken();
@@ -217,7 +218,10 @@ class Tokenizer {
 
         let number = ""
 
-        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) ) ) {
+        let temp = this.input.charAt(this.offset)
+        parseInt(temp)
+
+        while ( (this.offset < this.inputLength) && (parseInt(this.input.charAt(this.offset)) >= 0) ) {
             number += this.input.charAt(this.offset)
             this.offset++
         }

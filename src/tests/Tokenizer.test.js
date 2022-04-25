@@ -1,5 +1,5 @@
 const Tokenizer = require('../Lexer/Tokenizer');
-const { PublicToken, PrivateToken, ProtecToken } = require("../Lexer/Tokens/AccessTokens")
+const { PublicToken, PrivateToken, ProtecToken, AccessToken } = require("../Lexer/Tokens/AccessTokens")
 const { 
     LeftCurlyToken,
     RightCurlyToken, 
@@ -32,15 +32,12 @@ const {
     ThisToken
  } = require("../Lexer/Tokens/StatementTokens")
 const { 
-    IntegerToken,
-    TrueToken,
-    FalseToken,
-    StringToken,
     VoidTypeToken,
     ClassNameTypeToken,
     IntegerTypeToken,
     StringTypeToken,
-    BooleanTypeToken
+    BooleanTypeToken,
+    TypeToken
  } = require("../Lexer/Tokens/TypeTokens")
 const MethodNameToken = require("../Lexer/Tokens/MethodNameToken")
 const VariableToken = require("../Lexer/Tokens/VariableToken");
@@ -48,6 +45,16 @@ const ClassToken = require("../Lexer/Tokens/ClassToken")
 const SuperToken = require("../Lexer/Tokens/SuperToken");
 const { NewToken } = require('../Lexer/Tokens/NewToken');
 const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
+const { IntegerToken, TrueToken, FalseToken, StringToken } = require('../Lexer/Tokens/ExpressionTypeTokens');
+const ConstructorToken = require('../Lexer/Tokens/ConstructorToken');
+
+
+
+
+let i = new IntegerTypeToken()
+let thingy = i instanceof TypeToken
+
+
 
 
 function expectTokenizes (input) {
@@ -377,6 +384,12 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new ThyEntryPointToken()])).toBe(true)
     })
 
+    test("ConstructorToken if 'construc' is passed", () => {
+
+        let result = expectTokenizes("construc")
+        expect(toEqual(result, [new ConstructorToken()])).toBe(true)
+    })
+
 })
 
 
@@ -491,4 +504,51 @@ describe("Testing More Complex Inputs", () => {
             ])).toBe(true)
         })
     })
+})
+
+describe("Testing instanceof", () => {
+    describe("AccessToken Inheritence", () => {
+        test("PublicToken", () => {
+            let i = new PublicToken()
+            expect(i instanceof AccessToken).toBe(true)
+        })
+
+        test("PrivateToken", () => {
+            let i = new PrivateToken()
+            expect(i instanceof AccessToken).toBe(true)
+        })
+
+        test("ProtecToken", () => {
+            let i = new ProtecToken()
+            expect(i instanceof AccessToken).toBe(true)
+        })
+    })
+
+    describe("TypeToken Inheritence", () => {
+        test("VoidTypeToken", () => {
+            let i = new VoidTypeToken()
+            expect(i instanceof TypeToken).toBe(true)
+        })
+
+        test("ClassNameTypeTypeToken", () => {
+            let i = new ClassNameTypeToken()
+            expect(i instanceof TypeToken).toBe(true)
+        })
+
+        test("IntegerTypeToken", () => {
+            let i = new IntegerTypeToken()
+            expect(i instanceof TypeToken).toBe(true)
+        })
+
+        test("StringTypeToken", () => {
+            let i = new StringTypeToken()
+            expect(i instanceof TypeToken).toBe(true)
+        })
+
+        test("BooleanTypeToken", () => {
+            let i = new BooleanTypeToken()
+            expect(i instanceof TypeToken).toBe(true)
+        })
+    })
+
 })

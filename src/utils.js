@@ -15,7 +15,7 @@ function arraysEqual(arrayOne, arrayTwo) {
 
 //Takens an array and a type, and returns True if every item in the array matches that type.
 function arrayMatchType(array, arrayType) {
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i < array?.length; i++) {
         if(!(array[i] instanceof arrayType)){
             return false;
         }
@@ -43,9 +43,41 @@ function parseList(position, parseFunction) {
     return { list, position };
 }
 
+function instance_of(token, type) {
+
+    // let test = token.__proto__.__proto__.constructor.name
+
+    let tokenProto = token.__proto__
+    while(true) {
+        if (tokenProto === null)
+            break;
+        
+        if (tokenProto.constructor.name === type.name)
+            return true;
+
+        tokenProto = tokenProto.__proto__;
+    }
+
+    tokenProto = token.__proto__
+    type = type.__proto__.constructor
+    while(true) {
+        if (tokenProto === null)
+            return false;
+        
+        if (tokenProto.constructor.name === type.name)
+            return true;
+
+        tokenProto = tokenProto.__proto__;
+    }
+    // let temp = token.__proto__.constructor.name 
+    // let temp2 = type.name
+    // return temp === temp2;
+}
+
 
 module.exports = {
     arraysEqual,
     arrayMatchType,
-    parseList
+    parseList,
+    instance_of
 }
