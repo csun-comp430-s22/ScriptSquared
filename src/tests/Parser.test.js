@@ -248,6 +248,62 @@ describe("Testing parseMultDivExp", () => {
     })
 })
 
+describe("Testing parseAddSubExp", () => {
+    describe("Single multiplitive_exp", () => {
+        test("Multiplication/Division", () => {
+            let tokens = expectTokenizes('1 * 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new MultiplyOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Method Call", () => {
+            let parser = new Parser([new IntegerToken(5), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new ExpMethodExp(new IntegerExp(5), new MethodName("myMethod"), []), 5) )).toBe(true)
+        })
+
+        test("Primary Exp", () => {
+            let tokens = expectTokenizes('1')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new IntegerExp(1), 1) )).toBe(true)
+        })
+    })
+
+    describe("multiplitive_exp additive_op multiplitive_exp", () => {
+        test("Addition", () => {
+            let tokens = expectTokenizes('1 + 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new PlusOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Subtraction", () => {
+            let tokens = expectTokenizes('1 - 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new MinusOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+    })
+
+    describe("multiplitive_exp additive_op multiplitive_exp additive_op multiplitive_exp", () => {
+        test("Addition", () => {
+            let tokens = expectTokenizes('1 + 2 + 3')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new OpExp( new OpExp(new IntegerExp(1), new PlusOp(), new IntegerExp(2)), new PlusOp(), new  IntegerExp(3) ), 5) )).toBe(true)
+        })
+
+        test("Subtraction", () => {
+            let tokens = expectTokenizes('1 - 2 - 3')
+            let parser = new Parser(tokens)
+            let result = parser.parseAddSubExp(0)
+            expect(result.equals( new ParseResult(new OpExp( new OpExp(new IntegerExp(1), new MinusOp(), new IntegerExp(2)), new MinusOp(), new  IntegerExp(3) ), 5) )).toBe(true)
+        })
+    })
+})
+
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
         let string = expectTokenizes("public")
