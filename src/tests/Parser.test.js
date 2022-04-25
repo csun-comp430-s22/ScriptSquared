@@ -424,6 +424,12 @@ test("Test While Statement", () => {
 })
 
 // break;
+test("Test While Statement", () => {
+    let string = expectTokenizes("break;")
+    let parser = new Parser(string)
+    let result = parser.parseStmt(0)
+    expect(result.equals(new ParseResult(new BreakStmt(), 2))).toBe(true)
+})
 
 // print(exp);
 
