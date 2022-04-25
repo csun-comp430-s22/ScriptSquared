@@ -248,6 +248,7 @@ describe("Testing parseMultDivExp", () => {
     })
 })
 
+// access ::= public | private | protec
 describe("Testing parseAddSubExp", () => {
     describe("Single multiplitive_exp", () => {
         test("Multiplication/Division", () => {
@@ -380,6 +381,33 @@ describe("Testing parseComparisonExp", () => {
     })
 })
 
+// return exp; | return;
+describe("Testing return statements", () => {
+    test("return exp;", () => {
+        let string = expectTokenizes("return 12;")
+        let parser = new Parser(string)
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new ReturnExpStmt(new IntegerExp(12)), 3))).toBe(true)
+    })
+
+    test("return;", () => {
+        let string = expectTokenizes("return;")
+        let parser = new Parser(string)
+        let result = parser.parseStmt(0)
+        expect(result.equals(new ParseResult(new ReturnStmt(), 2))).toBe(true)
+    })
+})
+
+// if (exp) stmt else stmt
+
+// while (exp) stmt
+
+// break;
+
+// print(exp);
+
+// exp.methodname(exp*);
+
 // additive_exp ::= multiplitive_exp (additive_op multiplitive_exp)*
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
@@ -425,7 +453,6 @@ test("Testing parseInstanceDec", () => {
         6
     ))).toBe(true)
 })
-
 
 // classdec ::= class classname super classname {
 //                  instancedec*
