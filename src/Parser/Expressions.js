@@ -1,5 +1,6 @@
 const { arraysEqual, instance_of } = require("../utils");
 const { MethodName } = require("./MethodName");
+const { Op } = require("./Operations");
 const { ClassNameType } = require("./Type");
 const { Variable } = require("./Variable");
 
@@ -83,7 +84,7 @@ class OpExp extends Exp {
     constructor(leftExp, op, rightExp) {
         super()
 
-        if ( !(instance_of(leftExp, Exp) && instance_of(op, Op) && instance_of(rightExp, Exp)) )
+        if ( !instance_of(leftExp, Exp) || !instance_of(op, Op) || !instance_of(rightExp, Exp) )
             throw new EvalError("Incorrect type passed to OpExp")
 
         this.leftExp = leftExp
@@ -93,7 +94,7 @@ class OpExp extends Exp {
     
     equals(other) {
 
-        return ( (instance_of(other, OpExp)) && (leftExp.equals(other.leftExp)) && (op.equals(other.op)) && (rightExp.equals(other.rightExp)) );
+        return ( (instance_of(other, OpExp)) && (this.leftExp.equals(other.leftExp)) && (this.op.equals(other.op)) && (this.rightExp.equals(other.rightExp)) );
     }
 }
 

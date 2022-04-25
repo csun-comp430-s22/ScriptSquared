@@ -51,7 +51,7 @@ const {
 const VariableToken = require("../Lexer/Tokens/VariableToken");
 const ParseResult = require("../Parser/ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
-const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("../Parser/Operations");
+const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp, Op } = require("../Parser/Operations");
 const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('../Parser/Expressions');
 const { Variable } = require('../Parser/Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
@@ -93,9 +93,6 @@ function expectTokenizes (input) {
     const result = tokenizer.tokenize()
     return result;
 }
-
-let parser = new Parser([new NewToken(), new ClassNameTypeToken("myClass"), new LeftParenToken(), new IntegerToken(5), new CommaToken(), new IntegerToken(6), new CommaToken(), new TrueToken(), new RightParenToken()])
-let result = parser.parsePrimaryExp(0)
 
 
 // Parse Type:= int | string | boolean | void | classname
@@ -201,6 +198,56 @@ describe("Testing paresMethodExp", () => {
     })
 })
 
+// multiplitive_exp ::= method_exp (multiplitive_op method_exp )*
+describe("Testing parseMultDivExp", () => {
+    describe("Single method_exp", () => {
+        test("Method Call", () => {
+            let parser = new Parser([new IntegerToken(5), new DotToken(), new MethodNameToken("myMethod"), new LeftParenToken(), new RightParenToken()])
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new ExpMethodExp(new IntegerExp(5), new MethodName("myMethod"), []), 5) )).toBe(true)
+        })
+
+        test("Primary Exp", () => {
+            let tokens = expectTokenizes('1')
+            let parser = new Parser(tokens)
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new IntegerExp(1), 1) )).toBe(true)
+        })
+    })
+
+    describe("method_exp multiplitive_op method_exp", () => {
+        test("Multiplication", () => {
+            let tokens = expectTokenizes('1 * 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(1), new MultiplyOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+
+        test("Division", () => {
+            let tokens = expectTokenizes('6 / 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new OpExp(new IntegerExp(6), new DivideOp(), new IntegerExp(2)), 3) )).toBe(true)
+        })
+    })
+
+    describe("method_exp multiplitive_op method_exp multiplitive_op method_exp", () => {
+        test("Multiplication", () => {
+            let tokens = expectTokenizes('1 * 2 * 3')
+            let parser = new Parser(tokens)
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new OpExp( new OpExp(new IntegerExp(1), new MultiplyOp(), new IntegerExp(2)), new MultiplyOp(), new  IntegerExp(3) ), 5) )).toBe(true)
+        })
+
+        test("Division", () => {
+            let tokens = expectTokenizes('8 / 2 / 2')
+            let parser = new Parser(tokens)
+            let result = parser.parseMultDivExp(0)
+            expect(result.equals( new ParseResult(new OpExp( new OpExp(new IntegerExp(8), new DivideOp(), new IntegerExp(2)), new DivideOp(), new  IntegerExp(2) ), 5) )).toBe(true)
+        })
+    })
+})
+
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
         let string = expectTokenizes("public")
@@ -223,7 +270,6 @@ describe("Testing parseAccessModifier", () => {
         expect(result.equals(new ParseResult(new ProtecModifier(), 1))).toBe(true)
     })
 })
-
 
 // methoddec ::= access type methodname(vardec*) stmt 
 test("Testing parseMethodDec", () => {

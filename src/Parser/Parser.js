@@ -257,7 +257,7 @@ class Parser {
             try {
                     const multDivOp = this.parseMultDivOp(current.position)
                     const anotherPrimary = this.parseMethodExp(multDivOp.position)
-                    current = new ParseResult(new OpExp(current.result, multDivOp.result, anotherPrimary.result))
+                    current = new ParseResult(new OpExp(current.result, multDivOp.result, anotherPrimary.result), anotherPrimary.position)
             } catch (e) {
                 shouldRun = false
             }
