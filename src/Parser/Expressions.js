@@ -68,13 +68,12 @@ class VariableExp extends Exp {
 
 class ThisExp extends Exp {
     
-    constructor(value) {
+    constructor() {
         super()
-        this.value = value
     }
 
     equals(other) {
-        return((instance_of(other, ThisExp)) && (this.value === other.value))
+        return (instance_of(other, ThisExp))
     }
 }
 

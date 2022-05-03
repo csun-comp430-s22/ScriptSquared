@@ -35,7 +35,7 @@ const VariableToken = require("../Lexer/Tokens/VariableToken");
 const ParseResult = require("./ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp } = require("./Operations");
-const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('./Expressions');
+const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp, ThisExp } = require('./Expressions');
 const { Variable } = require('./Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
 const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt } = require('./Statements');
@@ -154,7 +154,7 @@ class Parser {
         }
     }
 
-    // primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
+    // primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*) | this
     parsePrimaryExp(position)
     {
         const token = this.getToken(position)
@@ -162,29 +162,29 @@ class Parser {
         
         if (instance_of(token, VariableToken))
         {
-            return new ParseResult(new VariableExp(new Variable(token.value)), position + 1)
+            return new ParseResult(new VariableExp(new Variable(token.value)), position + 1);
         }
         else if (instance_of(token, StringToken))
         {
-            return new ParseResult(new StringExp(token.value), position + 1)
+            return new ParseResult(new StringExp(token.value), position + 1);
         }
         else if (instance_of(token, IntegerToken))
         {
-            return new ParseResult(new IntegerExp(token.value), position + 1)
+            return new ParseResult(new IntegerExp(token.value), position + 1);
         }
         else if (instance_of(token, TrueToken))
         {
-            return new ParseResult(new BooleanExp(token.value), position + 1)
+            return new ParseResult(new BooleanExp(token.value), position + 1);
         }
         else if (instance_of(token, FalseToken))
         {
-            return new ParseResult(new BooleanExp(token.value), position + 1)
+            return new ParseResult(new BooleanExp(token.value), position + 1);
         }
         else if (instance_of(token, LeftParenToken))
         {
             let inParens = this.parseExp(position + 1)
             this.assertTokenHereIs(inParens.position, RightParenToken)
-            return new ParseResult(inParens.result, inParens.position + 1)
+            return new ParseResult(inParens.result, inParens.position + 1);
         }
         else if (instance_of(token, NewToken))
         {
@@ -201,7 +201,9 @@ class Parser {
 
             return new ParseResult(new NewClassExp(new ClassNameType(classNameTypeToken.value), expList), position + 1);
         }
-        
+        else if (instance_of(token, ThisToken)) {
+            return new ParseResult(new ThisExp(), position + 1);
+        }
         else {
             throw new EvalError("Expected primary expression; recieved " + token.value)
         }
@@ -339,9 +341,6 @@ class Parser {
     // exp ::= comparison_exp | this 
     parseExp(position) {
         const token = this.getToken(position)
-        if (instance_of(token, NewToken))
-            return; // TODO: return 'this' object
-
         return this.parseComparisonExp(position);
     }
 
