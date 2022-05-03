@@ -52,7 +52,7 @@ const VariableToken = require("../Lexer/Tokens/VariableToken");
 const ParseResult = require("../Parser/ParseResult") 
 const { NewToken } = require("../Lexer/Tokens/NewToken")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, GreaterThanEqualOp, LessThanOp, LessThanEqualOp, EqualOp, NotEqualOp, DotOp, Op } = require("../Parser/Operations");
-const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp } = require('../Parser/Expressions');
+const { VariableExp, StringExp, IntegerExp, BooleanExp, NewClassExp, OpExp, ExpMethodExp, ThisExp } = require('../Parser/Expressions');
 const { Variable } = require('../Parser/Variable');
 const MethodNameToken = require('../Lexer/Tokens/MethodNameToken');
 const { ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt, ReturnStmt, ReturnExpStmt, IfStmt, BlockStmt, WhileStmt, BreakStmt, PrintExpStmt, Stmt } = require('../Parser/Statements');
@@ -70,23 +70,6 @@ const { Constructor } = require('../Parser/Constructor');
 const { MethodName } = require('../Parser/MethodName')
 const { IntegerToken, TrueToken, FalseToken, StringToken } = require('../Lexer/Tokens/ExpressionTypeTokens')
 
-function assertParses(inputTokenList, expected) {
-
-    parser = new Parser(inputTokenList)
-    assertEqual(expected, parser.parseExp(0))
-}
-
-function assertParsesStmt(inputTokenList, expected) {
-
-    parser = new Parser(inputTokenList)
-    assertEqual(expected, parser.parseStmt(0))
-}
-
-function assertParseProgram(inputTokenList, expected) {
-
-    parser = new Parser(inputTokenList)
-    assertEqual(expected, parser.parseProgram())
-}
 
 function expectTokenizes (input) {
     const tokenizer = new Tokenizer(input)
@@ -125,7 +108,7 @@ describe("Testing parseType", () => {
     } )
 })
 
-// primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*)
+// primary_exp ::= i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*) | this
 describe("Testing parsePrimaryExp", () => {
 
     test("If input is of token Variable", () => {
@@ -173,6 +156,13 @@ describe("Testing parsePrimaryExp", () => {
         let parser = new Parser([new NewToken(), new ClassNameTypeToken("myClass"), new LeftParenToken(), new IntegerToken(5), new CommaToken(), new IntegerToken(6), new CommaToken(), new TrueToken(), new RightParenToken()])
         let result = parser.parsePrimaryExp(0)
         expect( result.equals( new ParseResult( new NewClassExp(new ClassNameType("myClass"), [new IntegerExp(5), new IntegerExp(6), new BooleanExp('true')]), 9))).toBe(true)
+    })
+
+    test("If input is of toke ThisToke", () => {
+        let string = expectTokenizes("this")
+        let parser = new Parser(string)
+        let result = parser.parsePrimaryExp(0)
+        expect(result.equals(new ParseResult(new ThisExp(), 1))).toBe(true)
     })
 })
 
