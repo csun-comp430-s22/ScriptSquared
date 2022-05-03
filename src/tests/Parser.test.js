@@ -529,7 +529,7 @@ describe("Testing parseClassDec", () => {
         let result = parser.parseClassDec(0)
         expect(result.equals(new ParseResult(
             new ClassDec(new ClassNameType("myClass"), 
-                         new ClassNameType(undefined),
+                         new ClassNameType("Object"),
                          [new InstanceDec(new PublicModifier(), new VarDec(new IntType, (new Variable("temp"))), new IntegerExp(0))],
                          new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], [new VarEqualsExpStmt(new Variable("temp"), new IntegerExp(6))]),
                          [])
