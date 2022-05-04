@@ -192,7 +192,7 @@ class TypeChecker {
 
     typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
-        const parameterExpsTypeArray = ExpMethodExp.parameterExpsTypeArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
+        const parameterExpsTypeArray = ExpMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
 
         if (!instance_of(parentExpType, ClassNameType))
             throw new TypeError("Called method on non-class type: " + parentExpType);
@@ -205,7 +205,7 @@ class TypeChecker {
             throw new TypeError("Inncorrect number of parameters for call " + methodName);
 
         // Will throw error if something fails
-        this.compareTypesInArray(parameterExpsTypeArray)
+        this.compareTypesInArray(parameterExpsTypeArray, methodTypeArray)
         return this.methodReturnType[methodName];
     }
 

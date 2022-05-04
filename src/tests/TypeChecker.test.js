@@ -47,8 +47,14 @@ let string = `
 
     thyEntryPoint {
         return;
+
+        int var = 1;
+        childchild myClass = new childchild();
+        
+        [BooleanType, IntType]
+        myClass.superChildMethod(var)
     }
 `
 let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
-console.log(typeChecker.methodReturnType)
+console.log(typeChecker.classMethodMap)
