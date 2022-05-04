@@ -122,8 +122,18 @@ class Parser {
 
     // int | string | boolean | void | classname
     parseType(position) {
-        this.assertTokenHereIs(position, TypeToken)
-        const typeToken = this.getToken(position)
+        let typeToken;
+        try {
+            this.assertTokenHereIs(position, TypeToken)
+            typeToken = this.getToken(position)
+        } 
+
+        // if token is a VariableToken, then it might be a class; Typechecker will handle if it actually is or not
+        catch (e) {
+            this.assertTokenHereIs(position, VariableToken)
+            const variableToken = this.getToken(position)
+            typeToken = new ClassNameTypeToken(variableToken.value)
+        }
 
         // int
         if (instance_of(typeToken, IntegerTypeToken)) {
@@ -629,6 +639,7 @@ class Parser {
         const methodDecList = methodDecs.list
         position = methodDecs.position
 
+        let temp = this.getToken(position)
         this.assertTokenHereIs(position, RightCurlyToken)
         
         return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 

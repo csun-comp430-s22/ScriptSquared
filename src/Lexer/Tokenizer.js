@@ -55,7 +55,7 @@ class Tokenizer {
         this.offset = 0
         this.inputLength = input.length
         this.tokens = []
-        this.classNameTypeList = []
+        // this.classNameTypeList = []
         // this.methodNameTypeList = []
     }
 
@@ -190,7 +190,7 @@ class Tokenizer {
 
             // class myClass ...
             else if (this.tokens[this.tokens.length - 1] instanceof ClassToken) {
-                this.classNameTypeList.push(name)
+                // this.classNameTypeList.push(name)
                 return new ClassNameTypeToken(name);
             }  
 

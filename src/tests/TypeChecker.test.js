@@ -12,34 +12,34 @@ function createAST(string) {
 }
 
 let string = `
-    class base {
-        construc() {}
 
-        public int baseMethod(int test, boolean test2, string test3) {
-            return 1;
-        }
+class base {
+    construc() {}
+    
+    public int baseMethod(test: int, test2: boolean, test3: string) {
+        return 1;
+    }
+}
+
+class child super base {
+    construc() {
+        super();
     }
 
-    class child super base {
-        construc() {
-            super();
-        }
-
-        public int childMethod(int test) {
-            return 2;
-        }
-
-        public child objectType() {
-            return 4;
-        }
+    public int childMethod(test: int) {
+        return 2;
     }
 
+    private child objectType() {
+        return 4;
+    }
+}
     class childchild super child {
         construc() {
             super();
         }
 
-        public boolean superChildMethod(boolean test) {
+        public boolean superChildMethod(test: boolean) {
             return 3;
         }
 
@@ -55,8 +55,8 @@ let string = `
         return;
     }
 `
-// let ast = createAST(string)
-// let typeChecker = new TypeChecker(ast.result)
+let ast = createAST(string)
+let typeChecker = new TypeChecker(ast.result)
 
-// // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
-// console.log(typeChecker.typeTree)
+// TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
+console.log(typeChecker.typeTree)
