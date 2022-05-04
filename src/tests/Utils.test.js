@@ -94,7 +94,7 @@ describe("Testing arrayMatchType", () => {
 
 describe("Testing parseList", () => {
 
-    const string = "int temp = 1; int temp2 = 2; int temp3 = 3;"
+    const string = "temp: int = 1; temp2: int = 2; temp3: int = 3;"
     const expected = [new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp")), new IntegerExp(1)),
                       new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp2")), new IntegerExp(2)),
                       new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp3")), new IntegerExp(3))]
@@ -103,7 +103,7 @@ describe("Testing parseList", () => {
         let tokens = expectTokenizes(string)
         let parser = new Parser(tokens)
         const {list, position} = parseList(0, parser.parseStmt.bind(parser))
-        expect(position).toBe(15)
+        expect(position).toBe(16)
     })
 
     test("Should return a list of all parseResults", () => {

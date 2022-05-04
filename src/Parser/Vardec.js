@@ -1,7 +1,7 @@
 const { Type } = require("./Type")
 const { Variable } = require("./Variable")
 
-// vardec ::= type var = exp;
+// vardec ::= var: type;
 class VarDec {
 
     constructor(type, variable) {

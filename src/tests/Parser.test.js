@@ -450,6 +450,17 @@ describe("Test exp.methodname(exp*)", () => {
     })
 })
 
+// vardec ::= var: type
+describe("Testing parseVarDec", () => {
+    test("If variable is int type", () => {
+        let string = expectTokenizes("var: int")
+        let parser = new Parser(string)
+        let result = parser.parseVarDec(0)
+        expect(result.equals(new ParseResult(new VarDec(new IntType(), new Variable("var")), 3))).toBe(true)
+    })
+})
+
+
 // additive_exp ::= multiplitive_exp (additive_op multiplitive_exp)*
 describe("Testing parseAccessModifier", () => {
     test("If input is of token PublicToken", () => {
@@ -476,7 +487,7 @@ describe("Testing parseAccessModifier", () => {
 
 // methoddec ::= access type methodname(vardec*) stmt 
 test("Testing parseMethodDec", () => {
-    let string = expectTokenizes("public int methodName() int temp = 1;")
+    let string = expectTokenizes("public int methodName() temp: int = 1;")
     let parser = new Parser(string)
     let result = parser.parseMethodDec(0)
     expect(result.equals(new ParseResult(
@@ -487,12 +498,12 @@ test("Testing parseMethodDec", () => {
 
 // instancedec ::= access vardec = exp;
 test("Testing parseInstanceDec", () => {
-    let string = expectTokenizes("public string temp = 1;")
+    let string = expectTokenizes("public temp: string = 1;")
     let parser = new Parser(string)
     let result = parser.parseInstanceDec(0)
     expect(result.equals(new ParseResult(
         new InstanceDec(new PublicModifier(), new VarDec(new StringType(), new Variable("temp")), new IntegerExp(1)),
-        6
+        7
     ))).toBe(true)
 })
 
@@ -509,7 +520,7 @@ test("Testing parseInstanceDec", () => {
 //              }
 describe("Testing parseClassDec", () => {
     test("With Super class", () => {
-        let string = expectTokenizes("class myClass super myClass { public int temp = 0; construc(boolean yeet) { super(); } }")
+        let string = expectTokenizes("class myClass super myClass { public temp: int = 0; construc(yeet: boolean) { super(); } }")
         let parser = new Parser(string)
         let result = parser.parseClassDec(0)
         expect(result.equals(new ParseResult(
@@ -524,7 +535,7 @@ describe("Testing parseClassDec", () => {
     })
 
     test("Without Super class", () => {
-        let string = expectTokenizes("class myClass { public int temp = 0; construc(boolean yeet) { temp = 6; } }")
+        let string = expectTokenizes("class myClass { public temp: int = 0; construc(yeet: boolean) { temp: int = 6; } }")
         let parser = new Parser(string)
         let result = parser.parseClassDec(0)
         expect(result.equals(new ParseResult(
@@ -541,7 +552,7 @@ describe("Testing parseClassDec", () => {
 
 // classdec* `thyEntryPoint` stmt
 test("Testing thyEntryPoint", () => {
-    let string = expectTokenizes("class myClass super myClass { public int temp = 0; construc(boolean yeet) { super(); } } thyEntryPoint { int var = 1; }")
+    let string = expectTokenizes("class myClass super myClass { public temp: int = 0; construc(yeet: boolean) { super(); } } thyEntryPoint { var: int = 1; }")
     let parser = new Parser(string)
     let result = parser.parseProgram(0)
     expect(result.equals(new ParseResult(
