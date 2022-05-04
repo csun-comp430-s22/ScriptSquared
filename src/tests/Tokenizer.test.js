@@ -297,14 +297,14 @@ describe("A single token should equal", () => {
 
     test("ClassNameTypeToken if a 'new [class name]' is passed", () => {
 
-        let result = expectTokenizes('class myClass; new myClass')
-        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("myClass"), new SemiColonToken(), new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
+        let result = expectTokenizes('new myClass')
+        expect(toEqual(result, [new NewToken(), new ClassNameTypeToken("myClass")])).toBe(true)
     })
 
-    test("Error Error if two classNameTokens with different names", () => {
+    test("ClassNameTypeToken if 'var: myClass' is passed", () => {
 
-        let result = expectTokenizes('class myClass')
-        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("test")])).toBe(false)
+        let result = expectTokenizes('variable: myClass;')
+        expect(toEqual(result, [new VariableToken("variable"), new ColonToken(), new ClassNameTypeToken("myClass"), new SemiColonToken()])).toBe(true)
     })
 
     test("MethodNameToken if a 'methodName()' is passed", () => {
@@ -433,6 +433,12 @@ describe("Testing Invalid Inputs", () => {
         }
         expect(result).toThrow(EvalError)
     })
+
+    test("Error if two classNameTokens with different names", () => {
+
+        let result = expectTokenizes('class myClass')
+        expect(toEqual(result, [new ClassToken(), new ClassNameTypeToken("test")])).toBe(false)
+    })
 })
 
 describe("Testing More Complex Inputs", () => {
@@ -510,6 +516,21 @@ describe("Testing More Complex Inputs", () => {
                 new RightCurlyToken(),
             ])).toBe(true)
         })
+    })
+
+    test("'var: myClass = new myClass; class myClass' should run", () => {
+        let result = expectTokenizes('var: myClass = new myClass; class myClass')
+        expect(toEqual(result, [
+            new VariableToken("var"),
+            new ColonToken(),
+            new ClassNameTypeToken("myClass"),
+            new AssignmentToken(),
+            new NewToken(),
+            new ClassNameTypeToken("myClass"),
+            new SemiColonToken(),
+            new ClassToken(),
+            new ClassNameTypeToken("myClass")
+        ])).toBe(true)
     })
 })
 
