@@ -642,14 +642,27 @@ class Parser {
     // classdec* `thyEntryPoint` stmt
     parseProgramObject(position) {
         
-        const result = parseList(position, this.parseClassDec.bind(this))
-        const classDecList = result.list
-        const currentPosition = result.position
+        // classdecs are first
+        try {
+            const result = parseList(position, this.parseClassDec.bind(this))
+            const classDecList = result.list
+            const currentPosition = result.position
+    
+            this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
+            const stmt = this.parseStmt(currentPosition + 1)
+    
+            return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+        } catch(e) {
 
-        this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
-        const stmt = this.parseStmt(currentPosition + 1)
+            this.assertTokenHereIs(position, ThyEntryPointToken)
+            const stmt = this.parseStmt(position + 1)
 
-        return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+            const result = parseList(stmt.position, this.parseClassDec.bind(this))
+            const classDecList = result.list
+            const currentPosition = result.position
+
+            return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+        }
     }
 
     // Intended to be called on the top-level

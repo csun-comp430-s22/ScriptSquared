@@ -492,7 +492,7 @@ test("Testing parseMethodDec", () => {
     let result = parser.parseMethodDec(0)
     expect(result.equals(new ParseResult(
         new MethodDec(new PublicModifier(), new IntType(), new MethodName("methodName"), [], new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("temp")), new IntegerExp(1))),
-        10
+        11
     ))).toBe(true)
 })
 
@@ -530,12 +530,12 @@ describe("Testing parseClassDec", () => {
                          new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], []),
                          [])
             ,
-            23
+            25
         ))).toBe(true)
     })
 
     test("Without Super class", () => {
-        let string = expectTokenizes("class myClass { public temp: int = 0; construc(yeet: boolean) { temp: int = 6; } }")
+        let string = expectTokenizes("class myClass { public temp: int = 0; construc(yeet: boolean) { temp = 6; } }")
         let parser = new Parser(string)
         let result = parser.parseClassDec(0)
         expect(result.equals(new ParseResult(
@@ -545,7 +545,7 @@ describe("Testing parseClassDec", () => {
                          new Constructor([new VarDec(new BooleanType(), new Variable("yeet"))], [], [new VarEqualsExpStmt(new Variable("temp"), new IntegerExp(6))]),
                          [])
             ,
-            21
+            23
         ))).toBe(true)
     })
 })
@@ -564,7 +564,7 @@ test("Testing thyEntryPoint", () => {
                          [])
         ], new BlockStmt([new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")), new IntegerExp(1))]))
         ,
-        31
+        34
     ))).toBe(true)
 })
 

@@ -307,6 +307,12 @@ describe("A single token should equal", () => {
         expect(toEqual(result, [new VariableToken("variable"), new ColonToken(), new ClassNameTypeToken("myClass"), new SemiColonToken()])).toBe(true)
     })
 
+    test("ClassNameTypeToken if 'super myClass' is passed", () => {
+
+        let result = expectTokenizes('super myClass')
+        expect(toEqual(result, [new SuperToken(), new ClassNameTypeToken("myClass")])).toBe(true)
+    })
+
     test("MethodNameToken if a 'methodName()' is passed", () => {
 
         let result = expectTokenizes('public myMethod()')

@@ -5,7 +5,8 @@ const {
     RightParenToken,
     DotToken,
     SemiColonToken,
-    CommaToken
+    CommaToken,
+    ColonToken
 } = require("./tokens/SymbolToken")
 const { 
     PlusToken,
@@ -186,13 +187,28 @@ class Tokenizer {
             {
                 return new ClassToken();
             }
+
+            // class myClass ...
             else if (this.tokens[this.tokens.length - 1] instanceof ClassToken) {
                 this.classNameTypeList.push(name)
                 return new ClassNameTypeToken(name);
-            }   
-            else if (this.classNameTypeList.includes(name)) {
+            }  
+
+            // new myClass ...
+            else if (this.tokens[this.tokens.length - 1] instanceof NewToken) {
                 return new ClassNameTypeToken(name);
-            }         
+            }  
+            
+            // var: myClass = ...
+            else if (this.tokens[this.tokens.length - 1] instanceof ColonToken) {
+                return new ClassNameTypeToken(name);
+            } 
+
+            // ... super myClass ...
+            else if (this.tokens[this.tokens.length - 1] instanceof SuperToken) {
+                return new ClassNameTypeToken(name);
+            } 
+
             else if (this.input.charAt(this.offset) === "(") {
                 return new MethodNameToken(name);
             }
@@ -280,6 +296,10 @@ class Tokenizer {
             this.offset++
             retval = new SemiColonToken()
 
+        } else if (this.input.startsWith(":", this.offset)) {
+            this.offset++
+            retval = new ColonToken()
+
         } else if (this.input.startsWith("+", this.offset)) {
             this.offset++
             retval = new PlusToken()
@@ -335,16 +355,5 @@ class Tokenizer {
         return retval;
     }
 }
-
-//TODO: remove
-// function expectTokenizes (input) {
-
-//     const tokenizer = new Tokenizer(input)
-//     const result = tokenizer.tokenize()
-//     return result;
-// }
-
-// expectTokenizes("class myClass; new myClass")
-
 
 module.exports = Tokenizer;

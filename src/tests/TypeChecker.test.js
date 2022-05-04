@@ -45,16 +45,18 @@ let string = `
 
     }
 
+    class test super nothing {
+        construc() {
+            super();
+        }
+    }
+
     thyEntryPoint {
         return;
-
-        int var = 1;
-        childchild myClass = new childchild();
-        
-        [BooleanType, IntType]
-        myClass.superChildMethod(var)
     }
 `
-let ast = createAST(string)
-let typeChecker = new TypeChecker(ast.result)
-console.log(typeChecker.classMethodMap)
+// let ast = createAST(string)
+// let typeChecker = new TypeChecker(ast.result)
+
+// // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
+// console.log(typeChecker.typeTree)

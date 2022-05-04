@@ -103,7 +103,7 @@ describe("Testing parseList", () => {
         let tokens = expectTokenizes(string)
         let parser = new Parser(tokens)
         const {list, position} = parseList(0, parser.parseStmt.bind(parser))
-        expect(position).toBe(16)
+        expect(position).toBe(18)
     })
 
     test("Should return a list of all parseResults", () => {
