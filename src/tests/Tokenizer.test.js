@@ -7,7 +7,8 @@ const {
     RightParenToken,
     SemiColonToken,
     DotToken,
-    CommaToken
+    CommaToken,
+    ColonToken
 } = require("../Lexer/Tokens/SymbolToken")
 const { 
     PlusToken,
@@ -250,6 +251,12 @@ describe("A single token should equal", () => {
         
         let result = expectTokenizes(";")
         expect(toEqual(result, [new SemiColonToken()])).toBe(true)
+    })
+
+    test("ColonToken if ':' is passed", () => {
+        
+        let result = expectTokenizes(":")
+        expect(toEqual(result, [new ColonToken()])).toBe(true)
     })
 
     test("DotToken if '.' is passed", () => {
