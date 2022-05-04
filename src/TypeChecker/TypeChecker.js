@@ -45,6 +45,10 @@ class TypeChecker {
 
     extractMethodsFromClass(className, classList) {
         const classDec = classList.find(classDec => classDec.classNameType.value === className)
+        if (classDec === undefined) {
+            throw new TypeError("Class '" + className + "' is not defined")
+        }
+
         let classMethods = [...classDec.methodDecList]
         
         if (classDec.superClassName.value !== "Object") {
