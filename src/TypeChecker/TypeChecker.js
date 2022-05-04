@@ -1,8 +1,8 @@
-import { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } from "../Parser/Expressions";
-import { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } from "../Parser/Operations";
-import { BooleanType, ClassNameType, IntType, StringType, Type } from "../Parser/Type";
-import { instance_of } from "../utils";
-import { TypeError } from require("./TypeError")
+const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
+const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
+const { BooleanType, ClassNameType, IntType, StringType, Type } = require("../Parser/Type");
+const { instance_of } = require("../utils");
+const { TypeError } = require("./TypeError")
 
 class TypeChecker {
 
@@ -26,17 +26,16 @@ class TypeChecker {
         this.classMethodMap = {}
 
         classList.forEach(classDec => {
-            const className = classDec.ClassNameType.value
+            const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
             this.classMethodMap[className] = this.convertMethodArrayToObj(methodsArray)
-
         })
 
         // TODO: check that class hierarchy is a tree (no cycles)
     }
 
     extractMethodsFromClass(className, classList) {
-        const classDec = classList.find(classDec => classDec.ClassNameType.value === className)
+        const classDec = classList.find(classDec => classDec.classNameType.value === className)
         let classMethods = [...classDec.methodDecList]
         
         if (classDec.superClassName.value !== "Object") {
@@ -207,3 +206,5 @@ class TypeChecker {
 
     }
 }
+
+module.exports = TypeChecker;
