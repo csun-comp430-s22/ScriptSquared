@@ -16,6 +16,8 @@ const MethodDec = require("./MethodDec")
 //                  construc(vardec*) stmt	
 //                  methoddec*
 //              }
+
+// superClassName is "Object" by default
 class ClassDec {
     constructor(classNameType, superClassName, instanceDecList, constructor, methodDecList) {
 

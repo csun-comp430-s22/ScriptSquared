@@ -20,10 +20,44 @@ class TypeChecker {
     // 5. Does our class hierarchy form a tree (aka no cycles)?
 
     constructor(program) {
-        this.classList = program.classDecList;
+        const classList = program.classDecList;
+        
+        // className: object => key: methodname, value: array of param types in order
+        this.classMethodMap = {}
+
+        classList.forEach(classDec => {
+            const className = classDec.ClassNameType.value
+            const methodsArray = this.extractMethodsFromClass(className, classList)
+            this.classMethodMap[className] = this.convertMethodArrayToObj(methodsArray)
+
+        })
 
         // TODO: check that class hierarchy is a tree (no cycles)
     }
+
+    extractMethodsFromClass(className, classList) {
+        const classDec = classList.find(classDec => classDec.ClassNameType.value === className)
+        let classMethods = [...classDec.methodDecList]
+        
+        if (classDec.superClassName.value !== "Object") {
+            const superClassMethods = this.extractMethodsFromClass(classDec.superClassName.value, classList)
+            classMethods = classMethods.concat(superClassMethods)
+        }
+
+        return classMethods;
+    }
+
+    convertMethodArrayToObj(methodArray) {
+        const methodMap = {}
+
+        methodArray.forEach(methodDec => {
+            methodMap[methodDec.methodName.value] = methodDec.varDecList.map(vardec => vardec.type)
+        })
+
+        return methodMap;
+    }
+
+
 
     /**
      * @param {*} exp An Expression variable
