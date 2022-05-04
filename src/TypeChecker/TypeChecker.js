@@ -28,10 +28,16 @@ class TypeChecker {
         // methodname: return type
         this.methodReturnType = {}
 
+        // type: array of subtypes
+        this.typeTree = {
+            "Object": []
+        }
+
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
             this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(methodsArray, this.methodReturnType)
+            this.insertIntoTypeTree(classDec, this.typeTree)
         })
 
         // TODO: check that class hierarchy is a tree (no cycles)
@@ -58,6 +64,26 @@ class TypeChecker {
         })
 
         return methodMap;
+    }
+
+    /**
+     * 
+     * @param {ClassDec} classDec 
+     */
+    insertIntoTypeTree(classDec, typeTree) {
+        const classType = classDec.classNameType.value
+        const parentType = classDec.superClassName.value 
+        
+        if (parentType in typeTree) {
+            typeTree[parentType].push(classType)
+        } else {
+            typeTree[parentType] = []
+            typeTree[parentType].push(classType)
+        }
+
+        if (!(classType in typeTree)) {
+            typeTree[classType] = [] 
+        }
     }
 
     /**
