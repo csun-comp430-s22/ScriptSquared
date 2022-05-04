@@ -28,6 +28,10 @@ let string = `
         public int childMethod(int test) {
             return 2;
         }
+
+        public child objectType() {
+            return 4;
+        }
     }
 
     class childchild super child {
@@ -38,6 +42,7 @@ let string = `
         public boolean superChildMethod(boolean test) {
             return 3;
         }
+
     }
 
     thyEntryPoint {
@@ -46,4 +51,4 @@ let string = `
 `
 let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
-console.log(typeChecker.classMethodMap)
+console.log(typeChecker.methodReturnType)

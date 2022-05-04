@@ -25,10 +25,13 @@ class TypeChecker {
         // className: object => key: methodname, value: array of param types in order
         this.classMethodMap = {}
 
+        // methodname: return type
+        this.methodReturnType = {}
+
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
-            this.classMethodMap[className] = this.convertMethodArrayToObj(methodsArray)
+            this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(methodsArray, this.methodReturnType)
         })
 
         // TODO: check that class hierarchy is a tree (no cycles)
@@ -46,22 +49,21 @@ class TypeChecker {
         return classMethods;
     }
 
-    convertMethodArrayToObj(methodArray) {
+    convertMethodArrayToObjAndExtractMethodTypes(methodArray, methodReturnType) {
         const methodMap = {}
 
         methodArray.forEach(methodDec => {
             methodMap[methodDec.methodName.value] = methodDec.varDecList.map(vardec => vardec.type)
+            methodReturnType[methodDec.methodName.value] = methodDec.type
         })
 
         return methodMap;
     }
 
-
-
     /**
-     * @param {*} exp An Expression variable
-     * @param {*} typeEnvironment An object that maps key:"Variable" to value:"Type"
-     * @param {*} classWeAreIn The current class that is in scope (string); Is "null" if in entry point
+     * @param {Exp} exp An Expression variable
+     * @param {Object} typeEnvironment An object that maps key:"Variable" to value:"Type"
+     * @param {String} classWeAreIn The current class that is in scope (string); Is "null" if in entry point
      * @returns The type of an expression
      */
     expTypeof(exp, typeEnvironment = {}, classWeAreIn) {
@@ -188,18 +190,63 @@ class TypeChecker {
         }
     }
 
-    expectedParamTypesForClassAndMethod(className, methodName) {
-        
-    }
-
     typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
-        const parameterExpsArray = this.expTypeof(ExpMethodExp.parameterExpsArray, typeEnvironment, classWeAreIn)
+        const parameterExpsTypeArray = ExpMethodExp.parameterExpsTypeArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
 
         if (!instance_of(parentExpType, ClassNameType))
             throw new TypeError("Called method on non-class type: " + parentExpType);
 
         const className = parentExpType.value
+        const methodName = ExpMethodExp.methodName.value
+        const methodTypeArray = this.expectedParamTypesForClassAndMethod(className, methodName)
+
+        if (testArray.length !== expectedArray.length)
+            throw new TypeError("Inncorrect number of parameters for call " + methodName);
+
+        // Will throw error if something fails
+        this.compareTypesInArray(parameterExpsTypeArray)
+        return this.methodReturnType[methodName];
+    }
+
+    /**
+     * 
+     * @param {String} className 
+     * @param {String} methodName 
+     * @returns Array containing types for method parameters; throws error if method not in class
+     */
+    expectedParamTypesForClassAndMethod(className, methodName) {
+        let result = this.classMethodMap[className][methodName]
+        if (result === undefined)
+            throw new TypeError("Method: " + methodName + " is not in class: " + className);
+        
+        return result;
+    }
+
+    /**
+     * 
+     * @param {Type[]} testArray 
+     * @param {Type[]} expectedArray 
+     * @returns True if have same types in same order
+     */
+    compareTypesInArray(testArray, expectedArray) {
+        for (let i = 0; i < testArray.length; i++) {
+            // test Type needs to be equal to or subtype of expected type
+           this.isLeftTypeofRight(testArray[i], expectedArray[i])
+        }      
+
+        return true;
+    }
+
+    /**
+     * 
+     * @param {Type} testType 
+     * @param {Type} expectedType 
+     * @returns true if test type is equal or subtype of expected type
+     */
+    isLeftTypeofRight(testType, expectedType) {
+        //TODO: Finish
+        //  throw new TypeError("Parameter type: " + testType + " doesn't match type: " + expectedType);
     }
 
     typeofNewClassExp() {
