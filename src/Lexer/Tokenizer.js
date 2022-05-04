@@ -70,7 +70,7 @@ class Tokenizer {
     }
 
     skipWhiteSpace () {
-        while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) === ' ') ) {
+        while ( (this.offset < this.inputLength) && (this.input.charAt(this.offset) === ' ' || this.input.charAt(this.offset) === '\n') ) {
             this.offset++;
         }
     }
@@ -85,7 +85,7 @@ class Tokenizer {
             (retval = this.tryTokenizeString()) === null &&
             (retval = this.tryTokenizeSymbol()) === null) 
             {
-                throw new EvalError("Invalid token! d u m b y")
+                throw new EvalError("Invalid token! Before: " + this.input.charAt(this.offset))
             }
      
         return retval;

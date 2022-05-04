@@ -2,7 +2,7 @@ const { ClassNameType } = require("./Type")
 const { arrayMatchType, arraysEqual, instance_of } = require("../utils")
 const { InstanceDec } = require("./InstanceDec")
 const { Constructor } = require("./Constructor")
-const MethodDec = require("./MethodDec")
+const { MethodDec } = require("./MethodDec")
 
 
 // classdec ::= class classname super classname {
@@ -16,8 +16,14 @@ const MethodDec = require("./MethodDec")
 //                  construc(vardec*) stmt	
 //                  methoddec*
 //              }
+
+// superClassName is "Object" by default
 class ClassDec {
     constructor(classNameType, superClassName, instanceDecList, constructor, methodDecList) {
+
+        instance_of(superClassName, ClassNameType)
+        arrayMatchType(instanceDecList, InstanceDec)
+        arrayMatchType(methodDecList, MethodDec)
 
         if ( !(instance_of(classNameType, ClassNameType)) 
                 || !instance_of(superClassName, ClassNameType)

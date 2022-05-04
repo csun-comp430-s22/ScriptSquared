@@ -622,7 +622,7 @@ class Parser {
         this.assertTokenHereIs(position, RightCurlyToken)
         
         return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 
-                                            new ClassNameType(superClassNameToken?.value),
+                                            new ClassNameType(superClassNameToken !== null ? superClassNameToken.value : "Object"),
                                             instanceDecList,
                                             new Constructor(vardecList, superExpList, stmtList),
                                             methodDecList), 
