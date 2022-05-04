@@ -1,4 +1,4 @@
-import { BooleanExp, IntegerExp, OpExp, StringExp, ThisExp, VariableExp } from "../Parser/Expressions";
+import { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } from "../Parser/Expressions";
 import { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } from "../Parser/Operations";
 import { BooleanType, ClassNameType, IntType, StringType, Type } from "../Parser/Type";
 import { instance_of } from "../utils";
@@ -48,11 +48,20 @@ class TypeChecker {
            return this.typeofThis(classWeAreIn);
         }
         else if (instance_of(exp, OpExp)) {
-            this.typeofOpExp(exp, typeEnvironment, classWeAreIn);
+            return this.typeofOpExp(exp, typeEnvironment, classWeAreIn);
+        }
+        else if (instance_of(exp, ExpMethodExp)) {
+            return this.typeofExpMethodExp(exp, typeEnvironment, classWeAreIn);
+        }
+        else if (instance_of(exp, NewClassExp)) {
+
+        }
+        else {
+
         }
     }
 
-    typeofVariable(variableExp, typeEnvironment = {}) {
+    typeofVariable(variableExp, typeEnvironment) {
         const variable = variableExp.value
         if (variable in typeEnvironment) {
             return typeEnvironment[variable];
@@ -144,5 +153,23 @@ class TypeChecker {
         else {
             throw new TypeError("Unsupported operation: " + op);
         }
+    }
+
+    expectedParamTypesForClassAndMethod(className, methodName) {
+        
+    }
+
+    typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
+        const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
+        const parameterExpsArray = this.expTypeof(ExpMethodExp.parameterExpsArray, typeEnvironment, classWeAreIn)
+
+        if (!instance_of(parentExpType, ClassNameType))
+            throw new TypeError("Called method on non-class type: " + parentExpType);
+
+        const className = parentExpType.value
+    }
+
+    typeofNewClassExp() {
+
     }
 }
