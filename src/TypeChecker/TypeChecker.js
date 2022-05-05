@@ -370,13 +370,13 @@ class TypeChecker {
             return this.isWellTypedWhile(stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } 
         else if (instance_of(stmt, ReturnExpStmt)) {
-            
+            return this.isWellTypedReturnExp(stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } 
         else if (instance_of(stmt, ReturnStmt)) {
             
         } 
         else if (instance_of(stmt, PrintExpStmt)) {
-            return this.isWellTypedPrint(stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return this.isWellTypedPrint(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, BreakStmt)) {
             return typeEnvironment;
@@ -388,10 +388,10 @@ class TypeChecker {
             
         } 
         else if (instance_of(stmt, VarEqualsExpStmt)) {
-            return this.isWellTypedVarEqualsExp(stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return this.isWellTypedVarEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, VarDecEqualsExpStmt)) {
-            return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn, functionReturnType);
+            return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
     }
 
@@ -423,14 +423,25 @@ class TypeChecker {
         
     }
 
+    // return exp;
+    isWellTypedReturnExp (returnExp, typeEnvironment, classWeAreIn, functionReturnType) {
+        
+        if (functionReturnType === null) 
+            throw new TypeError("returning in program entry point");
+        
+        const expType = this.expTypeof(returnExp.returnExp, typeEnvironment, classWeAreIn)
+        this.isLeftTypeofRight(expType, functionReturnType)
+        return typeEnvironment;
+    }
+
     // print(exp);
-    isWellTypedPrint (printStmt, typeEnvironment, classWeAreIn, functionReturnType) {
+    isWellTypedPrint (printStmt, typeEnvironment, classWeAreIn) {
         const expType = this.expTypeof(printStmt.printExp, typeEnvironment, classWeAreIn)
         return typeEnvironment;
     }
 
     // var = exp;
-    isWellTypedVarEqualsExp (varEqualsExpStmt, typeEnvironment, classWeAreIn, functionReturnType) {
+    isWellTypedVarEqualsExp (varEqualsExpStmt, typeEnvironment, classWeAreIn) {
         const expType = this.expTypeof(varEqualsExpStmt.exp, typeEnvironment, classWeAreIn)
         const variableName = varEqualsExpStmt.variable.value
         const variableDeclaredType = typeEnvironment[variableName] 
@@ -444,7 +455,7 @@ class TypeChecker {
     }
 
     // vardec = exp; 
-    isWellTypedVarDecEqualsExp (varDecEqualsExpStmt, typeEnvironment, classWeAreIn, functionReturnType) {
+    isWellTypedVarDecEqualsExp (varDecEqualsExpStmt, typeEnvironment, classWeAreIn) {
         const expType = this.expTypeof(varDecEqualsExpStmt.exp, typeEnvironment, classWeAreIn)
         const varDecType = varDecEqualsExpStmt.vardec.type
 
