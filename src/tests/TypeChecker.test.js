@@ -13,6 +13,25 @@ function createAST(string) {
 
 let string = `
 
+class base {
+    construc() {}
+    
+    public int baseMethod(test: int, test2: boolean, test3: string) {
+        return 1;
+    }
+}
+
+class childchild super child {
+    construc() {
+        super();
+    }
+
+    public boolean superChildMethod(test: boolean) {
+        return 3;
+    }
+
+}
+
 class child super base {
     construc() {
         super();
@@ -22,31 +41,18 @@ class child super base {
         return 2;
     }
 
-    private child objectType() {
+    public child objectType() {
         return 4;
     }
 }
 
-class base {
+class base2 super base {
     construc() {}
     
     public int baseMethod(test: int, test2: boolean, test3: string) {
         return 1;
     }
 }
-
-
-    class childchild super child {
-        construc() {
-            super();
-        }
-
-        public boolean superChildMethod(test: boolean) {
-            return 3;
-        }
-
-    }
-
 
 
     thyEntryPoint {

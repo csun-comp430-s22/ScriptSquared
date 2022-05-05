@@ -33,14 +33,23 @@ class TypeChecker {
             "Object": []
         }
 
+        // Create type tree
+        classList.forEach(classDec => {
+            this.insertIntoTypeTree(classDec, this.typeTree)
+        })
+
+        let trackerMap = {}
+        this.checkForCycles(this.typeTree, "Object", this.typeTree.Object, trackerMap)
+        if (Object.keys(trackerMap).length < classList.length)
+            throw new TypeError("There is a cycle in the class hierarchy");
+
+
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
             this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(methodsArray, this.methodReturnType)
-            this.insertIntoTypeTree(classDec, this.typeTree)
         })
 
-        // TODO: check that class hierarchy is a tree (no cycles)
     }
 
     extractMethodsFromClass(className, classList) {
@@ -88,6 +97,18 @@ class TypeChecker {
         if (!(classType in typeTree)) {
             typeTree[classType] = [] 
         }
+    }
+
+    checkForCycles(typeTree, currentType, currentSubTypeArray, trackerMap = {}) {
+
+        if (trackerMap[currentType])
+            throw new TypeError("There is a cycle in the class hierarchy");
+        else 
+            trackerMap[currentType] = true
+
+        currentSubTypeArray.forEach(type => {
+            this.checkForCycles(typeTree, type, typeTree[type], trackerMap)
+        })
     }
 
     /**
