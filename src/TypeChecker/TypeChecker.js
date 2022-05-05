@@ -1,6 +1,6 @@
 const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
 const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
-const { IfStmt, WhileStmt } = require("../Parser/Statements");
+const { IfStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, BreakStmt, BlockStmt, ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements");
 const { BooleanType, ClassNameType, IntType, StringType, Type } = require("../Parser/Type");
 const { instance_of } = require("../utils");
 const { TypeError } = require("./TypeError")
@@ -325,7 +325,7 @@ class TypeChecker {
      * 
      * @param {Type} testType 
      * @param {Type} expectedType 
-     * @returns true if test type is equal or subtype of expected type
+     * @returns true if test type is equal or subtype of expected type; throws error otherwise
      */
     isLeftTypeofRight(testType, expectedType) {
 
@@ -364,35 +364,44 @@ class TypeChecker {
     isWellTyped(stmt, typeEnvironment, classWeAreIn) {
 
         if (instance_of(stmt, IfStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
 
         } 
-        else if (instance_of(stmt, WhileStmt)) {
+        else if (instance_of(stmt, ReturnExpStmt)) {
+            
+        } 
+        else if (instance_of(stmt, ReturnStmt)) {
+            
+        } 
+        else if (instance_of(stmt, PrintExpStmt)) {
+            
+        } 
+        else if (instance_of(stmt, BreakStmt)) {
+            
+        } 
+        else if (instance_of(stmt, BlockStmt)) {
+            
+        } 
+        else if (instance_of(stmt, ExpMethodExpStmt)) {
+            
+        } 
+        else if (instance_of(stmt, VarEqualsExpStmt)) {
+            
+        } 
+        else if (instance_of(stmt, VarDecEqualsExpStmt)) {
+            return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn);
+        } 
+    }
 
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
-        else if (instance_of(stmt, WhileStmt)) {
-            
-        } 
+    // vardec = exp; 
+    isWellTypedVarDecEqualsExp (varDecEqualsExpStmt, typeEnvironment, classWeAreIn) {
+        const expType = this.expTypeof(varDecEqualsExpStmt.exp, typeEnvironment, classWeAreIn)
+        const varDecType = varDecEqualsExpStmt.vardec.type
+
+        this.isLeftTypeofRight(expType, varDecType)
+        return this.addToMap(typeEnvironment, varDecEqualsExpStmt.vardec.variable, varDecType);
     }
 
     /**
@@ -400,6 +409,7 @@ class TypeChecker {
      * @param {Object} map typeEnvironment you want to add variable to
      * @param {Variable} variable Variable object to be added
      * @param {Type} type Type of the variable object
+     * @returns new typeEnvironment with added variable
      */
     addToMap(map, variable, type) {
         let newMap = {...map}
