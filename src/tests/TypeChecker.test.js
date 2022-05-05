@@ -22,6 +22,17 @@ class base {
     }
 }
 
+class child super base {
+    construc() {
+        super();
+    }
+
+    public boolean baseMethod(test: int) {
+        return 1;
+    }
+}
+
+
 class childchild super child {
     construc() {
         super();
@@ -33,31 +44,8 @@ class childchild super child {
 
 }
 
-class child super base {
-    construc() {
-        super();
-    }
-
-    public int childMethod(test: int) {
-        return 2;
-    }
-
-    public child objectType() {
-        return 4;
-    }
-}
-
-class base2 super base {
-    construc() {}
-    
-    public int baseMethod(test: int, test2: boolean, test3: string) {
-        return 1;
-    }
-}
-
 
     thyEntryPoint {
-        new base().baseMethod(1, true, "hello");
         return;
     }
 `
@@ -65,4 +53,4 @@ let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
 
 // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
-console.log(typeChecker.typeTree)
+console.log(typeChecker.methodReturnType)

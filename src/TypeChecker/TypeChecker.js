@@ -25,6 +25,7 @@ class TypeChecker {
         // className: object => key: methodname, value: array of param types in order
         this.classMethodMap = {}
 
+        // add a class component so each class has their own methods
         // methodname: return type
         this.methodReturnType = {}
 
@@ -73,8 +74,10 @@ class TypeChecker {
         const methodMap = {}
 
         methodArray.forEach(methodDec => {
-            methodMap[methodDec.methodName.value] = methodDec.varDecList.map(vardec => vardec.type)
-            methodReturnType[methodDec.methodName.value] = methodDec.type
+            if ( !(methodDec.methodName.value in methodMap) ) {
+                methodMap[methodDec.methodName.value] = methodDec.varDecList.map(vardec => vardec.type)
+                methodReturnType[methodDec.methodName.value] = methodDec.type
+            }  
         })
 
         return methodMap;
@@ -141,7 +144,7 @@ class TypeChecker {
             return this.typeofExpMethodExp(exp, typeEnvironment, classWeAreIn);
         }
         else if (instance_of(exp, NewClassExp)) {
-
+            this.typeofNewClassExp(exp, typeEnvironment, classWeAreIn)
         }
         else {
 
@@ -305,7 +308,7 @@ class TypeChecker {
             throw new TypeError("Parameter type: " + testType.value + " doesn't match type: " + expectedType.value);
     }
 
-    typeofNewClassExp() {
+    typeofNewClassExp(NewClassExp, typeEnvironment, classWeAreIn) {
 
     }
 }
