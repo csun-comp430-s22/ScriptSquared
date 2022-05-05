@@ -1,6 +1,7 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
+const { ExpMethodExp } = require("../Parser/Expressions")
 
 
 function createAST(string) {
@@ -56,6 +57,7 @@ class base2 super base {
 
 
     thyEntryPoint {
+        new base().baseMethod(1, true, "hello");
         return;
     }
 `

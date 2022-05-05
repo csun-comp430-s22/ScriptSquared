@@ -38,12 +38,13 @@ class TypeChecker {
             this.insertIntoTypeTree(classDec, this.typeTree)
         })
 
+        // Check for Cycles
         let trackerMap = {}
         this.checkForCycles(this.typeTree, "Object", this.typeTree.Object, trackerMap)
         if (Object.keys(trackerMap).length < classList.length)
             throw new TypeError("There is a cycle in the class hierarchy");
 
-
+        // Fill classMethodMap and methodReturnType
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
@@ -282,7 +283,6 @@ class TypeChecker {
      */
     compareTypesInArray(testArray, expectedArray) {
         for (let i = 0; i < testArray.length; i++) {
-            // test Type needs to be equal to or subtype of expected type
            this.isLeftTypeofRight(testArray[i], expectedArray[i])
         }      
 
@@ -296,8 +296,13 @@ class TypeChecker {
      * @returns true if test type is equal or subtype of expected type
      */
     isLeftTypeofRight(testType, expectedType) {
-        //TODO: Finish
-        //  throw new TypeError("Parameter type: " + testType + " doesn't match type: " + expectedType);
+
+        if (testType.equals(expectedType))
+            return true;
+        else if (this.typeTree[expectedType.value].includes(testType.value))
+            return true;
+        else 
+            throw new TypeError("Parameter type: " + testType.value + " doesn't match type: " + expectedType.value);
     }
 
     typeofNewClassExp() {
