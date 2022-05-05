@@ -367,7 +367,7 @@ class TypeChecker {
             return this.isWellTypedIf(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, WhileStmt)) {
-
+            return this.isWellTypedWhile(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, ReturnExpStmt)) {
             
@@ -376,7 +376,7 @@ class TypeChecker {
             
         } 
         else if (instance_of(stmt, PrintExpStmt)) {
-            
+            return this.isWellTypedPrint(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, BreakStmt)) {
             
@@ -421,6 +421,12 @@ class TypeChecker {
             throw new TypeError("Guard of 'while' expects an expression of type Boolean but recieved a type of : " + guardType.value);
         }
         
+    }
+
+    // print(exp);
+    isWellTypedPrint (printStmt, typeEnvironment, classWeAreIn) {
+        const expType = this.expTypeof(printStmt.printExp, typeEnvironment, classWeAreIn)
+        return typeEnvironment;
     }
 
     // var = exp;
