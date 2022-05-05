@@ -48,6 +48,14 @@ class childchild super child {
 
 }
 
+class unrelatedClass {
+    construc() {}
+
+    public string baseMethod(test: string, test2: boolean) {
+        return 1;
+    }
+}
+
 
     thyEntryPoint {
         return;
@@ -58,3 +66,5 @@ let typeChecker = new TypeChecker(ast.result)
 
 // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
 console.log(typeChecker.classMethodMap)
+console.log(typeChecker.methodReturnType)
+console.log(typeChecker.typeTree)

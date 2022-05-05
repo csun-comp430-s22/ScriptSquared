@@ -49,7 +49,7 @@ class TypeChecker {
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
-            
+
             this.methodReturnType[className] = {}
             this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(className, methodsArray, this.methodReturnType)
         })
@@ -278,7 +278,7 @@ class TypeChecker {
 
         // Will throw error if something fails
         this.compareTypesInArray(parameterExpsTypeArray, methodTypeArray)
-        return this.methodReturnType[methodName];
+        return this.methodReturnType[className][methodName];
     }
 
     /**
