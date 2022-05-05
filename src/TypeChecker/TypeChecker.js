@@ -409,6 +409,20 @@ class TypeChecker {
         }
     }
 
+    // while (exp) stmt
+    isWellTypedWhile (whileStmt, typeEnvironment, classWeAreIn) {
+        const guardType = this.expTypeof(whileStmt.guardExp)
+
+        if (instance_of(guardType, BooleanType)) {
+            this.isWellTyped(whileStmt.loopStmt)
+            return typeEnvironment;
+            
+        } else {
+            throw new TypeError("Guard of 'while' expects an expression of type Boolean but recieved a type of : " + guardType.value);
+        }
+        
+    }
+
     // var = exp;
     isWellTypedVarEqualsExp (varEqualsExpStmt, typeEnvironment, classWeAreIn) {
         const expType = this.expTypeof(varEqualsExpStmt.exp, typeEnvironment, classWeAreIn)
