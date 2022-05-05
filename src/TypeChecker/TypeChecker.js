@@ -1,7 +1,7 @@
 const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
 const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
 const { IfStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, BreakStmt, BlockStmt, ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements");
-const { BooleanType, ClassNameType, IntType, StringType, Type } = require("../Parser/Type");
+const { BooleanType, ClassNameType, IntType, StringType, Type, VoidType } = require("../Parser/Type");
 const { instance_of } = require("../utils");
 const { TypeError } = require("./TypeError")
 
@@ -373,7 +373,7 @@ class TypeChecker {
             return this.isWellTypedReturnExp(stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } 
         else if (instance_of(stmt, ReturnStmt)) {
-            
+            return this.isWellTypedReturn(typeEnvironment, functionReturnType);
         } 
         else if (instance_of(stmt, PrintExpStmt)) {
             return this.isWellTypedPrint(stmt, typeEnvironment, classWeAreIn);
@@ -432,6 +432,17 @@ class TypeChecker {
         const expType = this.expTypeof(returnExp.returnExp, typeEnvironment, classWeAreIn)
         this.isLeftTypeofRight(expType, functionReturnType)
         return typeEnvironment;
+    }
+
+    // return;
+    isWellTypedReturn (typeEnvironment, functionReturnType) {
+        if (functionReturnType === null) 
+            throw new TypeError("returning in program entry point");
+        
+        if (instance_of(functionReturnType, VoidType))
+            return typeEnvironment;
+        else 
+            throw new TypeError("Function expects return type of '" + functionReturnType + "' but recieved Void");
     }
 
     // print(exp);
