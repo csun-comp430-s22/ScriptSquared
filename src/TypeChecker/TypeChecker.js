@@ -382,7 +382,7 @@ class TypeChecker {
             return typeEnvironment;
         } 
         else if (instance_of(stmt, BlockStmt)) {
-            
+            return this.isWellTypedBlock(stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } 
         else if (instance_of(stmt, ExpMethodExpStmt)) {
             
@@ -393,6 +393,9 @@ class TypeChecker {
         else if (instance_of(stmt, VarDecEqualsExpStmt)) {
             return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
+        else {
+            throw new TypeError("Unsupported statement: " + stmt);
+        }
     }
 
     // if (exp) stmt else stmt
@@ -448,6 +451,18 @@ class TypeChecker {
     // print(exp);
     isWellTypedPrint (printStmt, typeEnvironment, classWeAreIn) {
         const expType = this.expTypeof(printStmt.printExp, typeEnvironment, classWeAreIn)
+        return typeEnvironment;
+    }
+
+    // { stmt* }
+    isWellTypedBlock (blockStmt, typeEnvironment, classWeAreIn, functionReturnType) {
+
+        const stmtList = blockStmt.stmtList
+
+        for (let i = 0; i < stmtList.length; i++) {
+            typeEnvironment = this.isWellTyped(stmtList[i], typeEnvironment, classWeAreIn, functionReturnType)
+        }
+
         return typeEnvironment;
     }
 
