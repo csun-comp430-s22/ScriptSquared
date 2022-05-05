@@ -467,8 +467,6 @@ class TypeChecker {
     }
 
     // exp.methodname(exp*);
-    // does the class have this method on it
-    // does the method take params of these types
     isWellTypedExpMethodExp (expMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(expMethodExp.parentExp, typeEnvironment, classWeAreIn)
 
@@ -478,6 +476,8 @@ class TypeChecker {
         const className = parentExpType.value
         const methodName = expMethodExp.methodName.value
         const methodParams = expMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp))
+
+        //TODO: if classname isn't in map it will crash cuz trying to call on undefined
         const expectedMethodParams = this.classMethodMap[className][methodName]
 
         if (expectedMethodParams === undefined) 
