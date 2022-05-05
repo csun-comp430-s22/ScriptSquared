@@ -42,6 +42,10 @@ class childchild super child {
         return 3;
     }
 
+    public child superChildMethod2(test: child) {
+        return 3;
+    }
+
 }
 
 
@@ -53,4 +57,4 @@ let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
 
 // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
-console.log(typeChecker.methodReturnType)
+console.log(typeChecker.classMethodMap)

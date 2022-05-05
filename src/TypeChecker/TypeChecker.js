@@ -26,7 +26,7 @@ class TypeChecker {
         this.classMethodMap = {}
 
         // add a class component so each class has their own methods
-        // methodname: return type
+        // classname: { methodname: return type }
         this.methodReturnType = {}
 
         // type: array of subtypes
@@ -49,7 +49,9 @@ class TypeChecker {
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
-            this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(methodsArray, this.methodReturnType)
+            
+            this.methodReturnType[className] = {}
+            this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(className, methodsArray, this.methodReturnType)
         })
 
     }
@@ -61,7 +63,19 @@ class TypeChecker {
         }
 
         let classMethods = [...classDec.methodDecList]
+
+        // Check for dups
+        const dupMap = {}
+        classMethods.forEach(methodDec => {
+            const methodName = methodDec.methodName.value
+
+            if (dupMap[methodName])
+                throw new TypeError("Cannot have two methods '" + methodName + "' in class '" + className + "'");
+            else 
+                dupMap[methodName] = true
+        })
         
+        // Extract super class methods
         if (classDec.superClassName.value !== "Object") {
             const superClassMethods = this.extractMethodsFromClass(classDec.superClassName.value, classList)
             classMethods = classMethods.concat(superClassMethods)
@@ -70,13 +84,16 @@ class TypeChecker {
         return classMethods;
     }
 
-    convertMethodArrayToObjAndExtractMethodTypes(methodArray, methodReturnType) {
+    convertMethodArrayToObjAndExtractMethodTypes(className, methodArray, methodReturnType) {
         const methodMap = {}
 
         methodArray.forEach(methodDec => {
-            if ( !(methodDec.methodName.value in methodMap) ) {
-                methodMap[methodDec.methodName.value] = methodDec.varDecList.map(vardec => vardec.type)
-                methodReturnType[methodDec.methodName.value] = methodDec.type
+            const methodName = methodDec.methodName.value
+
+            // if method is in the map already then it has been overriden and you don't need the super's method
+            if ( !(methodName in methodMap) ) {
+                methodMap[methodName] = methodDec.varDecList.map(vardec => vardec.type)
+                methodReturnType[className][methodName] = methodDec.type
             }  
         })
 
