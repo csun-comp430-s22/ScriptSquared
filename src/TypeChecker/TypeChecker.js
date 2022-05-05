@@ -364,7 +364,7 @@ class TypeChecker {
     isWellTyped(stmt, typeEnvironment, classWeAreIn) {
 
         if (instance_of(stmt, IfStmt)) {
-            
+            return this.isWellTypedIf(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, WhileStmt)) {
 
@@ -393,6 +393,20 @@ class TypeChecker {
         else if (instance_of(stmt, VarDecEqualsExpStmt)) {
             return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
+    }
+
+    // if (exp) stmt else stmt
+    isWellTypedIf (ifStmt, typeEnvironment, classWeAreIn) {
+        const guardType = this.expTypeof(ifStmt.guardExp)
+
+        if (instance_of(guardType, BooleanType)) {
+            this.isWellTyped(ifStmt.trueBranch, typeEnvironment, classWeAreIn)
+            this.isWellTyped(ifStmt.falseBranch, typeEnvironment, classWeAreIn)
+            return typeEnvironment;
+
+        } else {
+            throw new TypeError("Guard of 'if' expects an expression of type Boolean but recieved a type of : " + guardType.value);
+        }
     }
 
     // var = exp;
