@@ -379,7 +379,7 @@ class TypeChecker {
             return this.isWellTypedPrint(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, BreakStmt)) {
-            
+            return typeEnvironment;
         } 
         else if (instance_of(stmt, BlockStmt)) {
             
