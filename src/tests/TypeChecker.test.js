@@ -22,6 +22,14 @@ class base {
     }
 }
 
+class base {
+    construc() {}
+    
+    public int baseMethod(test: int, test2: boolean, test3: string) {
+        return 1;
+    }
+}
+
 class child super base {
     construc() {
         super();

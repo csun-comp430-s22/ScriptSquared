@@ -22,10 +22,12 @@ class TypeChecker {
     constructor(program) {
         const classList = program.classDecList;
         
-        // className: object => key: methodname, value: array of param types in order
+        // className: { methodname: array of param types in order }
         this.classMethodMap = {}
 
-        // add a class component so each class has their own methods
+        // className: array of param types
+        this.classConstructorTypes = {}
+
         // classname: { methodname: return type }
         this.methodReturnType = {}
 
@@ -35,7 +37,14 @@ class TypeChecker {
         }
 
         // Create type tree
+        const dupMap = {}
         classList.forEach(classDec => {
+            const className = classDec.classNameType.value 
+
+            if (dupMap[className])
+                throw new TypeError("Duplicate class: " + className)
+            
+            dupMap[className] = true
             this.insertIntoTypeTree(classDec, this.typeTree)
         })
 
@@ -50,6 +59,8 @@ class TypeChecker {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
 
+            this.classConstructorTypes[className] = classDec.constructor.vardecList.map(varDec => varDec.type)
+            
             this.methodReturnType[className] = {}
             this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(className, methodsArray, this.methodReturnType)
         })
@@ -281,7 +292,7 @@ class TypeChecker {
         return this.methodReturnType[className][methodName];
     }
 
-    /**
+    /** 
      * 
      * @param {String} className 
      * @param {String} methodName 
@@ -327,6 +338,17 @@ class TypeChecker {
 
     typeofNewClassExp(NewClassExp, typeEnvironment, classWeAreIn) {
 
+        const className = NewClassExp.className.value
+
+        // Makes sure parameters are correct type
+        
+        // Get params of user created exp
+        const testParams = NewClassExp.parameterExpsArray
+        const testParamsTypes = testParams.map(exp => this.expTypeof(exp))
+        
+        // Get params of 
+
+        return NewClassExp.className;
     }
 }
 
