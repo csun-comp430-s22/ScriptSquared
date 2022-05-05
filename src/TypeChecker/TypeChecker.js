@@ -1,5 +1,6 @@
 const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
 const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
+const { IfStmt, WhileStmt } = require("../Parser/Statements");
 const { BooleanType, ClassNameType, IntType, StringType, Type } = require("../Parser/Type");
 const { instance_of } = require("../utils");
 const { TypeError } = require("./TypeError")
@@ -356,6 +357,54 @@ class TypeChecker {
         this.compareTypesInArray(testParamsTypes, expectedParamsTypes)
 
         return new ClassNameType(NewClassExp.className);
+    }
+
+
+    // STATEMENTS
+    isWellTyped(stmt, typeEnvironment, classWeAreIn) {
+
+        if (instance_of(stmt, IfStmt)) {
+
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+        else if (instance_of(stmt, WhileStmt)) {
+            
+        } 
+    }
+
+    /**
+     * 
+     * @param {Object} map typeEnvironment you want to add variable to
+     * @param {Variable} variable Variable object to be added
+     * @param {Type} type Type of the variable object
+     */
+    addToMap(map, variable, type) {
+        let newMap = {...map}
+        newMap[variable.value] = type
+        return newMap;
     }
 }
 
