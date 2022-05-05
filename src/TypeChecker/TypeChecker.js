@@ -385,7 +385,7 @@ class TypeChecker {
             return this.isWellTypedBlock(stmt, typeEnvironment, classWeAreIn, functionReturnType);
         } 
         else if (instance_of(stmt, ExpMethodExpStmt)) {
-            
+            return this.isWellTypedExpMethodExp(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, VarEqualsExpStmt)) {
             return this.isWellTypedVarEqualsExp(stmt, typeEnvironment, classWeAreIn);
@@ -463,6 +463,28 @@ class TypeChecker {
             typeEnvironment = this.isWellTyped(stmtList[i], typeEnvironment, classWeAreIn, functionReturnType)
         }
 
+        return typeEnvironment;
+    }
+
+    // exp.methodname(exp*);
+    // does the class have this method on it
+    // does the method take params of these types
+    isWellTypedExpMethodExp (expMethodExp, typeEnvironment, classWeAreIn) {
+        const parentExpType = this.expTypeof(expMethodExp.parentExp, typeEnvironment, classWeAreIn)
+
+        if (!instance_of(parentExpType, ClassNameType))
+            throw new TypeError("'" + expMethodExp.parentExp.value + "' is not a class");
+
+        const className = parentExpType.value
+        const methodName = expMethodExp.methodName.value
+        const methodParams = expMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp))
+        const expectedMethodParams = this.classMethodMap[className][methodName]
+
+        if (expectedMethodParams === undefined) 
+            throw new TypeError("No such method '" + methodName + "' exists for class '" + className + "'");
+
+        this.compareTypesInArray(methodParams, expectedMethodParams)
+        
         return typeEnvironment;
     }
 
