@@ -388,11 +388,25 @@ class TypeChecker {
             
         } 
         else if (instance_of(stmt, VarEqualsExpStmt)) {
-            
+            return this.isWellTypedVarEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
         else if (instance_of(stmt, VarDecEqualsExpStmt)) {
             return this.isWellTypedVarDecEqualsExp(stmt, typeEnvironment, classWeAreIn);
         } 
+    }
+
+    // var = exp;
+    isWellTypedVarEqualsExp (varEqualsExpStmt, typeEnvironment, classWeAreIn) {
+        const expType = this.expTypeof(varEqualsExpStmt.exp, typeEnvironment, classWeAreIn)
+        const variableName = varEqualsExpStmt.variable.value
+        const variableDeclaredType = typeEnvironment[variableName] 
+
+        if (variableDeclaredType === undefined) {
+            throw new TypeError("Variable '" + variableName + "' does not exist")
+        }
+
+        this.isLeftTypeofRight(expType, variableDeclaredType)
+        return typeEnvironment;
     }
 
     // vardec = exp; 
