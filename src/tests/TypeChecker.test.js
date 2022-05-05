@@ -15,15 +15,7 @@ function createAST(string) {
 let string = `
 
 class base {
-    construc() {}
-    
-    public int baseMethod(test: int, test2: boolean, test3: string) {
-        return 1;
-    }
-}
-
-class base {
-    construc() {}
+    construc(var: int) {}
     
     public int baseMethod(test: int, test2: boolean, test3: string) {
         return 1;
@@ -31,7 +23,7 @@ class base {
 }
 
 class child super base {
-    construc() {
+    construc(var: string) {
         super();
     }
 
@@ -42,7 +34,7 @@ class child super base {
 
 
 class childchild super child {
-    construc() {
+    construc(var: boolean) {
         super();
     }
 
@@ -57,7 +49,7 @@ class childchild super child {
 }
 
 class unrelatedClass {
-    construc() {}
+    construc(var: int, var1: child) {}
 
     public string baseMethod(test: string, test2: boolean) {
         return 1;
@@ -76,3 +68,4 @@ let typeChecker = new TypeChecker(ast.result)
 console.log(typeChecker.classMethodMap)
 console.log(typeChecker.methodReturnType)
 console.log(typeChecker.typeTree)
+console.log(typeChecker.classConstructorTypes)

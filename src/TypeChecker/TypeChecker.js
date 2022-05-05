@@ -36,7 +36,7 @@ class TypeChecker {
             "Object": []
         }
 
-        // Create type tree
+        // Fill type tree
         const dupMap = {}
         classList.forEach(classDec => {
             const className = classDec.classNameType.value 
@@ -54,7 +54,7 @@ class TypeChecker {
         if (Object.keys(trackerMap).length < classList.length)
             throw new TypeError("There is a cycle in the class hierarchy");
 
-        // Fill classMethodMap and methodReturnType
+        // Fill classMethodMap, methodReturnType, and classConstructorTypes
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
@@ -175,7 +175,7 @@ class TypeChecker {
             this.typeofNewClassExp(exp, typeEnvironment, classWeAreIn)
         }
         else {
-
+            throw new TypeError("Unrecognized expression: " + exp);
         }
     }
 
@@ -342,13 +342,20 @@ class TypeChecker {
 
         // Makes sure parameters are correct type
         
-        // Get params of user created exp
-        const testParams = NewClassExp.parameterExpsArray
-        const testParamsTypes = testParams.map(exp => this.expTypeof(exp))
-        
-        // Get params of 
+            // Get params of user created exp
+            const testParams = NewClassExp.parameterExpsArray
+            const testParamsTypes = testParams.map(exp => this.expTypeof(exp))
+            
+            // Get params of defined class
+            const expectedParamsTypes = this.classConstructorTypes[className]
 
-        return NewClassExp.className;
+        if (testParamsTypes.length !== expectedParamsTypes.length)
+            throw new TypeError("Inncorrect number of constructor parameters for: " + className);
+
+        // Throws error if there is a mismatch
+        this.compareTypesInArray(testParamsTypes, expectedParamsTypes)
+
+        return new ClassNameType(NewClassExp.className);
     }
 }
 
