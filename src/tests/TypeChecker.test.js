@@ -15,6 +15,8 @@ function createAST(string) {
 let string = `
 
 class base {
+    protec var: int = 1;
+
     construc(var: int) {}
     
     public int baseMethod(test: int, test2: boolean, test3: string) {
@@ -23,6 +25,8 @@ class base {
 }
 
 class child super base {
+    private var: boolean = 2;
+
     construc(var: string) {
         super();
     }
@@ -34,6 +38,8 @@ class child super base {
 
 
 class childchild super child {
+    private varchildchild: string = "hello";
+
     construc(var: boolean) {
         super();
 
@@ -43,7 +49,7 @@ class childchild super child {
     public boolean superChildMethod(test: boolean) {
         return 3;
     }
-
+  
     public child superChildMethod2(test: child) {
         return 3;
     }
@@ -72,6 +78,9 @@ console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
 console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
 console.log("\nTypeTree: ", typeChecker.typeTree)
 console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
+
+console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
+console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
 
 

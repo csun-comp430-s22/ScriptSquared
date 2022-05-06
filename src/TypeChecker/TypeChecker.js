@@ -48,8 +48,11 @@ class TypeChecker {
         this.classInstanceVariables = {
             "Object": {}
         }
-            // remove privates from subclasses (like methods)
-            // Inheritance works the same as methods
+
+        // className: { variableName: accessModifier }
+        this.instanceVariableAccessMod = {
+            "Object": {}
+        }
 
         // type: array of subtypes
         this.typeTree = {
@@ -84,8 +87,9 @@ class TypeChecker {
             this.methodReturnType[className] = {}
             this.methodAccessMod[className] = {}
             this.classMethodMap[className] = this.iterateMethodArrayAndExtractData(className, methodsArray, this.methodReturnType, this.methodAccessMod)
-
-            this.classInstanceVariables[className] = this.iterateInstanceDecArrayAndExtractData(className, classDec.instanceDecList)
+            
+            this.instanceVariableAccessMod[className] = {}
+            this.classInstanceVariables[className] = this.iterateInstanceDecArrayAndExtractData(className, instanceDecsArray, this.instanceVariableAccessMod)
         })
 
     }
@@ -171,7 +175,7 @@ class TypeChecker {
             const methodName = methodDec.methodName.value
 
             // if method is in the map already then it has been overriden and you don't need the super's method
-            if ( !(methodName in methodMap) ) {
+            if ( methodMap[methodName] === undefined ) {
                 methodMap[methodName] = methodDec.varDecList.map(vardec => vardec.type)
                 methodReturnType[className][methodName] = methodDec.type
                 methodAccessMod[className][methodName] = methodDec.accessModifier
@@ -180,6 +184,23 @@ class TypeChecker {
         })
 
         return methodMap;
+    }
+
+    iterateInstanceDecArrayAndExtractData(className, instanceDecsArray, instanceVariableAccessMod) {
+
+        const variableTypeMap = {}
+
+        instanceDecsArray.forEach(instanceDec => {
+            const variableName = instanceDec.vardec.variable.value
+
+            // if variable is in the map already then it has been overriden and you don't need the super's variable
+            if ( variableTypeMap[variableName] === undefined ) {
+                variableTypeMap[variableName] = instanceDec.vardec.type
+                instanceVariableAccessMod[className][variableName] = instanceDec.accessModifier
+            }
+        })
+
+        return variableTypeMap;
     }
 
 
