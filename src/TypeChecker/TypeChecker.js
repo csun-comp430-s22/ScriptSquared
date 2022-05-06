@@ -77,7 +77,7 @@ class TypeChecker {
         // Fill classMethodMap, methodReturnType, classConstructorTypes, and methodAccessMod
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
-            const methodsArray = this.extractMethodsFromClass(className, classList)
+            const [instanceDecsArray, methodsArray] = this.extractMethodsAndInstanceDecsFromClass(className, classList)
 
             this.classConstructorTypes[className] = classDec.constructor.vardecList.map(varDec => varDec.type)
             
@@ -85,7 +85,7 @@ class TypeChecker {
             this.methodAccessMod[className] = {}
             this.classMethodMap[className] = this.iterateMethodArrayAndExtractData(className, methodsArray, this.methodReturnType, this.methodAccessMod)
 
-            this.classInstanceVariables[className] = extractInstanceDecsFromClass(className, classDec.instanceDecList)
+            this.classInstanceVariables[className] = this.iterateInstanceDecArrayAndExtractData(className, classDec.instanceDecList)
         })
 
     }
@@ -94,30 +94,26 @@ class TypeChecker {
      * 
      * @param {String} className name of class to extract methods from
      * @param {Array} classList array of all classDecs
-     * @returns array of methodDecs in specified class
+     * @returns array of instanceDecs and methodDecs in specified class (as array)
      */
-    extractMethodsFromClass(className, classList) {
+    extractMethodsAndInstanceDecsFromClass(className, classList) {
         const classDec = classList.find(classDec => classDec.classNameType.value === className)
         if (classDec === undefined) {
             throw new TypeError("Class '" + className + "' is not defined")
         }
 
+        let classInstanceDecs = [...classDec.instanceDecList]
         let classMethods = [...classDec.methodDecList]
 
-        // Check for dups
-        const dupMap = {}
-        classMethods.forEach(methodDec => {
-            const methodName = methodDec.methodName.value
+        // Check for instance variable dups
+        this.checkForDupInstanceDecs(className, classInstanceDecs)
 
-            if (dupMap[methodName])
-                throw new TypeError("Cannot have two methods '" + methodName + "' in class '" + className + "'");
-            else 
-                dupMap[methodName] = true
-        })
+        // Check for method dups
+        this.checkForDupMethods(className, classMethods)
         
         // Extract super class methods
         if (classDec.superClassName.value !== "Object") {
-            const superClassMethods = this.extractMethodsFromClass(classDec.superClassName.value, classList)
+            const [superClassInstanceDecs, superClassMethods] = this.extractMethodsAndInstanceDecsFromClass(classDec.superClassName.value, classList)
 
             // Delete Private Methods
             for (let i = 0; i < superClassMethods.length; i++) {
@@ -128,10 +124,44 @@ class TypeChecker {
                 }
             }
 
+            // Delete Private Instance Variables
+            for (let i = 0; i < superClassInstanceDecs.length; i++) {
+                const accessMod = superClassInstanceDecs[i].accessModifier
+
+                if (instance_of(accessMod, PrivateModifier)) {
+                    superClassInstanceDecs.splice(i,1)
+                }
+            }
+
+            classInstanceDecs = classInstanceDecs.concat(superClassInstanceDecs)
             classMethods = classMethods.concat(superClassMethods)
         }
 
-        return classMethods;
+        return [classInstanceDecs, classMethods];
+    }
+
+    checkForDupMethods(className, methodDecArray) {
+        const dupMap = {}
+        methodDecArray.forEach(methodDec => {
+            const methodName = methodDec.methodName.value
+
+            if (dupMap[methodName])
+                throw new TypeError("Cannot have two methods '" + methodName + "' in class '" + className + "'");
+            else 
+                dupMap[methodName] = true
+        })
+    }
+
+    checkForDupInstanceDecs(className, instanceDecArray) {
+        const dupMap = {}
+        instanceDecArray.forEach(instanceDec => {
+            const variableName = instanceDec.vardec.variable.value
+
+            if (dupMap[variableName])
+                throw new TypeError("Cannot have two variables '" + variableName + "' in class '" + className + "'");
+            else 
+                dupMap[variableName] = true
+        })
     }
 
     iterateMethodArrayAndExtractData(className, methodArray, methodReturnType, methodAccessMod) {
@@ -152,40 +182,6 @@ class TypeChecker {
         return methodMap;
     }
 
-    extractInstanceDecsFromClass(className, instanceDecList) {
-
-        let classInstanceDecs = [...instanceDecList]
-
-        // Check for dups
-        const dupMap = {}
-        classInstanceDecs.forEach(instanceDec => {
-            const variableName = instanceDec.vardec.variable.value
-
-            if (dupMap[variableName])
-                throw new TypeError("Cannot have two variables '" + variableName + "' in class '" + className + "'");
-            else 
-                dupMap[variableName] = true
-        })
-
-        // Extract super class instance variables
-        if (classDec.superClassName.value !== "Object") {
-            // const superClassMethods = this.extractInstanceDecsFromClass(classDec.superClassName.value, classList)
-
-            // // Delete Private Methods
-            // for (let i = 0; i < superClassMethods.length; i++) {
-            //     const accessMod = superClassMethods[i].accessModifier
-
-            //     if (instance_of(accessMod, PrivateModifier)) {
-            //         superClassMethods.splice(i,1)
-            //     }
-            // }
-
-            classInstanceDecs = classInstanceDecs.concat(superClassMethods)
-        }
-
-        return classInstanceDecs;
-        
-    }
 
     /**
      * 
