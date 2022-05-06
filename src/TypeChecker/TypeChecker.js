@@ -666,19 +666,12 @@ class TypeChecker {
     */
     isWellTypedClassDec (classDec) {
         const className = classDec.classNameType.value
-        let typeEnvironment = {}
+        let typeEnvironment = this.classInstanceVariables[className]
 
-        // Add instanceDecs to typeEnvironment if well typed
-        // TODO: go through classInstanceVariables and check if exp assigned to each variable is well typed
+        // Check if instance variables are well typed
         classDec.instanceDecList.forEach(instanceDec => {
             this.isWellTypedInstanceDec(instanceDec, typeEnvironment, className)
-            
-            const variable = instanceDec.vardec.variable.value
-            if (typeEnvironment[variable] === undefined) 
-                typeEnvironment[variable] = instanceDec.vardec.type
-            else 
-                throw new TypeError("Duplicate instance variable: " + variable + " in class: " + className);
-        })
+        })        
 
         // Check if constructor is well typed
        
@@ -706,3 +699,5 @@ class TypeChecker {
 }
 
 module.exports = TypeChecker;
+
+//TODO: check if variable being used is accessible
