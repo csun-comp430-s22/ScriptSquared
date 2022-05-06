@@ -38,7 +38,6 @@ class childchild super child {
         super();
 
         b: child = new child();
-        b.baseMethod(1);
     }
 
     public boolean superChildMethod(test: boolean) {

@@ -517,12 +517,13 @@ class TypeChecker {
     isWellTypedBlock (blockStmt, typeEnvironment, classWeAreIn, functionReturnType) {
 
         const stmtList = blockStmt.stmtList
+        let newTypeEnvironment = {...typeEnvironment}
 
         for (let i = 0; i < stmtList.length; i++) {
-            typeEnvironment = this.isWellTyped(stmtList[i], typeEnvironment, classWeAreIn, functionReturnType)
+            newTypeEnvironment = this.isWellTyped(stmtList[i], newTypeEnvironment, classWeAreIn, functionReturnType)
         }
 
-        return typeEnvironment;
+        return newTypeEnvironment;
     }
 
     // exp.methodname(exp*);
@@ -568,11 +569,27 @@ class TypeChecker {
     }
 
 
-    // Greater Structures
+    // OTHER STRUCTURES
 
     // methoddec ::= access type methodname(vardec*) stmt
+    isWellTypedMethodDec (methodDec, typeEnvironment, classWeAreIn) {
+
+        let newTypeEnvironment = {...typeEnvironment}
+
+        const methodParamsList = methodDec.varDecList 
+        for (let i = 0; i < methodParamsList.length; i++) {
+            newTypeEnvironment = this.addToMap(newTypeEnvironment, methodParamsList[i].variable, methodParamsList[i].type)
+        }
+
+        this.isWellTyped(methodDec.stmt, newTypeEnvironment, classWeAreIn, methodDec.type)
+    }
 
     // instancedec ::= access vardec = exp;
+    isWellTypedInstanceDec (instanceDec, typeEnvironment, classWeAreIn) {
+        this.isWellTypedVarDecEqualsExp(new VarDecEqualsExpStmt(instanceDec.vardec, instanceDec.expression),
+                                        typeEnvironment,
+                                        classWeAreIn)
+    }
 
     /* 
         classdec ::= class classname super classname {
@@ -582,8 +599,14 @@ class TypeChecker {
 		    methoddec*
 	    }
     */
+    isWellTypedClassDec () {
+
+    }
 
     // program ::= classdec* `thyEntryPoint` stmt 
+    isWellTypedProgram () {
+
+    }
 }
 
 module.exports = TypeChecker;
