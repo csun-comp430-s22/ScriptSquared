@@ -17,7 +17,7 @@ let string = `
 class base {
     construc(var: int) {}
     
-    private int baseMethod(test: int, test2: boolean, test3: string) {
+    public int baseMethod(test: int, test2: boolean, test3: string) {
         return 1;
     }
 }
@@ -57,18 +57,19 @@ class unrelatedClass {
 }
 
 
-    thyEntryPoint {
-        return;
-    }
+thyEntryPoint {
+    return;
+}
 `
 let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
 
 // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
-console.log(typeChecker.classMethodMap)
-console.log(typeChecker.methodReturnType)
-console.log(typeChecker.typeTree)
-console.log(typeChecker.classConstructorTypes)
+console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
+console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
+console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
+console.log("\nTypeTree: ", typeChecker.typeTree)
+console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
 
 
 

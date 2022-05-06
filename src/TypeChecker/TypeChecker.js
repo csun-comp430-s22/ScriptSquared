@@ -33,7 +33,12 @@ class TypeChecker {
         // classname: { methodname: return type }
         this.methodReturnType = {}
 
+        // classname: { methodname: accessModifier }
+        this.methodAccessMod = {}
+
         // TODO: Get all instanceDecs
+            // remove privates from subclasses (like methods)
+            // Inheritance works the same as methods
 
         // type: array of subtypes
         this.typeTree = {
@@ -52,13 +57,13 @@ class TypeChecker {
             this.insertIntoTypeTree(classDec, this.typeTree)
         })
 
-        // Check for Cycles
+        // Check for Cycles in type tree
         let trackerMap = {}
         this.checkForCycles(this.typeTree, "Object", this.typeTree.Object, trackerMap)
         if (Object.keys(trackerMap).length < classList.length)
             throw new TypeError("There is a cycle in the class hierarchy");
 
-        // Fill classMethodMap, methodReturnType, and classConstructorTypes
+        // Fill classMethodMap, methodReturnType, classConstructorTypes, and methodAccessMod
         classList.forEach(classDec => {
             const className = classDec.classNameType.value
             const methodsArray = this.extractMethodsFromClass(className, classList)
@@ -66,7 +71,8 @@ class TypeChecker {
             this.classConstructorTypes[className] = classDec.constructor.vardecList.map(varDec => varDec.type)
             
             this.methodReturnType[className] = {}
-            this.classMethodMap[className] = this.convertMethodArrayToObjAndExtractMethodTypes(className, methodsArray, this.methodReturnType)
+            this.methodAccessMod[className] = {}
+            this.classMethodMap[className] = this.iterateMethodArrayAndExtractData(className, methodsArray, this.methodReturnType, this.methodAccessMod)
         })
 
     }
@@ -115,7 +121,7 @@ class TypeChecker {
         return classMethods;
     }
 
-    convertMethodArrayToObjAndExtractMethodTypes(className, methodArray, methodReturnType) {
+    iterateMethodArrayAndExtractData(className, methodArray, methodReturnType, methodAccessMod) {
         const methodMap = {}
 
         methodArray.forEach(methodDec => {
@@ -125,7 +131,9 @@ class TypeChecker {
             if ( !(methodName in methodMap) ) {
                 methodMap[methodName] = methodDec.varDecList.map(vardec => vardec.type)
                 methodReturnType[className][methodName] = methodDec.type
+                methodAccessMod[className][methodName] = methodDec.accessModifier
             }  
+
         })
 
         return methodMap;
@@ -305,6 +313,12 @@ class TypeChecker {
 
         const className = parentExpType.value
         const methodName = ExpMethodExp.methodName.value
+
+        // Check if method is accessable in current scope
+            // if method is private, then you can only call it in side the class of the method
+            // if ()
+            // className === classWeAreIn
+
         const methodTypeArray = this.expectedParamTypesForClassAndMethod(className, methodName)
 
         if (testArray.length !== expectedArray.length)
