@@ -24,19 +24,30 @@ class TypeChecker {
     constructor(program) {
         const classList = program.classDecList;
         
-        // className: { methodname: array of param types in order }
-        this.classMethodMap = {}
+        // className: { methodName: array of param types in order }
+        this.classMethodMap = {
+            "Object": {}
+        }
 
         // className: array of param types
-        this.classConstructorTypes = {}
+        this.classConstructorTypes = {
+            "Object": []
+        }
 
-        // classname: { methodname: return type }
-        this.methodReturnType = {}
+        // className: { methodName: return type }
+        this.methodReturnType = {
+            "Object": {}
+        }
 
-        // classname: { methodname: accessModifier }
-        this.methodAccessMod = {}
+        // className: { methodName: accessModifier }
+        this.methodAccessMod = {
+            "Object": {}
+        }
 
-        // TODO: Get all instanceDecs
+        // className: { variableName: type }
+        this.classInstanceVariables = {
+            "Object": {}
+        }
             // remove privates from subclasses (like methods)
             // Inheritance works the same as methods
 
@@ -73,6 +84,8 @@ class TypeChecker {
             this.methodReturnType[className] = {}
             this.methodAccessMod[className] = {}
             this.classMethodMap[className] = this.iterateMethodArrayAndExtractData(className, methodsArray, this.methodReturnType, this.methodAccessMod)
+
+            this.classInstanceVariables[className] = extractInstanceDecsFromClass(className, classDec.instanceDecList)
         })
 
     }
@@ -137,6 +150,41 @@ class TypeChecker {
         })
 
         return methodMap;
+    }
+
+    extractInstanceDecsFromClass(className, instanceDecList) {
+
+        let classInstanceDecs = [...instanceDecList]
+
+        // Check for dups
+        const dupMap = {}
+        classInstanceDecs.forEach(instanceDec => {
+            const variableName = instanceDec.vardec.variable.value
+
+            if (dupMap[variableName])
+                throw new TypeError("Cannot have two variables '" + variableName + "' in class '" + className + "'");
+            else 
+                dupMap[variableName] = true
+        })
+
+        // Extract super class instance variables
+        if (classDec.superClassName.value !== "Object") {
+            // const superClassMethods = this.extractInstanceDecsFromClass(classDec.superClassName.value, classList)
+
+            // // Delete Private Methods
+            // for (let i = 0; i < superClassMethods.length; i++) {
+            //     const accessMod = superClassMethods[i].accessModifier
+
+            //     if (instance_of(accessMod, PrivateModifier)) {
+            //         superClassMethods.splice(i,1)
+            //     }
+            // }
+
+            classInstanceDecs = classInstanceDecs.concat(superClassMethods)
+        }
+
+        return classInstanceDecs;
+        
     }
 
     /**
@@ -599,8 +647,39 @@ class TypeChecker {
 		    methoddec*
 	    }
     */
-    isWellTypedClassDec () {
+    isWellTypedClassDec (classDec) {
+        const className = classDec.classNameType.value
+        let typeEnvironment = {}
 
+        // Add instanceDecs to typeEnvironment if well typed
+        // TODO: go through classInstanceVariables and check if exp assigned to each variable is well typed
+        classDec.instanceDecList.forEach(instanceDec => {
+            this.isWellTypedInstanceDec(instanceDec, typeEnvironment, className)
+            
+            const variable = instanceDec.vardec.variable.value
+            if (typeEnvironment[variable] === undefined) 
+                typeEnvironment[variable] = instanceDec.vardec.type
+            else 
+                throw new TypeError("Duplicate instance variable: " + variable + " in class: " + className);
+        })
+
+        // Check if constructor is well typed
+       
+            // get super object's constructor params and compare to params passed to 'super()'
+            const superClassName = classDec.superClassName.value
+            const superParamTypes = classDec.constructor.superExpList.map(exp => this.expTypeof(exp, typeEnvironment, className))
+            const superClassParamTypes = this.classConstructorTypes[superClassName]
+            this.compareTypesInArray(superParamTypes, superClassParamTypes)
+
+            // check stmts and update typeEnvironment if changed
+            classDec.constructor.stmtList.forEach(stmt => {
+                typeEnvironment = this.isWellTyped(stmt, typeEnvironment, className, /*TODO: RETURN TYPE*/)
+            })
+        
+        // Check if methodDecs are well typed
+        classDec.methodDecList.forEach(methodDec => {
+            this.isWellTypedMethodDec(methodDec, typeEnvironment, className)
+        })
     }
 
     // program ::= classdec* `thyEntryPoint` stmt 
