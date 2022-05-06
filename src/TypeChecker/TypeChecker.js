@@ -477,9 +477,11 @@ class TypeChecker {
         const methodName = expMethodExp.methodName.value
         const methodParams = expMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp))
 
-        //TODO: if classname isn't in map it will crash cuz trying to call on undefined
-        const expectedMethodParams = this.classMethodMap[className][methodName]
+        const classMethods = this.classMethodMap[className]
+        if (classMethods === undefined) 
+            throw new TypeError("No such class '" + className + "' exists")
 
+        const expectedMethodParams = classMethods[methodName]
         if (expectedMethodParams === undefined) 
             throw new TypeError("No such method '" + methodName + "' exists for class '" + className + "'");
 
@@ -523,6 +525,24 @@ class TypeChecker {
         newMap[variable.value] = type
         return newMap;
     }
+
+
+    // Greater Structures
+
+    // methoddec ::= access type methodname(vardec*) stmt
+
+    // instancedec ::= access vardec = exp;
+
+    /* 
+        classdec ::= class classname super classname {
+	     	instancedec*
+		    construc(vardec*) { super(exp*); stmt* }	// vardec separated by comma. 
+							      // stmt’s separated by semi-colons
+		    methoddec*
+	    }
+    */
+
+    // program ::= classdec* `thyEntryPoint` stmt 
 }
 
 module.exports = TypeChecker;
