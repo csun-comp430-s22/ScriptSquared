@@ -1,4 +1,4 @@
-const { PrivateModifier } = require("../Parser/AccessModifier");
+const { PrivateModifier, ProtecModifier } = require("../Parser/AccessModifier");
 const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
 const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
 const { IfStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, BreakStmt, BlockStmt, ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements");
@@ -302,31 +302,46 @@ class TypeChecker {
         }
     }
 
-    // TODO: Depending on what class you in and access type some methods should not be accessable
     // exp.methodname(exp*)
     typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
         const parameterExpsTypeArray = ExpMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
 
         if (!instance_of(parentExpType, ClassNameType))
-            throw new TypeError("Called method on non-class type: " + parentExpType);
+            throw new TypeError("Called method '" + methodName + "' on non-class type: " + parentExpType);
 
         const className = parentExpType.value
         const methodName = ExpMethodExp.methodName.value
 
         // Check if method is accessable in current scope
-            // if method is private, then you can only call it in side the class of the method
-            // if ()
-            // className === classWeAreIn
-
-        const methodTypeArray = this.expectedParamTypesForClassAndMethod(className, methodName)
-
-        if (testArray.length !== expectedArray.length)
-            throw new TypeError("Inncorrect number of parameters for call " + methodName);
+        const accessMod = this.methodAccessMod[className][methodName]
+        this.checkAccessMod(className, methodName, accessMod, classWeAreIn)
+    
+        const expectedMethodParamsTypes = this.expectedParamTypesForClassAndMethod(className, methodName)
 
         // Will throw error if something fails
-        this.compareTypesInArray(parameterExpsTypeArray, methodTypeArray)
+        this.compareTypesInArray(parameterExpsTypeArray, expectedMethodParamsTypes)
         return this.methodReturnType[className][methodName];
+    }
+
+    /**
+     * 
+     * @param {String} className name of class method is being called on
+     * @param {String} methodName name of method being called
+     * @param {AccessModifier} accessMod access modifier of the method being called
+     * @param {String} classWeAreIn the current class the method is being called in
+     * @returns true if everything is okay; throws error otherwise
+     */
+    checkAccessMod(className, methodName, accessMod, classWeAreIn) {
+        // if method is private, then you can only call it inside the class of the method
+        if ( instance_of(accessMod, PrivateModifier) && className !== classWeAreIn ) 
+            throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");
+            
+        // if method is protec, then you can only call it inside the class or subclass of the class of the method
+        if ( instance_of(accessMod, ProtecModifier) && !this.isLeftTypeofRight(classWeAreIn, className) )
+            throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");
+
+        return true;
     }
 
     /** 
@@ -336,20 +351,28 @@ class TypeChecker {
      * @returns Array containing types for method parameters; throws error if method not in class
      */
     expectedParamTypesForClassAndMethod(className, methodName) {
-        let result = this.classMethodMap[className][methodName]
-        if (result === undefined)
-            throw new TypeError("Method: " + methodName + " is not in class: " + className);
+        const classMethods = this.classMethodMap[className]
+        if (classMethods === undefined) 
+            throw new TypeError("No such class '" + className + "' exists")
+
+        const expectedMethodParams = classMethods[methodName]
+        if (expectedMethodParams === undefined) 
+            throw new TypeError("No such method '" + methodName + "' exists for class '" + className + "'");
         
-        return result;
+        return expectedMethodParams;
     }
 
     /**
      * 
      * @param {Type[]} testArray 
      * @param {Type[]} expectedArray 
-     * @returns True if have same types in same order
+     * @returns True if have same types in same order; throws error otherwise
      */
     compareTypesInArray(testArray, expectedArray) {
+
+        if (testArray.length !== expectedArray.length)
+            throw new TypeError("Inncorrect number of parameters for call " + methodName);
+
         for (let i = 0; i < testArray.length; i++) {
            this.isLeftTypeofRight(testArray[i], expectedArray[i])
         }      
@@ -502,28 +525,9 @@ class TypeChecker {
         return typeEnvironment;
     }
 
-    // TODO: Depending on what class you in and access type some methods should not be accessable
     // exp.methodname(exp*);
     isWellTypedExpMethodExp (expMethodExp, typeEnvironment, classWeAreIn) {
-        const parentExpType = this.expTypeof(expMethodExp.parentExp, typeEnvironment, classWeAreIn)
-
-        if (!instance_of(parentExpType, ClassNameType))
-            throw new TypeError("'" + expMethodExp.parentExp.value + "' is not a class");
-
-        const className = parentExpType.value
-        const methodName = expMethodExp.methodName.value
-        const methodParams = expMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp))
-
-        const classMethods = this.classMethodMap[className]
-        if (classMethods === undefined) 
-            throw new TypeError("No such class '" + className + "' exists")
-
-        const expectedMethodParams = classMethods[methodName]
-        if (expectedMethodParams === undefined) 
-            throw new TypeError("No such method '" + methodName + "' exists for class '" + className + "'");
-
-        this.compareTypesInArray(methodParams, expectedMethodParams)
-        
+        this.typeofExpMethodExp(expMethodExp, typeEnvironment, classWeAreIn)
         return typeEnvironment;
     }
 

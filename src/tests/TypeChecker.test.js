@@ -27,7 +27,7 @@ class child super base {
         super();
     }
 
-    private boolean baseMethod(test: int) {
+    public boolean baseMethod(test: int) {
         return 1;
     }
 }
@@ -36,6 +36,9 @@ class child super base {
 class childchild super child {
     construc(var: boolean) {
         super();
+
+        b: child = new child();
+        b.baseMethod(1);
     }
 
     public boolean superChildMethod(test: boolean) {
