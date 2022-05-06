@@ -674,16 +674,22 @@ class TypeChecker {
         })        
 
         // Check if constructor is well typed
-       
+        let constructorTypeEnvironment = {...typeEnvironment}
+
+            // Update constructor type environment
+            classDec.constructor.vardecList.forEach(vardec => {
+                constructorTypeEnvironment[vardec.variable.value] = vardec.type
+            })
+
             // get super object's constructor params and compare to params passed to 'super()'
             const superClassName = classDec.superClassName.value
-            const superParamTypes = classDec.constructor.superExpList.map(exp => this.expTypeof(exp, typeEnvironment, className))
+            const superParamTypes = classDec.constructor.superExpList.map(exp => this.expTypeof(exp, constructorTypeEnvironment, className))
             const superClassParamTypes = this.classConstructorTypes[superClassName]
             this.compareTypesInArray(superParamTypes, superClassParamTypes)
 
-            // check stmts and update typeEnvironment if changed
+            // check if statements are well typed in constructor
             classDec.constructor.stmtList.forEach(stmt => {
-                typeEnvironment = this.isWellTyped(stmt, typeEnvironment, className, /*TODO: RETURN TYPE*/)
+                constructorTypeEnvironment = this.isWellTyped(stmt, constructorTypeEnvironment, className, VoidType)
             })
         
         // Check if methodDecs are well typed

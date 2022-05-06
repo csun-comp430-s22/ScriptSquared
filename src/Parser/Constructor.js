@@ -3,7 +3,7 @@ const { Exp } = require("./Expressions");
 const { Stmt } = require("./Statements");
 const { VarDec } = require("./VarDec");
 
-
+// construc(vardec*) { super(exp*); stmt* } 
 class Constructor {
 
     constructor(vardecList, superExpList, stmtList) {
