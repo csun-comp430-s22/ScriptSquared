@@ -17,7 +17,7 @@ let string = `
 class base {
     construc(var: int) {}
     
-    public int baseMethod(test: int, test2: boolean, test3: string) {
+    private int baseMethod(test: int, test2: boolean, test3: string) {
         return 1;
     }
 }
@@ -27,7 +27,7 @@ class child super base {
         super();
     }
 
-    public boolean baseMethod(test: int) {
+    private boolean baseMethod(test: int) {
         return 1;
     }
 }
@@ -69,3 +69,9 @@ console.log(typeChecker.classMethodMap)
 console.log(typeChecker.methodReturnType)
 console.log(typeChecker.typeTree)
 console.log(typeChecker.classConstructorTypes)
+
+
+
+// Private - only inside of the class
+// Protec - only by subclasses 
+// Public - by anyone

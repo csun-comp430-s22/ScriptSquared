@@ -1,3 +1,4 @@
+const { PrivateModifier } = require("../Parser/AccessModifier");
 const { BooleanExp, Exp, ExpMethodExp, IntegerExp, NewClassExp, OpExp, StringExp, ThisExp, VariableExp } = require("../Parser/Expressions");
 const { DivideOp, DotOp, EqualOp, GreaterThanEqualOp, GreaterThanOp, LessThanEqualOp, LessThanOp, MinusOp, MultiplyOp, NotEqualOp, PlusOp } = require("../Parser/Operations");
 const { IfStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, BreakStmt, BlockStmt, ExpMethodExpStmt, VarEqualsExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements");
@@ -31,6 +32,8 @@ class TypeChecker {
 
         // classname: { methodname: return type }
         this.methodReturnType = {}
+
+        // TODO: Get all instanceDecs
 
         // type: array of subtypes
         this.typeTree = {
@@ -68,6 +71,12 @@ class TypeChecker {
 
     }
 
+    /**
+     * 
+     * @param {String} className name of class to extract methods from
+     * @param {Array} classList array of all classDecs
+     * @returns array of methodDecs in specified class
+     */
     extractMethodsFromClass(className, classList) {
         const classDec = classList.find(classDec => classDec.classNameType.value === className)
         if (classDec === undefined) {
@@ -90,6 +99,16 @@ class TypeChecker {
         // Extract super class methods
         if (classDec.superClassName.value !== "Object") {
             const superClassMethods = this.extractMethodsFromClass(classDec.superClassName.value, classList)
+
+            // Delete Private Methods
+            for (let i = 0; i < superClassMethods.length; i++) {
+                const accessMod = superClassMethods[i].accessModifier
+
+                if (instance_of(accessMod, PrivateModifier)) {
+                    superClassMethods.splice(i,1)
+                }
+            }
+
             classMethods = classMethods.concat(superClassMethods)
         }
 
@@ -196,6 +215,7 @@ class TypeChecker {
             return new ClassNameType(classWeAreIn);
     }
 
+    // exp op exp
     typeofOpExp(OpExp, typeEnvironment, classWeAreIn) {
         leftType = this.expTypeof(OpExp.leftExp, typeEnvironment, classWeAreIn)
         rightType = this.expTypeof(OpExp.rightExp, typeEnvironment, classWeAreIn)
@@ -274,6 +294,8 @@ class TypeChecker {
         }
     }
 
+    // TODO: Depending on what class you in and access type some methods should not be accessable
+    // exp.methodname(exp*)
     typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
         const parameterExpsTypeArray = ExpMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
@@ -466,6 +488,7 @@ class TypeChecker {
         return typeEnvironment;
     }
 
+    // TODO: Depending on what class you in and access type some methods should not be accessable
     // exp.methodname(exp*);
     isWellTypedExpMethodExp (expMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(expMethodExp.parentExp, typeEnvironment, classWeAreIn)
