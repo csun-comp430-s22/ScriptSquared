@@ -6,7 +6,7 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = requi
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt, WhileStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt } = require("../Parser/Statements")
 
 
 function createAST(string) {
@@ -426,6 +426,27 @@ describe("Test Statement TypeChecker", () => {
                                                     null,
                                                     null
                 )
+            }
+            expect(func).toThrow(TypeError)
+        })
+    })
+
+    describe("typeofReturnExp", () => {
+        test("correct typing", () => {
+            const result = typeChecker.isWellTyped(new ReturnExpStmt(new IntegerExp(1)), {}, "foo", new IntType())
+            expect(objsEqual(result, {})).toBe(true)
+        })
+
+        test("incorrect typing: mismatch", () => {
+            function func () {
+                typeChecker.isWellTyped(new ReturnExpStmt(new IntegerExp(1)), {}, "foo", new StringType("he"))
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: null", () => {
+            function func () {
+                typeChecker.isWellTyped(new ReturnExpStmt(new IntegerExp(1)), {}, "foo", null)
             }
             expect(func).toThrow(TypeError)
         })
