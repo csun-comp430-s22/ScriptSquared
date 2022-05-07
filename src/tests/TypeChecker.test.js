@@ -1,7 +1,6 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
-const { ExpMethodExp } = require("../Parser/Expressions")
 
 
 function createAST(string) {
@@ -32,7 +31,7 @@ class child super base {
         test = 2;
     }
 
-    protec boolean baseMethod(test: int) {
+    private boolean baseMethod(test: int) {
         return true;
     }
 }
@@ -44,8 +43,7 @@ class childchild super child {
     construc(var: boolean) {
         super("yeet");
 
-        b: child = new child("test");
-        b.baseMethod(2);
+        this.baseMethod(3, true, "yeet");  
     }
 
     public boolean superChildMethod(test: boolean) {
@@ -75,7 +73,6 @@ let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
 typeChecker.isWellTypedProgram()
 
-// TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
 // console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
 // console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
 // console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
@@ -84,8 +81,6 @@ typeChecker.isWellTypedProgram()
 
 // console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
 // console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
-
-// TODO: crashes when i make a variable of type class
 
 // Private - only inside of the class
 // Protec - only by subclasses 
