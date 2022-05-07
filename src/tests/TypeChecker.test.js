@@ -1,9 +1,10 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
-const { IntType } = require("../Parser/Type")
-const { VariableExp } = require("../Parser/Expressions")
+const { IntType, ClassNameType } = require("../Parser/Type")
+const { VariableExp, ThisExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
+const { TypeError } = require("../TypeChecker/TypeError")
 
 
 function createAST(string) {
@@ -87,18 +88,40 @@ typeChecker.isWellTypedProgram()
 
 
 describe("Test Expression TypeChecker", () => {
-    const typeEnvironment = { "var": new IntType() }
-    const ast = createAST("thyEntryPoint {}")
-    const typeChecker = new TypeChecker(ast.result)
 
     describe("typeofVariable", () => {
+        const typeEnvironment = { "var": new IntType() }
+        const ast = createAST("thyEntryPoint {}")
+        const typeChecker = new TypeChecker(ast.result)
+
         test("variable in typeEnvironment", () => {
             const result = typeChecker.expTypeof(new VariableExp(new Variable("var")), typeEnvironment, null)
             expect(result.equals(new IntType())).toBe(true)
         })
         
-        // test("variable NOT in typeEnvironment", () => {
-    
-        // })
+        test("variable NOT in typeEnvironment", () => {
+            function func() {
+                typeChecker.expTypeof(new VariableExp(new Variable("test")), typeEnvironment, null)
+            }
+            expect(func).toThrow(TypeError)
+        })
+    })
+
+    describe("typeofThis", () => {
+        const ast = createAST("thyEntryPoint {}")
+        const typeChecker = new TypeChecker(ast.result)
+
+        test("Not in entry point", () => {
+            const result = typeChecker.expTypeof(new ThisExp(), {}, "foo")
+            expect(result.equals(new ClassNameType("foo"))).toBe(true)
+        })
+
+        test("In entry point", () => {
+            function func () {
+                const result = typeChecker.expTypeof(new ThisExp(), {}, null)
+            }
+
+            expect (func).toThrow(TypeError)
+        })
     })
 })
