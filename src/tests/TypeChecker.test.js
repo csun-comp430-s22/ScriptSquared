@@ -5,7 +5,7 @@ const { IntType, ClassNameType, StringType, BooleanType } = require("../Parser/T
 const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
-const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp } = require("../Parser/Operations")
+const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
 
 
 function createAST(string) {
@@ -286,22 +286,66 @@ describe("Test Expression TypeChecker", () => {
         })
 
         describe("EqualOp", () => {
-            test("correct typing", () => {
-                expect(false).toBe(true)
+            test("correct boolean typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new BooleanExp(true), new EqualOp(), new BooleanExp(false)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
+            })
+
+            test("correct integer typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new EqualOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
+            })
+
+            test("correct string typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new StringExp("t"), new EqualOp(), new StringExp("y")),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new EqualOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
 
         describe("NotEqualOp", () => {
-            test("correct typing", () => {
-                expect(false).toBe(true)
+            test("correct boolean typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new BooleanExp(true), new NotEqualOp(), new BooleanExp(false)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
+            })
+
+            test("correct integer typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new NotEqualOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
+            })
+
+            test("correct string typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new StringExp("t"), new NotEqualOp(), new StringExp("y")),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new NotEqualOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
     })
