@@ -6,7 +6,7 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = requi
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
 
 
@@ -482,7 +482,18 @@ describe("Test Statement TypeChecker", () => {
     })
 
     describe("typeofBlockStmt", () => {
+        
+        test("correct typeing", () => {
+            const typeEnvironment = {}
+            const result = typeChecker.isWellTyped(new BlockStmt([
+                new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")), new IntegerExp(1)),
+                new VarEqualsExpStmt(new Variable("var"), new IntegerExp(46)),
+                new BreakStmt()
+            ]), typeEnvironment, null, null)
 
+            expect(objsEqual(result, { "var": new IntType() })).toBe(true)
+            expect(objsEqual(typeEnvironment, {})).toBe(true)
+        })
     })
     
     describe("typeofVarEqualsExp", () => {
