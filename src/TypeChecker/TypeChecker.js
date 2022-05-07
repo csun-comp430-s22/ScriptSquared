@@ -286,9 +286,9 @@ class TypeChecker {
 
     // exp op exp
     typeofOpExp(OpExp, typeEnvironment, classWeAreIn) {
-        leftType = this.expTypeof(OpExp.leftExp, typeEnvironment, classWeAreIn)
-        rightType = this.expTypeof(OpExp.rightExp, typeEnvironment, classWeAreIn)
-        op = OpExp.op
+        const leftType = this.expTypeof(OpExp.leftExp, typeEnvironment, classWeAreIn)
+        const rightType = this.expTypeof(OpExp.rightExp, typeEnvironment, classWeAreIn)
+        const op = OpExp.op
 
         if (instance_of(op, PlusOp)) {
             if (instance_of(leftType, IntType) && instance_of(rightType, IntType))

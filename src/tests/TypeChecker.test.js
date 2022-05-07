@@ -2,9 +2,10 @@ const TypeChecker = require("../TypeChecker/TypeChecker")
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
 const { IntType, ClassNameType, StringType, BooleanType } = require("../Parser/Type")
-const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp } = require("../Parser/Expressions")
+const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
+const { PlusOp, MinusOp, MultiplyOp, DivideOp } = require("../Parser/Operations")
 
 
 function createAST(string) {
@@ -90,6 +91,7 @@ typeChecker.isWellTypedProgram()
 describe("Test Expression TypeChecker", () => {
     const ast = createAST("thyEntryPoint {}")
     const typeChecker = new TypeChecker(ast.result)
+    const typeEnvironment = {}
 
     test("IntegerExp", () => {
         const result = typeChecker.expTypeof(new IntegerExp(1), {}, null)
@@ -135,6 +137,140 @@ describe("Test Expression TypeChecker", () => {
             }
 
             expect (func).toThrow(TypeError)
+        })
+    })
+
+    describe("typeofOpExp", () => {
+        describe("PlusOp", () => {
+            test("correct typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new PlusOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new IntType())).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new PlusOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
+            })
+        })
+
+        describe("MinusOp", () => {
+            test("correct typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new MinusOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new IntType())).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new MinusOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
+            })
+        })
+
+        describe("MultiplyOp", () => {
+            test("correct typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new MultiplyOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new IntType())).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new MultiplyOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
+            })
+        })
+
+        describe("DivideOp", () => {
+            test("correct typing", () => {
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new DivideOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new IntType())).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new DivideOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
+            })
+        })
+
+        describe("GreaterThanOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
+        })
+
+        describe("LessThanOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
+        })
+
+        describe("GreaterThanEqualOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
+        })
+
+        describe("LessThanEqualOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
+        })
+
+        describe("EqualOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
+        })
+
+        describe("NotEqualOp", () => {
+            test("correct typing", () => {
+                expect(false).toBe(true)
+            })
+
+            test("incorrect typing", () => {
+                expect(false).toBe(true)
+            })
         })
     })
 })
