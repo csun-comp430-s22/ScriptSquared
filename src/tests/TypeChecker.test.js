@@ -1,11 +1,12 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
-const { IntType, ClassNameType, StringType, BooleanType } = require("../Parser/Type")
+const { IntType, ClassNameType, StringType, BooleanType, VoidType } = require("../Parser/Type")
 const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
+const { IfStmt, BreakStmt } = require("../Parser/Statements")
 
 
 function createAST(string) {
@@ -16,67 +17,81 @@ function createAST(string) {
     return AST;
 }
 
-let string = `
+function objsEqual(obj1, obj2) {
+    const obj1Keys = Object.keys(obj1)
 
-class base {
-    protec test: int = 1;
+    for (let i = 0; i < obj1Keys.length; i++) {
+        const key = obj1Keys[i]
 
-    construc(var: int) {}
+        if ( !(key in obj2) || !(obj1[key].equals(obj2[key])) ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// let string = `
+
+// class base {
+//     protec test: int = 1;
+
+//     construc(var: int) {}
     
-    public int baseMethod(test: int, test2: boolean, test3: string) {
-        return 1;
-    }
-}
+//     public int baseMethod(test: int, test2: boolean, test3: string) {
+//         return 1;
+//     }
+// }
 
-class child super base {
-    private var: boolean = true;
+// class child super base {
+//     private var: boolean = true;
 
-    construc(var: string) {
-        super(1);
-        test = 2;
-    }
+//     construc(var: string) {
+//         super(1);
+//         test = 2;
+//     }
 
-    private boolean baseMethod(test: int) {
-        return true;
-    }
-}
+//     private boolean baseMethod(test: int) {
+//         return true;
+//     }
+// }
 
 
-class childchild super child {
-    private varchildchild: string = "hello";
+// class childchild super child {
+//     private varchildchild: string = "hello";
 
-    construc(var: boolean) {
-        super("yeet");
+//     construc(var: boolean) {
+//         super("yeet");
 
-        this.baseMethod(3, true, "yeet");  
-    }
+//         this.baseMethod(3, true, "yeet");  
+//     }
 
-    public boolean superChildMethod(test: boolean) {
-        return true;
-    }
+//     public boolean superChildMethod(test: boolean) {
+//         return true;
+//     }
   
-    public child superChildMethod2(test: child) {
-        return new child("hello");
-    }
+//     public child superChildMethod2(test: child) {
+//         return new child("hello");
+//     }
 
-}
+// }
 
-class unrelatedClass {
-    construc(var: int, var1: child) {}
+// class unrelatedClass {
+//     construc(var: int, var1: child) {}
 
-    public string baseMethod(test: string, test2: boolean) {
-        return "hello";
-    }
-}
+//     public string baseMethod(test: string, test2: boolean) {
+//         return "hello";
+//     }
+// }
 
 
-thyEntryPoint {
-    var: base = new base(1);
-}
-`
-let ast = createAST(string)
-let typeChecker = new TypeChecker(ast.result)
-typeChecker.isWellTypedProgram()
+// thyEntryPoint {
+//     var: base = new base(1);
+// }
+// `
+// let ast = createAST(string)
+// let typeChecker = new TypeChecker(ast.result)
+// typeChecker.isWellTypedProgram()
 
 // console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
 // console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
@@ -347,6 +362,51 @@ describe("Test Expression TypeChecker", () => {
                 }
                 expect(func).toThrow(TypeError)
             })
+        })
+    })
+
+    describe("typeofExpMethodExp", () => {
+
+    })
+
+    describe("typeofNewClassExp", () => {
+
+    })
+})
+
+describe("Test Statement TypeChecker", () => {
+    const ast = createAST("thyEntryPoint {}")
+    const typeChecker = new TypeChecker(ast.result)
+    const typeEnvironment = {}
+
+    describe("typeofIf", () => {
+        test("correct typing", () => {
+            const result = typeChecker.isWellTyped(new IfStmt(new BooleanExp(true), 
+                                                              new BreakStmt(),
+                                                              new BreakStmt()), 
+                                                    typeEnvironment,
+                                                    null,
+                                                    null
+            )
+
+            expect(objsEqual(result, {})).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+
+        })
+    })
+
+    describe("typeofWhile", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+
         })
     })
 })
