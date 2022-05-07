@@ -5,7 +5,7 @@ const { IntType, ClassNameType, StringType, BooleanType } = require("../Parser/T
 const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
-const { PlusOp, MinusOp, MultiplyOp, DivideOp } = require("../Parser/Operations")
+const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp } = require("../Parser/Operations")
 
 
 function createAST(string) {
@@ -215,41 +215,73 @@ describe("Test Expression TypeChecker", () => {
 
         describe("GreaterThanOp", () => {
             test("correct typing", () => {
-                expect(false).toBe(true)
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new GreaterThanOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new GreaterThanOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
 
         describe("LessThanOp", () => {
             test("correct typing", () => {
-                expect(false).toBe(true)
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new LessThanOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new LessThanOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
 
         describe("GreaterThanEqualOp", () => {
             test("correct typing", () => {
-                expect(false).toBe(true)
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new GreaterThanEqualOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new GreaterThanEqualOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
 
         describe("LessThanEqualOp", () => {
             test("correct typing", () => {
-                expect(false).toBe(true)
+                const result = typeChecker.expTypeof(new OpExp(new IntegerExp(1), new LessThanEqualOp(), new IntegerExp(2)),
+                                                     typeEnvironment,
+                                                     null)
+                expect(result.equals(new BooleanType())).toBe(true)
             })
 
             test("incorrect typing", () => {
-                expect(false).toBe(true)
+                function func () {
+                    typeChecker.expTypeof(new OpExp(new IntegerExp(1), new LessThanEqualOp(), new StringExp("1")),
+                                                     typeEnvironment,
+                                                     null)
+                }
+                expect(func).toThrow(TypeError)
             })
         })
 
