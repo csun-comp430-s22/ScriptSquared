@@ -6,7 +6,7 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = requi
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
 
 
@@ -486,7 +486,41 @@ describe("Test Statement TypeChecker", () => {
     })
     
     describe("typeofVarEqualsExp", () => {
-        
+        test("correct typing", () => {
+            const typeEnvironment = {
+                "var": new IntType()
+            }
+    
+            const result = typeChecker.isWellTyped(new VarEqualsExpStmt(new Variable("var"), new IntegerExp(1)),
+                                                   typeEnvironment,
+                                                   null,
+                                                   null)
+            expect(objsEqual(result, typeEnvironment)).toBe(true)
+        })
+
+        test("incorrect typing: var not in environment", () => {
+            function func () {
+                typeChecker.isWellTyped(new VarEqualsExpStmt(new Variable("var"), new IntegerExp(1)),
+                                        {},
+                                        null,
+                                        null)
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: var-environment mismatch", () => {
+            function func () {
+                const typeEnvironment = {
+                    "var": new IntType()
+                }
+
+                typeChecker.isWellTyped(new VarEqualsExpStmt(new Variable("var"), new BooleanExp(true)),
+                                        typeEnvironment,
+                                        null,
+                                        null)
+            }
+            expect(func).toThrow(TypeError)
+        })
     })
 
     describe("typeofVarDecEqualsExp", () => {
