@@ -385,6 +385,29 @@ class TypeChecker {
         return this.methodReturnType[className][methodName];
     }
 
+    // new classname(exp*)
+    typeofNewClassExp(NewClassExp, typeEnvironment, classWeAreIn) {
+
+        const className = NewClassExp.className.value
+
+        // Makes sure parameters are correct type
+        
+            // Get params of user created exp
+            const testParams = NewClassExp.parameterExpsArray
+            const testParamsTypes = testParams.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
+            
+            // Get params of defined class
+            const expectedParamsTypes = this.classConstructorTypes[className]
+
+        if (testParamsTypes.length !== expectedParamsTypes.length)
+            throw new TypeError("Inncorrect number of constructor parameters for: " + className);
+
+        // Throws error if there is a mismatch
+        this.compareTypesInArray(testParamsTypes, expectedParamsTypes)
+
+        return new ClassNameType(NewClassExp.className.value);
+    }
+
     /**
      * 
      * @param {String} className name of class method is being called on
@@ -460,29 +483,6 @@ class TypeChecker {
         else 
             throw new TypeError("Type: " + testType.value + " doesn't match type: " + expectedType.value);
     }
-
-    typeofNewClassExp(NewClassExp, typeEnvironment, classWeAreIn) {
-
-        const className = NewClassExp.className.value
-
-        // Makes sure parameters are correct type
-        
-            // Get params of user created exp
-            const testParams = NewClassExp.parameterExpsArray
-            const testParamsTypes = testParams.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
-            
-            // Get params of defined class
-            const expectedParamsTypes = this.classConstructorTypes[className]
-
-        if (testParamsTypes.length !== expectedParamsTypes.length)
-            throw new TypeError("Inncorrect number of constructor parameters for: " + className);
-
-        // Throws error if there is a mismatch
-        this.compareTypesInArray(testParamsTypes, expectedParamsTypes)
-
-        return new ClassNameType(NewClassExp.className.value);
-    }
-
 
     // STATEMENTS
     isWellTyped(stmt, typeEnvironment, classWeAreIn, functionReturnType) {
