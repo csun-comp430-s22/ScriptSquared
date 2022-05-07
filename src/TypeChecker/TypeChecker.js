@@ -266,7 +266,7 @@ class TypeChecker {
             return this.typeofExpMethodExp(exp, typeEnvironment, classWeAreIn);
         }
         else if (instance_of(exp, NewClassExp)) {
-            this.typeofNewClassExp(exp, typeEnvironment, classWeAreIn)
+            return this.typeofNewClassExp(exp, typeEnvironment, classWeAreIn)
         }
         else {
             throw new TypeError("Unrecognized expression: " + exp);
@@ -437,7 +437,7 @@ class TypeChecker {
     compareTypesInArray(testArray, expectedArray) {
 
         if (testArray.length !== expectedArray.length)
-            throw new TypeError("Inncorrect number of parameters for call " + methodName);
+            throw new TypeError("Inncorrect number of parameters for call. Recieved: " + testArray.map(e => e.value) + ". Expected: " + expectedArray.map(e => e.value) );
 
         for (let i = 0; i < testArray.length; i++) {
            this.isLeftTypeofRight(testArray[i], expectedArray[i])
@@ -456,10 +456,14 @@ class TypeChecker {
 
         if (testType.equals(expectedType))
             return true;
-        else if (this.typeTree[expectedType.value].includes(testType.value))
+    
+        if (this.typeTree[expectedType.value] === undefined)
+            throw new TypeError("Type: " + testType.value + " doesn't match type: " + expectedType.value);
+            
+        if (this.typeTree[expectedType.value].includes(testType.value))
             return true;
         else 
-            throw new TypeError("Parameter type: " + testType.value + " doesn't match type: " + expectedType.value);
+            throw new TypeError("Type: " + testType.value + " doesn't match type: " + expectedType.value);
     }
 
     typeofNewClassExp(NewClassExp, typeEnvironment, classWeAreIn) {
@@ -470,7 +474,7 @@ class TypeChecker {
         
             // Get params of user created exp
             const testParams = NewClassExp.parameterExpsArray
-            const testParamsTypes = testParams.map(exp => this.expTypeof(exp))
+            const testParamsTypes = testParams.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
             
             // Get params of defined class
             const expectedParamsTypes = this.classConstructorTypes[className]
@@ -481,7 +485,7 @@ class TypeChecker {
         // Throws error if there is a mismatch
         this.compareTypesInArray(testParamsTypes, expectedParamsTypes)
 
-        return new ClassNameType(NewClassExp.className);
+        return new ClassNameType(NewClassExp.className.value);
     }
 
 
@@ -690,7 +694,7 @@ class TypeChecker {
 
             // check if statements are well typed in constructor
             classDec.constructor.stmtList.forEach(stmt => {
-                constructorTypeEnvironment = this.isWellTyped(stmt, constructorTypeEnvironment, className, VoidType)
+                constructorTypeEnvironment = this.isWellTyped(stmt, constructorTypeEnvironment, className, new VoidType())
             })
         
         // Check if methodDecs are well typed
@@ -713,5 +717,3 @@ class TypeChecker {
 }
 
 module.exports = TypeChecker;
-
-//TODO: check if variable being used is accessible

@@ -25,14 +25,14 @@ class base {
 }
 
 class child super base {
-    private var: boolean = 2;
+    private var: boolean = true;
 
     construc(var: string) {
-        super();
+        super(1);
     }
 
     public boolean baseMethod(test: int) {
-        return 1;
+        return true;
     }
 }
 
@@ -41,17 +41,17 @@ class childchild super child {
     private varchildchild: string = "hello";
 
     construc(var: boolean) {
-        super();
+        super("yeet");
 
-        b: child = new child();
+        b: child = new child("test");
     }
 
     public boolean superChildMethod(test: boolean) {
-        return 3;
+        return true;
     }
   
     public child superChildMethod2(test: child) {
-        return 3;
+        return new child("hello");
     }
 
 }
@@ -60,27 +60,28 @@ class unrelatedClass {
     construc(var: int, var1: child) {}
 
     public string baseMethod(test: string, test2: boolean) {
-        return 1;
+        return "hello";
     }
 }
 
 
 thyEntryPoint {
-    return;
+    var: base = new base(1);
 }
 `
 let ast = createAST(string)
 let typeChecker = new TypeChecker(ast.result)
+typeChecker.isWellTypedProgram()
 
 // TODO: objectType is being returned as one of the functions for the subclass. It shouldn't
-console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
-console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
-console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
-console.log("\nTypeTree: ", typeChecker.typeTree)
-console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
+// console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
+// console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
+// console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
+// console.log("\nTypeTree: ", typeChecker.typeTree)
+// console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
 
-console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
-console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
+// console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
+// console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
 // TODO: crashes when i make a variable of type class
 
