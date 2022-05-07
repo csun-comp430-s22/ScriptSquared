@@ -367,11 +367,23 @@ describe("Test Expression TypeChecker", () => {
     })
 
     describe("typeofExpMethodExp", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
 
+        test("ingcorrect typing", () => {
+            expect(false).toBe(true)
+        })
     })
 
     describe("typeofNewClassExp", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
 
+        test("ingcorrect typing", () => {
+            expect(false).toBe(true)
+        })
     })
 })
 
@@ -495,6 +507,16 @@ describe("Test Statement TypeChecker", () => {
             expect(objsEqual(typeEnvironment, {})).toBe(true)
         })
     })
+
+    describe("typeofExpMethodExpStmt", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+        })
+    })
     
     describe("typeofVarEqualsExp", () => {
         test("correct typing", () => {
@@ -556,6 +578,48 @@ describe("Test Statement TypeChecker", () => {
                                                       ), {}, null, null)
             }
             expect(func).toThrow(TypeError)
+        })
+    })
+})
+
+describe("Test Other Structures TypeChecker", () => {
+    describe("typeofMethodDec", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+        })
+    })
+
+    describe("typeofInstanceDec", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+        })
+    })
+
+    describe("typeofClassDec", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
+        })
+    })
+
+    describe("typeofProgram", () => {
+        test("correct typing", () => {
+            expect(false).toBe(true)
+        })
+
+        test("incorrect typing", () => {
+            expect(false).toBe(true)
         })
     })
 })
