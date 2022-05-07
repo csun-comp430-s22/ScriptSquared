@@ -22,6 +22,7 @@ class TypeChecker {
     // 5. Does our class hierarchy form a tree (aka no cycles)?
 
     constructor(program) {
+        this.program = program
         const classList = program.classDecList;
         
         // className: { methodName: array of param types in order }
@@ -700,7 +701,14 @@ class TypeChecker {
 
     // program ::= classdec* `thyEntryPoint` stmt 
     isWellTypedProgram () {
+        const classDecList = this.program.classDecList
+        const programStmt = this.program.stmt
 
+        classDecList.forEach(classDec => {
+            this.isWellTypedClassDec(classDec)
+        })
+
+        this.isWellTyped(programStmt, {}, null, null)
     }
 }
 

@@ -82,7 +82,7 @@ console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
 console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
 console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
-
+// TODO: crashes when i make a variable of type class
 
 // Private - only inside of the class
 // Protec - only by subclasses 
