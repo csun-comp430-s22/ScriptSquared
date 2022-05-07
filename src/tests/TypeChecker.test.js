@@ -6,7 +6,8 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = requi
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt } = require("../Parser/Statements")
+const { VarDec } = require("../Parser/VarDec")
 
 
 function createAST(string) {
@@ -477,6 +478,39 @@ describe("Test Statement TypeChecker", () => {
         test("correct typing", () => {
             const result = typeChecker.isWellTyped(new PrintExpStmt(new IntegerExp(1)), {}, null, null)
             expect(objsEqual(result, {})).toBe(true)
+        })
+    })
+
+    describe("typeofBlockStmt", () => {
+
+    })
+    
+    describe("typeofVarEqualsExp", () => {
+        
+    })
+
+    describe("typeofVarDecEqualsExp", () => {
+        test("correct typing", () => {
+            const result = typeChecker.isWellTyped(new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")),
+                                                                           new IntegerExp(1)
+                                                  ), {}, null, null)
+            expect(objsEqual(result, { "var": new IntType() })).toBe(true)
+        })
+
+        test("incorrect typing: typeEnvironment", () => {
+            const result = typeChecker.isWellTyped(new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")),
+                                                                           new IntegerExp(1)
+                                                  ), {}, null, null)
+            expect(objsEqual(result, { "var": new StringType() })).toBe(false)
+        })
+
+        test("incorrect typing: typeEnvironment", () => {
+            function func() {
+                typeChecker.isWellTyped(new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")),
+                                                                               new BooleanExp(true)
+                                                      ), {}, null, null)
+            }
+            expect(func).toThrow(TypeError)
         })
     })
 })
