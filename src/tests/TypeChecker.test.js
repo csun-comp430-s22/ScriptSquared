@@ -6,7 +6,7 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = requi
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt } = require("../Parser/Statements")
 
 
 function createAST(string) {
@@ -393,20 +393,41 @@ describe("Test Statement TypeChecker", () => {
         })
 
         test("incorrect typing", () => {
-            expect(false).toBe(true)
-
+            function func () {
+                typeChecker.isWellTyped(new IfStmt(new IntegerExp(1), 
+                                                              new BreakStmt(),
+                                                              new BreakStmt()), 
+                                                    typeEnvironment,
+                                                    null,
+                                                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
         })
     })
 
     describe("typeofWhile", () => {
         test("correct typing", () => {
-            expect(false).toBe(true)
-
+            const result = typeChecker.isWellTyped(new WhileStmt(new BooleanExp(true), 
+                                                                  new BreakStmt()),
+                                                        typeEnvironment,
+                                                        null,
+                                                        null
+                )
+    
+                expect(objsEqual(result, {})).toBe(true)
         })
 
         test("incorrect typing", () => {
-            expect(false).toBe(true)
-
+            function func () {
+                typeChecker.isWellTyped(new WhileStmt(new IntegerExp(1), 
+                                                              new BreakStmt()),
+                                                    typeEnvironment,
+                                                    null,
+                                                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
         })
     })
 })
