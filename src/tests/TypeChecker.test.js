@@ -1,6 +1,9 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
+const { IntType } = require("../Parser/Type")
+const { VariableExp } = require("../Parser/Expressions")
+const { Variable } = require("../Parser/Variable")
 
 
 function createAST(string) {
@@ -82,6 +85,20 @@ typeChecker.isWellTypedProgram()
 // console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
 // console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
-// Private - only inside of the class
-// Protec - only by subclasses 
-// Public - by anyone
+
+describe("Test Expression TypeChecker", () => {
+    const typeEnvironment = { "var": new IntType() }
+    const ast = createAST("thyEntryPoint {}")
+    const typeChecker = new TypeChecker(ast.result)
+
+    describe("typeofVariable", () => {
+        test("variable in typeEnvironment", () => {
+            const result = typeChecker.expTypeof(new VariableExp(new Variable("var")), typeEnvironment, null)
+            expect(result.equals(new IntType())).toBe(true)
+        })
+        
+        // test("variable NOT in typeEnvironment", () => {
+    
+        // })
+    })
+})

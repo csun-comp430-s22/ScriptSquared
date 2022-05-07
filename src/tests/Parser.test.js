@@ -1,6 +1,5 @@
 const { Parser } = require('../Parser/Parser')
 const {
-    Type,
     IntType,
     StringType,
     BooleanType,
@@ -65,7 +64,6 @@ const ThyEntryPointToken = require('../Lexer/Tokens/ThyEntryPointToken');
 const ClassToken = require('../Lexer/Tokens/ClassToken');
 const { ClassDec } = require('../Parser/ClassDec');
 const SuperToken = require('../Lexer/Tokens/SuperToken');
-const { parseList, arraysEqual } = require('../utils');
 const { Constructor } = require('../Parser/Constructor');
 const { MethodName } = require('../Parser/MethodName')
 const { IntegerToken, TrueToken, FalseToken, StringToken } = require('../Lexer/Tokens/ExpressionTypeTokens')

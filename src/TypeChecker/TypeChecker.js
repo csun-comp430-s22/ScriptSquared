@@ -204,11 +204,6 @@ class TypeChecker {
         return variableTypeMap;
     }
 
-
-    /**
-     * 
-     * @param {ClassDec} classDec 
-     */
     insertIntoTypeTree(classDec, typeTree) {
         const classType = classDec.classNameType.value
         const parentType = classDec.superClassName.value 
