@@ -1,8 +1,8 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
-const { IntType, ClassNameType } = require("../Parser/Type")
-const { VariableExp, ThisExp } = require("../Parser/Expressions")
+const { IntType, ClassNameType, StringType, BooleanType } = require("../Parser/Type")
+const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 
@@ -88,11 +88,26 @@ typeChecker.isWellTypedProgram()
 
 
 describe("Test Expression TypeChecker", () => {
+    const ast = createAST("thyEntryPoint {}")
+    const typeChecker = new TypeChecker(ast.result)
+
+    test("IntegerExp", () => {
+        const result = typeChecker.expTypeof(new IntegerExp(1), {}, null)
+        expect(result.equals(new IntType())).toBe(true)
+    })
+
+    test("StringExp", () => {
+        const result = typeChecker.expTypeof(new StringExp("hello"), {}, null)
+        expect(result.equals(new StringType())).toBe(true)
+    })
+
+    test("BooleanExp", () => {
+        const result = typeChecker.expTypeof(new BooleanExp(true), {}, null)
+        expect(result.equals(new BooleanType())).toBe(true)
+    })
 
     describe("typeofVariable", () => {
         const typeEnvironment = { "var": new IntType() }
-        const ast = createAST("thyEntryPoint {}")
-        const typeChecker = new TypeChecker(ast.result)
 
         test("variable in typeEnvironment", () => {
             const result = typeChecker.expTypeof(new VariableExp(new Variable("var")), typeEnvironment, null)
@@ -108,8 +123,6 @@ describe("Test Expression TypeChecker", () => {
     })
 
     describe("typeofThis", () => {
-        const ast = createAST("thyEntryPoint {}")
-        const typeChecker = new TypeChecker(ast.result)
 
         test("Not in entry point", () => {
             const result = typeChecker.expTypeof(new ThisExp(), {}, "foo")
@@ -118,7 +131,7 @@ describe("Test Expression TypeChecker", () => {
 
         test("In entry point", () => {
             function func () {
-                const result = typeChecker.expTypeof(new ThisExp(), {}, null)
+                typeChecker.expTypeof(new ThisExp(), {}, null)
             }
 
             expect (func).toThrow(TypeError)
