@@ -399,6 +399,9 @@ class TypeChecker {
             // Get params of defined class
             const expectedParamsTypes = this.classConstructorTypes[className]
 
+        if (expectedParamsTypes === undefined) 
+            throw new TypeError("Class '" + className + "' doesn't exist");
+
         if (testParamsTypes.length !== expectedParamsTypes.length)
             throw new TypeError("Inncorrect number of constructor parameters for: " + className);
 

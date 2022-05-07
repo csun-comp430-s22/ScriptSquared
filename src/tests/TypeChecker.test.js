@@ -1,8 +1,8 @@
 const TypeChecker = require("../TypeChecker/TypeChecker") 
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
-const { IntType, ClassNameType, StringType, BooleanType, VoidType } = require("../Parser/Type")
-const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp } = require("../Parser/Expressions")
+const { IntType, ClassNameType, StringType, BooleanType, VoidType, Type } = require("../Parser/Type")
+const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp, NewClassExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
@@ -377,12 +377,53 @@ describe("Test Expression TypeChecker", () => {
     })
 
     describe("typeofNewClassExp", () => {
+        const ast = createAST("thyEntryPoint {}")
+        const typeChecker = new TypeChecker(ast.result)
+        typeChecker.classConstructorTypes["foo"] = [new IntType()]
+
         test("correct typing", () => {
-            expect(false).toBe(true)
+            const result = typeChecker.expTypeof(
+                new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1)]),
+                {},
+                null,
+                null
+            )
+
+            expect(result.equals(new ClassNameType("foo"))).toBe(true)
         })
 
-        test("ingcorrect typing", () => {
-            expect(false).toBe(true)
+        test("incorrect typing: class doesn't exist", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new NewClassExp(new ClassNameType("bar"), [new IntegerExp(1)]),
+                    {},
+                    null,
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: param amount incorrect", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1), new BooleanExp(true)]),
+                    {},
+                    null,
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: param type mismatch", () => {
+            function func() {
+                typeChecker.expTypeof(new ClassNameType("foo"), [new StringExp("1")],
+                {},
+                null,
+                null)
+            }
+            expect(func).toThrow(TypeError)
         })
     })
 })
