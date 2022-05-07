@@ -379,35 +379,35 @@ class Parser {
         const token = this.getToken(position)
 
         // var = exp; | vardec = exp;
-        if (instance_of(token, VariableToken)) {
-
-            // var = exp;
-            try {
-                this.assertTokenHereIs(position + 1, AssignmentToken)
-                const exp = this.parseExp(position + 2)
-                this.assertTokenHereIs(exp.position, SemiColonToken)
-
-                return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
-            }
-
-            // vardec = exp;
-            catch(e) {
-                const vardec = this.parseVarDec(position)
-                this.assertTokenHereIs(vardec.position, AssignmentToken)
-                const exp = this.parseExp(vardec.position + 1)
-                this.assertTokenHereIs(exp.position, SemiColonToken)
+        try {
+            if (instance_of(token, VariableToken)) {
     
-                return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
+                // var = exp;
+                try {
+                    this.assertTokenHereIs(position + 1, AssignmentToken)
+                    const exp = this.parseExp(position + 2)
+                    this.assertTokenHereIs(exp.position, SemiColonToken)
+    
+                    return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
+                }
+    
+                // vardec = exp;
+                catch(e) {
+                    const vardec = this.parseVarDec(position)
+                    this.assertTokenHereIs(vardec.position, AssignmentToken)
+                    const exp = this.parseExp(vardec.position + 1)
+                    this.assertTokenHereIs(exp.position, SemiColonToken)
+        
+                    return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
+                }
+    
             }
-
-        }
-
-        else if (instance_of(token, VariableToken)) {
-            
-        }
+        } 
+        // It might be exp.methodname(exp*)
+        catch(e) {}
 
         // { stmt* } 
-        else if (instance_of(token, LeftCurlyToken)) {
+        if (instance_of(token, LeftCurlyToken)) {
 
             const stmtList = []
             let currentPosition = position + 1

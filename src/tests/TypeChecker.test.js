@@ -15,7 +15,7 @@ function createAST(string) {
 let string = `
 
 class base {
-    protec var: int = 1;
+    protec test: int = 1;
 
     construc(var: int) {}
     
@@ -29,9 +29,10 @@ class child super base {
 
     construc(var: string) {
         super(1);
+        test = 2;
     }
 
-    public boolean baseMethod(test: int) {
+    private boolean baseMethod(test: int) {
         return true;
     }
 }
@@ -44,6 +45,7 @@ class childchild super child {
         super("yeet");
 
         b: child = new child("test");
+        b.baseMethod(2);
     }
 
     public boolean superChildMethod(test: boolean) {
