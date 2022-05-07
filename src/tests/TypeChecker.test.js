@@ -32,7 +32,7 @@ class child super base {
         test = 2;
     }
 
-    private boolean baseMethod(test: int) {
+    protec boolean baseMethod(test: int) {
         return true;
     }
 }

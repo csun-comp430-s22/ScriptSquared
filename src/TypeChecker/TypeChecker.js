@@ -404,7 +404,7 @@ class TypeChecker {
             throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");
             
         // if method is protec, then you can only call it inside the class or subclass of the class of the method
-        if ( instance_of(accessMod, ProtecModifier) && !this.isLeftTypeofRight(classWeAreIn, className) )
+        if ( instance_of(accessMod, ProtecModifier) && !this.isLeftTypeofRight(new ClassNameType(classWeAreIn), new ClassNameType(className)) )
             throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");
 
         return true;
