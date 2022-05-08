@@ -730,7 +730,7 @@ describe("Test Other Structures TypeChecker", () => {
                     null
                 )
             }
-            expect(func).not.toThrow(TypeError)
+            expect(func).not.toThrow(Error)
         })
     })
 
@@ -743,11 +743,14 @@ describe("Test Other Structures TypeChecker", () => {
                     null
                 )
             }
-            expect(func).not.toThrow(TypeError)
+            expect(func).not.toThrow(Error)
         })
     })
 
     describe("typeofClassDec", () => {
+        typeChecker.classConstructorTypes["foo"] = [new BooleanType()]
+        typeChecker.classConstructorTypes["bar"] = [new StringType()]
+
         test("correct typing", () => {
             function func () {
                 typeChecker.isWellTypedClassDec(
@@ -755,7 +758,7 @@ describe("Test Other Structures TypeChecker", () => {
                         new ClassNameType("foo"),
                         new ClassNameType("bar"),
                         [new InstanceDec(new PrivateModifier(), new VarDec(new IntType(), new Variable("thing")), new IntegerExp(1))],
-                        new Constructor([new VarDec(new BooleanType(), new Variable("temp"))], [new StringExp("yeet")], new BreakStmt()),
+                        new Constructor([new VarDec(new BooleanType(), new Variable("temp"))], [new StringExp("yeet")], [new BreakStmt()]),
                         [new MethodDec(
                             new ProtecModifier(), 
                             new VoidType(), 
@@ -766,7 +769,7 @@ describe("Test Other Structures TypeChecker", () => {
                     )
                 )
             }
-            expect(func).not.toThrow(TypeError)
+            expect(func).not.toThrow(Error)
         })
 
         test("incorrect typing", () => {
