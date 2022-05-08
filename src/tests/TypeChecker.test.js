@@ -9,9 +9,11 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, Greate
 const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt, ExpMethodExpStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
 const { MethodName } = require("../Parser/MethodName")
-const { PublicModifier, PrivateModifier } = require("../Parser/AccessModifier")
+const { PublicModifier, PrivateModifier, ProtecModifier } = require("../Parser/AccessModifier")
 const { MethodDec } = require("../Parser/MethodDec")
 const { InstanceDec } = require("../Parser/InstanceDec")
+const { ClassDec } = require("../Parser/ClassDec")
+const { Constructor } = require("../Parser/Constructor")
 
 
 function createAST(string) {
@@ -747,7 +749,24 @@ describe("Test Other Structures TypeChecker", () => {
 
     describe("typeofClassDec", () => {
         test("correct typing", () => {
-            expect(false).toBe(true)
+            function func () {
+                typeChecker.isWellTypedClassDec(
+                    new ClassDec(
+                        new ClassNameType("foo"),
+                        new ClassNameType("bar"),
+                        [new InstanceDec(new PrivateModifier(), new VarDec(new IntType(), new Variable("thing")), new IntegerExp(1))],
+                        new Constructor([new VarDec(new BooleanType(), new Variable("temp"))], [new StringExp("yeet")], new BreakStmt()),
+                        [new MethodDec(
+                            new ProtecModifier(), 
+                            new VoidType(), 
+                            new MethodName("baz"), 
+                            [new VarDec(new BooleanType(), new Variable("temp"))],
+                            new ReturnStmt()
+                        )]
+                    )
+                )
+            }
+            expect(func).not.toThrow(TypeError)
         })
 
         test("incorrect typing", () => {
