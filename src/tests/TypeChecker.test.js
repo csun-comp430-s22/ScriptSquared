@@ -11,6 +11,7 @@ const { VarDec } = require("../Parser/VarDec")
 const { MethodName } = require("../Parser/MethodName")
 const { PublicModifier, PrivateModifier } = require("../Parser/AccessModifier")
 const { MethodDec } = require("../Parser/MethodDec")
+const { InstanceDec } = require("../Parser/InstanceDec")
 
 
 function createAST(string) {
@@ -723,7 +724,7 @@ describe("Test Other Structures TypeChecker", () => {
             function func () {
                 typeChecker.isWellTypedMethodDec(
                     new MethodDec(new PublicModifier(), new IntType(), new MethodName("foo"), [new VarDec(new BooleanType(), new Variable("temp"))], new ReturnExpStmt(new IntegerExp(1))),
-                    {},
+                    {"stuff": new BooleanType()},
                     null
                 )
             }
@@ -733,11 +734,14 @@ describe("Test Other Structures TypeChecker", () => {
 
     describe("typeofInstanceDec", () => {
         test("correct typing", () => {
-            expect(false).toBe(true)
-        })
-
-        test("incorrect typing", () => {
-            expect(false).toBe(true)
+            function func () {
+                typeChecker.isWellTypedInstanceDec(
+                    new InstanceDec(new PublicModifier(), new VarDec(new IntType, new Variable("foo")), new IntegerExp(1)),
+                    {},
+                    null
+                )
+            }
+            expect(func).not.toThrow(TypeError)
         })
     })
 
