@@ -367,12 +367,12 @@ class TypeChecker {
     typeofExpMethodExp(ExpMethodExp, typeEnvironment, classWeAreIn) {
         const parentExpType = this.expTypeof(ExpMethodExp.parentExp, typeEnvironment, classWeAreIn)
         const parameterExpsTypeArray = ExpMethodExp.parameterExpsArray.map(exp => this.expTypeof(exp, typeEnvironment, classWeAreIn))
+        const methodName = ExpMethodExp.methodName.value
 
         if (!instance_of(parentExpType, ClassNameType))
             throw new TypeError("Called method '" + methodName + "' on non-class type: " + parentExpType);
 
         const className = parentExpType.value
-        const methodName = ExpMethodExp.methodName.value
 
         // Check if method is accessable in current scope
         const accessMod = this.methodAccessMod[className][methodName]

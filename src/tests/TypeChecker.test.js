@@ -9,7 +9,7 @@ const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, Greate
 const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
 const { MethodName } = require("../Parser/MethodName")
-const { PublicModifier } = require("../Parser/AccessModifier")
+const { PublicModifier, PrivateModifier } = require("../Parser/AccessModifier")
 
 
 function createAST(string) {
@@ -387,8 +387,71 @@ describe("Test Expression TypeChecker", () => {
             expect(result.equals(new StringType())).toBe(true)
         })
 
-        test("ingcorrect typing", () => {
-            expect(false).toBe(true)
+        test("incorrect typing: non-class type", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new ExpMethodExp(new IntegerExp(1),
+                                     new MethodName("someMethod"),
+                                     [new BooleanExp(true)]),
+                    {},
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: class doesn't exist", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new ExpMethodExp(new NewClassExp(new ClassNameType("bar"), [new IntegerExp(1)]),
+                                 new MethodName("someMethod"),
+                                 [new BooleanExp(true)]),
+                    {},
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: param count incorrect", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new ExpMethodExp(new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1), new StringExp("1")]),
+                                 new MethodName("someMethod"),
+                                 [new BooleanExp(true)]),
+                    {},
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: param type incorrect", () => {
+            function func () {
+                typeChecker.expTypeof(
+                    new ExpMethodExp(new NewClassExp(new ClassNameType("foo"), [new StringExp("1")]),
+                                 new MethodName("someMethod"),
+                                 [new BooleanExp(true)]),
+                    {},
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
+        })
+
+        test("incorrect typing: inaccessable", () => {
+            typeChecker.methodAccessMod["foo"] = { "someMethod": new PrivateModifier() }
+
+            function func () {
+                typeChecker.expTypeof(
+                    new ExpMethodExp(new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1), new StringExp("1")]),
+                                 new MethodName("someMethod"),
+                                 [new BooleanExp(true)]),
+                    {},
+                    null
+                )
+            }
+            expect(func).toThrow(TypeError)
         })
     })
 
