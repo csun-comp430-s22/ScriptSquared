@@ -6,7 +6,7 @@ const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp, NewClass
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
-const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt } = require("../Parser/Statements")
+const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt, ExpMethodExpStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
 const { MethodName } = require("../Parser/MethodName")
 const { PublicModifier, PrivateModifier } = require("../Parser/AccessModifier")
@@ -629,12 +629,22 @@ describe("Test Statement TypeChecker", () => {
     })
 
     describe("typeofExpMethodExpStmt", () => {
-        test("correct typing", () => {
-            expect(false).toBe(true)
-        })
+        const ast = createAST("thyEntryPoint {}")
+        const typeChecker = new TypeChecker(ast.result)
+        typeChecker.classConstructorTypes["foo"] = [new IntType()]
+        typeChecker.classMethodMap["foo"] = { "someMethod": [new BooleanType()] }
+        typeChecker.methodAccessMod["foo"] = { "someMethod": new PublicModifier() }
+        typeChecker.methodReturnType["foo"] = { "someMethod": new StringType() }
 
-        test("incorrect typing", () => {
-            expect(false).toBe(true)
+        test("correct typing", () => {
+            const result = typeChecker.isWellTyped(
+                new ExpMethodExpStmt(new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1)]),
+                                     new MethodName("someMethod"),
+                                     [new BooleanExp(true)]),
+                {},
+                null
+            )
+            expect(objsEqual(result, {})).toBe(true)
         })
     })
     
