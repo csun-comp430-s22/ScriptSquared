@@ -10,6 +10,7 @@ const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, V
 const { VarDec } = require("../Parser/VarDec")
 const { MethodName } = require("../Parser/MethodName")
 const { PublicModifier, PrivateModifier } = require("../Parser/AccessModifier")
+const { MethodDec } = require("../Parser/MethodDec")
 
 
 function createAST(string) {
@@ -713,13 +714,20 @@ describe("Test Statement TypeChecker", () => {
 })
 
 describe("Test Other Structures TypeChecker", () => {
+    const ast = createAST("thyEntryPoint {}")
+    const typeChecker = new TypeChecker(ast.result)
+    const typeEnvironment = {}
+
     describe("typeofMethodDec", () => {
         test("correct typing", () => {
-            expect(false).toBe(true)
-        })
-
-        test("incorrect typing", () => {
-            expect(false).toBe(true)
+            function func () {
+                typeChecker.isWellTypedMethodDec(
+                    new MethodDec(new PublicModifier(), new IntType(), new MethodName("foo"), [new VarDec(new BooleanType(), new Variable("temp"))], new ReturnExpStmt(new IntegerExp(1))),
+                    {},
+                    null
+                )
+            }
+            expect(func).not.toThrow(TypeError)
         })
     })
 
