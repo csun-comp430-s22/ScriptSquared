@@ -2,12 +2,14 @@ const TypeChecker = require("../TypeChecker/TypeChecker")
 const Tokenizer = require('../Lexer/Tokenizer')
 const { Parser } = require('../Parser/Parser')
 const { IntType, ClassNameType, StringType, BooleanType, VoidType, Type } = require("../Parser/Type")
-const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp, NewClassExp } = require("../Parser/Expressions")
+const { VariableExp, ThisExp, IntegerExp, StringExp, BooleanExp, OpExp, NewClassExp, ExpMethodExp } = require("../Parser/Expressions")
 const { Variable } = require("../Parser/Variable")
 const { TypeError } = require("../TypeChecker/TypeError")
 const { PlusOp, MinusOp, MultiplyOp, DivideOp, GreaterThanOp, LessThanOp, GreaterThanEqualOp, LessThanEqualOp, EqualOp, NotEqualOp } = require("../Parser/Operations")
 const { IfStmt, BreakStmt, WhileStmt, ReturnExpStmt, ReturnStmt, PrintExpStmt, VarDecEqualsExpStmt, VarEqualsExpStmt, BlockStmt } = require("../Parser/Statements")
 const { VarDec } = require("../Parser/VarDec")
+const { MethodName } = require("../Parser/MethodName")
+const { PublicModifier } = require("../Parser/AccessModifier")
 
 
 function createAST(string) {
@@ -367,8 +369,22 @@ describe("Test Expression TypeChecker", () => {
     })
 
     describe("typeofExpMethodExp", () => {
+        const ast = createAST("thyEntryPoint {}")
+        const typeChecker = new TypeChecker(ast.result)
+        typeChecker.classConstructorTypes["foo"] = [new IntType()]
+        typeChecker.classMethodMap["foo"] = { "someMethod": [new BooleanType()] }
+        typeChecker.methodAccessMod["foo"] = { "someMethod": new PublicModifier() }
+        typeChecker.methodReturnType["foo"] = { "someMethod": new StringType() }
+
         test("correct typing", () => {
-            expect(false).toBe(true)
+            const result = typeChecker.expTypeof(
+                new ExpMethodExp(new NewClassExp(new ClassNameType("foo"), [new IntegerExp(1)]),
+                                 new MethodName("someMethod"),
+                                 [new BooleanExp(true)]),
+                {},
+                null
+            )
+            expect(result.equals(new StringType())).toBe(true)
         })
 
         test("ingcorrect typing", () => {
