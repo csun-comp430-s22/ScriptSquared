@@ -660,12 +660,17 @@ class TypeChecker {
     }
 
     /* 
-        classdec ::= class classname super classname {
-	     	instancedec*
-		    construc(vardec*) { super(exp*); stmt* }	// vardec separated by comma. 
-							      // stmt’s separated by semi-colons
-		    methoddec*
-	    }
+    classdec ::= class classname super classname {
+                    instancedec*
+                    construc(vardec*) { super(exp*); stmt* } 
+                    methoddec*
+                }
+                |
+                class classname {
+                    instancedec*;
+                    construc(vardec*) stmt	
+                    methoddec*
+                }
     */
     isWellTypedClassDec (classDec) {
         const className = classDec.classNameType.value

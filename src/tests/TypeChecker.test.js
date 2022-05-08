@@ -771,19 +771,33 @@ describe("Test Other Structures TypeChecker", () => {
             }
             expect(func).not.toThrow(Error)
         })
-
-        test("incorrect typing", () => {
-            expect(false).toBe(true)
-        })
     })
 
-    describe("typeofProgram", () => {
-        test("correct typing", () => {
-            expect(false).toBe(true)
-        })
+    describe("typeofProgram", () => {      
+        const program = createAST(`
+            class foo {
+                private bar: int = 1;
 
-        test("incorrect typing", () => {
-            expect(false).toBe(true)
+                construc() {
+                    break;
+                }
+
+                protec boolean bazMethod(thing: string) {
+                    return true;
+                }
+            }
+            
+            thyEntryPoint {
+
+            }
+        `).result
+
+        test("correct typing", () => {
+            function fun () {
+                typeChecker.program = program
+                typeChecker.isWellTypedProgram()
+            }
+            expect(fun).not.toThrow(Error)
         })
     })
 })
