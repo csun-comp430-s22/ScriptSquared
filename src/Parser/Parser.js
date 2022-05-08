@@ -678,6 +678,9 @@ class Parser {
 
     // Intended to be called on the top-level
     parseProgram() {
+        if(this.tokens.length === 0)
+            return new ParseResult(new Program([], new BlockStmt([])), 0) 
+        
         const program = this.parseProgramObject(0)    //ParseResult
         
         if(program.position == this.tokens.length) {

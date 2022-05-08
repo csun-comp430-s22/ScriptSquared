@@ -30,9 +30,11 @@ function objsEqual(obj1, obj2) {
     for (let i = 0; i < obj1Keys.length; i++) {
         const key = obj1Keys[i]
 
-        if ( !(key in obj2) || !(obj1[key].equals(obj2[key])) ) {
+        if ( !(key in obj2) )
             return false;
-        }
+        
+        if ( !(obj1[key].equals(obj2[key])) )
+            return false;
     }
 
     return true;
@@ -701,7 +703,7 @@ describe("Test Statement TypeChecker", () => {
         test("incorrect typing: typeEnvironment", () => {
             const result = typeChecker.isWellTyped(new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")),
                                                                            new IntegerExp(1)
-                                                  ), {}, null, null)
+                                                                          ), {}, null, null)
             expect(objsEqual(result, { "var": new StringType() })).toBe(false)
         })
 
@@ -709,7 +711,7 @@ describe("Test Statement TypeChecker", () => {
             function func() {
                 typeChecker.isWellTyped(new VarDecEqualsExpStmt(new VarDec(new IntType(), new Variable("var")),
                                                                                new BooleanExp(true)
-                                                      ), {}, null, null)
+                                                               ), {}, null, null)
             }
             expect(func).toThrow(TypeError)
         })
@@ -799,5 +801,100 @@ describe("Test Other Structures TypeChecker", () => {
             }
             expect(fun).not.toThrow(Error)
         })
+    })
+})
+
+describe("Test Whole Programs", () => {
+    test("Duplicate Class", () => {
+        function func () {
+                const program = createAST(`
+                class foo {
+                    construc() {}
+                }
+
+                class foo {
+                    construc() {}
+                }
+
+                thyEntryPoint {
+
+                }
+            `).result
+            const typeChecker = new TypeChecker(program)
+        }
+
+        expect(func).toThrow(Error)
+    })
+
+    test("No Duplicate Class", () => {
+        function func () {
+            const program = createAST(`
+                class foo {
+                    construc() {}
+                }
+
+                thyEntryPoint {
+
+                }
+            `).result
+            const typeChecker = new TypeChecker(program)
+        }
+
+        expect(func).toThrow(Error)
+    })
+
+    test("Typechecker Maps", () => {
+        const program = createAST(`
+            class foo {
+                private bar: int = 1;
+
+                construc(param: boolean) {
+                    break;
+                }
+
+                protec boolean bazMethod(thing: string) {
+                    return true;
+                }
+            }
+            
+            thyEntryPoint {
+
+            }
+        `).result
+        const typeChecker = new TypeChecker(program)
+
+        expect(objsEqual(typeChecker.classMethodMap["foo"], { "Object": {}, "foo": { "bazMethod": [new StringType()] } }))
+        expect(objsEqual(typeChecker.classConstructorTypes["foo"], { "Object": {}, "foo": [new BooleanType()] }))
+        expect(objsEqual(typeChecker.methodReturnType["foo"], { "Object": {}, "foo": { "bazMethod": new BooleanType() } }))
+        expect(objsEqual(typeChecker.methodAccessMod["foo"], { "Object": {}, "foo": { "bazMethod": new ProtecModifier() } }))
+        expect(objsEqual(typeChecker.classInstanceVariables["foo"], { "Object": {}, "foo": { "bar": new IntType() } }))
+        expect(objsEqual(typeChecker.instanceVariableAccessMod["foo"], { "Object": {}, "foo": { "bar": new PrivateModifier() } }))
+        expect(objsEqual(typeChecker.typeTree["foo"], { "Object": [ "foo" ], "foo": [] }))
+    })
+
+    test("Duplicate Class", () => {
+        const program = createAST(`
+
+        `).result
+        const typeChecker = new TypeChecker(program)
+
+        function func () {
+            typeChecker.isWellTypedProgram()
+        }
+
+        expect(func).toThrow(Error)
+    })
+
+    test("Duplicate Class", () => {
+        const program = createAST(`
+
+        `).result
+        const typeChecker = new TypeChecker(program)
+
+        function func () {
+            typeChecker.isWellTypedProgram()
+        }
+
+        expect(func).toThrow(Error)
     })
 })
