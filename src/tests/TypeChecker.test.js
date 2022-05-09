@@ -872,29 +872,42 @@ describe("Test Whole Programs", () => {
         expect(objsEqual(typeChecker.typeTree["foo"], { "Object": [ "foo" ], "foo": [] }))
     })
 
-    test("Duplicate Class", () => {
+    test("Class with Super Class", () => {
         const program = createAST(`
+            class foo {
+                protec protecVar: int = 1;
+                private privateVar: string = "2";
 
+                construc(var: int) {}
+                
+                public int baseMethod(test: int, test2: boolean) {
+                    return 1;
+                }
+
+                private boolean privateBaseMethod(test3: int) {
+                    return 2;
+                }
+            }
+            
+            class bar super foo {          
+                construc() {
+                    super(1);
+                }
+            }
+
+            thyEntryPoint {
+
+            }
         `).result
         const typeChecker = new TypeChecker(program)
 
-        function func () {
-            typeChecker.isWellTypedProgram()
-        }
-
-        expect(func).toThrow(Error)
+        // expect(objsEqual(typeChecker.classMethodMap["foo"], { "Object": {}, "foo": { "baseMethod": [new IntType(), new BooleanType()], "privateBaseMethod": [new IntType()] }, "bar": { "baseMethod": [new IntType(), new BooleanType()] } }))
+        // expect(objsEqual(typeChecker.classConstructorTypes["foo"], { "Object": [], "foo": [ new IntType() ], "bar": [] }))
+        // expect(objsEqual(typeChecker.methodReturnType["foo"], { "Object": {}, "foo": { "baseMethod": new IntType(), "privateBaseMethod": new BooleanType() }, "bar": { "baseMethod": new IntType() } }))
+        // expect(objsEqual(typeChecker.methodAccessMod["foo"], { "Object": {}, "foo": { "baseMethod": new PublicModifier(), "privateBaseMethod": new PrivateModifier() }, "bar": { "baseMethod": new PublicModifier() } }))
+        // expect(objsEqual(typeChecker.classInstanceVariables["foo"], { "Object": {}, "foo": { "protecVar": new IntType(), "privateVar": new StringType() }, "bar": { "protecVar": new IntType() } }))
+        // expect(objsEqual(typeChecker.instanceVariableAccessMod["foo"], { "Object": {}, "foo": { "protecVar": new ProtecModifier(), "privateVar": new PrivateModifier() }, "bar": { "protecVar": new ProtecModifier() } }))
+        // expect(objsEqual(typeChecker.typeTree["foo"], { "Object": [ "foo" ], "foo": [ "bar" ], "bar": [] }))
     })
 
-    test("Duplicate Class", () => {
-        const program = createAST(`
-
-        `).result
-        const typeChecker = new TypeChecker(program)
-
-        function func () {
-            typeChecker.isWellTypedProgram()
-        }
-
-        expect(func).toThrow(Error)
-    })
 })
