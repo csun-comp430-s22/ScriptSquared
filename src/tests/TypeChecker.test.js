@@ -840,7 +840,7 @@ describe("Test Whole Programs", () => {
             const typeChecker = new TypeChecker(program)
         }
 
-        expect(func).toThrow(Error)
+        expect(func).not.toThrow(Error)
     })
 
     test("Typechecker Maps", () => {
