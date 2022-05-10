@@ -7,6 +7,7 @@ const {
     SemiColonToken,
     DotToken,
     CommaToken,
+    ColonToken,
 } = require("../Lexer/Tokens/SymbolToken");
 const { 
     PlusToken,
@@ -121,8 +122,18 @@ class Parser {
 
     // int | string | boolean | void | classname
     parseType(position) {
-        this.assertTokenHereIs(position, TypeToken)
-        const typeToken = this.getToken(position)
+        let typeToken;
+        try {
+            this.assertTokenHereIs(position, TypeToken)
+            typeToken = this.getToken(position)
+        } 
+
+        // if token is a VariableToken, then it might be a class; Typechecker will handle if it actually is or not
+        catch (e) {
+            this.assertTokenHereIs(position, VariableToken)
+            const variableToken = this.getToken(position)
+            typeToken = new ClassNameTypeToken(variableToken.value)
+        }
 
         // int
         if (instance_of(typeToken, IntegerTypeToken)) {
@@ -344,13 +355,14 @@ class Parser {
         return this.parseComparisonExp(position);
     }
 
-    // vardec ::= type var
+    // vardec ::= var: type
     parseVarDec(position) {
-        const type = this.parseType(position)
-        this.assertTokenHereIs(type.position, VariableToken)
-        const variableToken = this.getToken(type.position)
+        this.assertTokenHereIs(position, VariableToken)
+        const variableToken = this.getToken(position)
+        this.assertTokenHereIs(position + 1, ColonToken)
+        const type = this.parseType(position + 2)
 
-        return new ParseResult( new VarDec(type.result, new Variable(variableToken.value) ), type.position + 1 );
+        return new ParseResult( new VarDec(type.result, new Variable(variableToken.value) ), type.position );
     }
 
     // stmt ::= var = exp; | vardec = exp; |  
@@ -366,28 +378,36 @@ class Parser {
     parseStmt(position) {
         const token = this.getToken(position)
 
-        // var = exp;
-        if (instance_of(token, VariableToken)) {
-            this.assertTokenHereIs(position + 1, AssignmentToken)
-            const exp = this.parseExp(position + 2)
-            this.assertTokenHereIs(exp.position, SemiColonToken)
-
-            return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
-        }
-
-        // vardec = exp;
-        else if (instance_of(token, IntegerTypeToken) || instance_of(token, VoidTypeToken) || instance_of(token, ClassNameTypeToken) ||
-                 instance_of(token, StringTypeToken) || instance_of(token, BooleanTypeToken)) {
-            const vardec = this.parseVarDec(position)
-            this.assertTokenHereIs(vardec.position, AssignmentToken)
-            const exp = this.parseExp(vardec.position + 1)
-            this.assertTokenHereIs(exp.position, SemiColonToken)
-
-            return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
-        }
+        // var = exp; | vardec = exp;
+        try {
+            if (instance_of(token, VariableToken)) {
+    
+                // var = exp;
+                try {
+                    this.assertTokenHereIs(position + 1, AssignmentToken)
+                    const exp = this.parseExp(position + 2)
+                    this.assertTokenHereIs(exp.position, SemiColonToken)
+    
+                    return new ParseResult(new VarEqualsExpStmt(new Variable(token.value), exp.result), exp.position + 1);
+                }
+    
+                // vardec = exp;
+                catch(e) {
+                    const vardec = this.parseVarDec(position)
+                    this.assertTokenHereIs(vardec.position, AssignmentToken)
+                    const exp = this.parseExp(vardec.position + 1)
+                    this.assertTokenHereIs(exp.position, SemiColonToken)
+        
+                    return new ParseResult( new VarDecEqualsExpStmt( vardec.result, exp.result ), exp.position + 1 );
+                }
+    
+            }
+        } 
+        // It might be exp.methodname(exp*)
+        catch(e) {}
 
         // { stmt* } 
-        else if (instance_of(token, LeftCurlyToken)) {
+        if (instance_of(token, LeftCurlyToken)) {
 
             const stmtList = []
             let currentPosition = position + 1
@@ -619,6 +639,7 @@ class Parser {
         const methodDecList = methodDecs.list
         position = methodDecs.position
 
+        let temp = this.getToken(position)
         this.assertTokenHereIs(position, RightCurlyToken)
         
         return new ParseResult(new ClassDec(new ClassNameType(classNameToken.value), 
@@ -632,18 +653,34 @@ class Parser {
     // classdec* `thyEntryPoint` stmt
     parseProgramObject(position) {
         
-        const result = parseList(position, this.parseClassDec.bind(this))
-        const classDecList = result.list
-        const currentPosition = result.position
+        // classdecs are first
+        try {
+            const result = parseList(position, this.parseClassDec.bind(this))
+            const classDecList = result.list
+            const currentPosition = result.position
+    
+            this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
+            const stmt = this.parseStmt(currentPosition + 1)
+    
+            return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+        } catch(e) {
 
-        this.assertTokenHereIs(currentPosition, ThyEntryPointToken)
-        const stmt = this.parseStmt(currentPosition + 1)
+            this.assertTokenHereIs(position, ThyEntryPointToken)
+            const stmt = this.parseStmt(position + 1)
 
-        return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+            const result = parseList(stmt.position, this.parseClassDec.bind(this))
+            const classDecList = result.list
+            const currentPosition = result.position
+
+            return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+        }
     }
 
     // Intended to be called on the top-level
     parseProgram() {
+        if(this.tokens.length === 0)
+            return new ParseResult(new Program([], new BlockStmt([])), 0) 
+        
         const program = this.parseProgramObject(0)    //ParseResult
         
         if(program.position == this.tokens.length) {

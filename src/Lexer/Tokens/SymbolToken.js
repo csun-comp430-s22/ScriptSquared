@@ -39,6 +39,13 @@ class SemiColonToken  {
     }
 }
 
+class ColonToken {
+    constructor() {
+        
+        this.value = ":"
+    }
+}
+
 class DotToken  {
 
     constructor() {
@@ -56,12 +63,14 @@ class CommaToken  {
 }
 
 
+
 module.exports = {
     LeftCurlyToken,
     RightCurlyToken,
     LeftParenToken,
     RightParenToken,
     SemiColonToken,
+    ColonToken,
     DotToken,
     CommaToken
 };

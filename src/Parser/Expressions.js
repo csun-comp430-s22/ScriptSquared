@@ -123,7 +123,7 @@ class NewClassExp extends Exp {
 
     constructor(className, parameterExpsArray) {
         super()
-        if ( !(instance_of(className, ClassNameType)) && !(instance_of(parameterExpsArray, Array)) )
+        if ( !(instance_of(className, ClassNameType)) && !(arrayMatchType(parameterExpsArray, Exp)) )
             throw new EvalError("Incorrect type passed to NewClassExp")
 
         this.className = className
