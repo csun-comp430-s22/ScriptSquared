@@ -119,13 +119,12 @@ thyEntryPoint{
 ### The Nitty (The idiosyncrasies)
 
 - Classes
-  - A class must be declared before 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
+  - All classes must be declared before or after 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
   - The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
   - Classes require a constructor even if it will not be used
-  - For the class to inherit access to the data members of the parent class super must be called in the constructor
-  - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name.
+  - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name. This also applies to instance variables
 - Functions
-  - There is no requirement that return be in a function if it has a non-void type.
+  - There is no requirement that return be in a function even if it has a non-void type.
 - Types
   - Types cannot be casted to a different type so what you see is what you get.
 
