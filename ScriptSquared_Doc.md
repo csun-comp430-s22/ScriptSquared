@@ -46,7 +46,7 @@ We wanted to use JS to make this language happen and to make this an actual lear
 ```text
 thyEntryPoint {
   hey: string = "Hello World";
-  print(s);
+  print(hey);
 }
 ```
 
