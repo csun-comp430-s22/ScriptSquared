@@ -6,7 +6,19 @@ ScriptSquared is an object-oriented language that is meant to imitate Java and i
 
 ---
 
-Table of contents
+- [ScriptSquared](#scriptsquared)
+  - [Language Design](#language-design)
+    - [What is this language](#what-is-this-language)
+    - [Why this language](#why-this-language)
+    - [Why this design](#why-this-design)
+  - [Features !!!!!GONNA NEED HELP WITH THIS](#features-gonna-need-help-with-this)
+  - [Known Limitations](#known-limitations)
+    - [The Nitty (The idiosyncrasies)](#the-nitty-the-idiosyncrasies)
+    - [The Gritty (Actual oversights or shortcomings)](#the-gritty-actual-oversights-or-shortcomings)
+    - [The things that cannot be done](#the-things-that-cannot-be-done)
+  - [What we would do differently](#what-we-would-do-differently)
+  - [Compellation instruction](#compellation-instruction)
+  - [Abstract syntax](#abstract-syntax)
 
 ---
 
@@ -54,83 +66,73 @@ thyEntryPoint {
 
 ***Sample class inheritance***
 
-```text
-class base {
-  construct() {}
-
-  public int baseMethod(x: int, y: int) {
-    return x + y;
-  }
-
-}
-
-class child super base {
-  private name: string;
-
-  construc(name: string) {
-    super();
-    this.name = name;
-  }
-
-// Overwrites previous base
-  protec boolean baseMethod() {
-    return this.name;
-  }
-}
-
-class childChild super child {
-  private word: string = "BIG";
-  public talkinWord: string;
-
-  construc(talkinWord: string) {
-    super("yeet");
-    this.talkinWord = talkinWord;
-  }
-
-  public string speak() {
-    test: string = this.baseMethod();
-    print(test);
-    return this.talkinWord;
-  }
-}
-
-class unrelated super base {
-  construc() {
-    super();
-  }
-
-}
-
-thyEntryPoint{
-
-  tim: child = new child("Tim");
-  james: childChild = new childChild("AHK!");
-  something: unrealated = new unrelated();
-
-  print(tim.baseMethod()); // outputs "Tim"
-  print(james.speak()); // outputs "yeetAHK!"
-  print(something.baseMethod(1, 2)); // outputs 3
-}
-
-```
+---
 
 ## Known Limitations
 
 ### The Nitty (The idiosyncrasies)
 
-- Classes
-  - All classes must be declared before or after 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
-  - The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
-  - Classes require a constructor even if it will not be used
-  - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name. This also applies to instance variables
-- Functions
-  - There is no requirement that return be in a function even if it has a non-void type.
-- Types
-  - Types cannot be casted to a different type so what you see is what you get.
+Classes
+
+- All classes must be declared before or after 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
+- The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
+  - This applies to the use of `this` in a constructor. If a data member needs a value assigned `this.val = val` will not work instead it can either be `val = valIn` or `this.setVal(val);`.
+- Classes require a constructor even if it will not be used
+- There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name. This also applies to instanced variables.
+- When a data member is declared within a class it must be instantiated at declaration.
+
+Functions
+
+- Functions cannot be created outside of a class
+
+ThyEntryPoint
+
+- Must be declared at the top or the bottom of the code, not in between class declarations.
+- Can still recognize the classes outside of thyEntryPoint
 
 ### The Gritty (Actual oversights or shortcomings)
 
+Classes
+
+- Within the constructor if the input parameter is named the same as an internal data member that input parameter will get mixed up with the internal data member. So `val = val;` would be `valInput = valInput` and this will not change the state of the data member.
+
+Functions
+
+- There is no requirement that return be in a function even if it has a non-void type.
+  - If you were to assign the result of let's say a function that should return an integer to a integer variable but the that int function does not have a return the program would wander into undefined behavior.
+
+Types
+
+- Types cannot be casted to a different type so what you see is what you get.
+
+### The things that cannot be done
+
+- No arrays built in! There could be an attempt at it by making an array by stringing together a custom node class.
+- No string manipulation. A string can be overwritten but it is a static thing.
+- No constants so all variables are mutable
+
+---
+
 ## What we would do differently
+
+The code
+
+- Created a heiraicahal abstract syntax from the very beginning. It would have made the parser so much easier to approach
+- CLASSES. We worked on finding classes and method names in the tokenization step. That was not that great of an idea and if we could have done it again we probably would have followed the advice we got later and instead treated variables, class names, and methods as identifiers and then later assigned them to there appropriate classifications.
+- In terms of syntax we initially stuck close to Java but that limited us in our approach on parsing. If we could do it again we would change the syntax so the spirit of excessive OOP would be there but the code would be more straight forward to parse and consistent.
+- Functions would be something the we wished we could have made work outside of classes. Oddly enough the limitations of excessive OOP make our approach consistent but it feels like a short coming.
+- BETTER ERROR MESSAGES. This is something that will follow us to our early graves. The amount of stress due to vague or incomplete error messaging made finding bugs or breaks in our logic. If we could do it again we would have made highly detailed error messages from the very beginning.
+
+The process
+
+- With hindsight we should have made tighter deadlines on smaller components to stay on track and manage time better. There where a few mad scrambles to get components finished when our expected workflow hit a road block on a particularly difficult aspect of the compiler.
+- We should have been more iterative in our process. We usually locked in an idea and tried running it until we couldn't get past a problem that was rooted in the design. If we continuously thought about our design and the way that it was going to interact we would have saved ourselves a lot of trouble.
+
+---
+
+## Compellation instruction
+
+The compiler requires Node.js to run the code.
 
 ## Abstract syntax
 
