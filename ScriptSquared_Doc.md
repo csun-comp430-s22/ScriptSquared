@@ -203,6 +203,5 @@ class classname {
 }
 
 
-program ::=
-: classdec* thyEntryPoint stmt
+program ::= classdec* thyEntryPoint stmt | thyEntryPoint stmt classdec*
 ```
