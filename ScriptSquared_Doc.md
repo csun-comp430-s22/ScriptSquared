@@ -1,14 +1,15 @@
-ScriptSquared
-=============
+# ScriptSquared
 
 Documentation for a compiler created by Emmanuel Bruce Loh, Erick Sanchez, Gevork Manukyan, and Jack Kouyoumdjian
 
 ScriptSquared is an object-oriented language that is meant to imitate Java and implemented in and compiled to JavaScript.
 
 ---
-**Table of contents**
+
+Table of contents
 
 ---
+
 ## Language Design
 
 ### What is this language
@@ -21,6 +22,7 @@ There is
 - Objects + Methods with class-based inheritance, not based in JS classes
 - Subtyping
 - Access Modifiers
+
 ### Why this language
 
 This language was made as a learning exercise to develop an understanding of how compilers work in the context of a object-oriented language. We want to take the "script" out of JavaScript. In our attempt to try to mimic the syntax of Java and some of the class features. We choose JavaScript as our target and implementation language due to it being the second-most familiar language in our group and its ease of use. ***HUBRIS***. This was a way for us to express our frustration with the prolific use of Java at CSUN.
@@ -37,7 +39,7 @@ We wanted to use JS to make this language happen and to make this an actual lear
 
 ---
 
-## Features
+## Features !!!!!GONNA NEED HELP WITH THIS
 
 ***Sample "Hello World"***
 
@@ -114,14 +116,26 @@ thyEntryPoint{
 
 ## Known Limitations
 
-- classes and variables have to be declared before they are use
-- class must have a constructor
-- classes must be declared outside of thyentry point
+### The Nitty (The idiosyncrasies)
+
+- Classes
+  - A class must be declared before 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
+  - The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
+  - Classes require a constructor even if it will not be used
+  - For the class to inherit access to the data members of the parent class super must be called in the constructor
+  - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name.
+- Functions
+  - There is no requirement that return be in a function if it has a non-void type.
+- Types
+  - Types cannot be casted to a different type so what you see is what you get.
+
+### The Gritty (Actual oversights or shortcomings)
 
 ## What we would do differently
 
 ## Abstract syntax
 
+```text
 var is a variable
 s is a string
 i is a integer
@@ -130,53 +144,53 @@ methodname is the name of a method
 classname is the name of the class
 
 type ::=
-: int | string | boolean | void | classname
+  int | string | boolean | void | classname
 
 primary_exp ::=
-: i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*) | this
+  i | s | b | var | ‘(‘ exp ‘)’ | new classname(exp*) | this
 
 method_exp ::=
-: primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )\*
+  primary_exp ( ‘.’ methodname ‘(‘ exp* ‘)’ )\*
 
 multiplitive_op ::=
-: * | /
+  * | /
 
 multiplitive_exp ::=
-: method_exp (multiplitive_op method_exp )*
+  method_exp (multiplitive_op method_exp )*
 
 additive_op ::=
-: + | -
+  + | -
 
 additive_exp ::=
-: multiplitive_exp (additive_op multiplitive_exp)*
+  multiplitive_exp (additive_op multiplitive_exp)*
 
 comparison_op ::=
-: ‘>’ | ‘<’ | ‘>=’ | ‘<=’ | ‘==’ | ‘!=’
+  ‘>’ | ‘<’ | ‘>=’ | ‘<=’ | ‘==’ | ‘!=’
 
 comparison_exp ::=
-: additive_exp | additive_exp comparison_op  additive_exp
+  additive_exp | additive_exp comparison_op  additive_exp
 
 exp ::=
-: comparison_exp
+  comparison_exp
 
 vardec ::=
-: var: type
+  var: type
 
 stmt ::=
-: var = exp; | vardec = exp; | { stmt* } | return exp; | return; | if (exp) stmt else stmt | while (exp) stmt | break; | print(exp); | exp.methodname(exp\*);
+  var = exp; | vardec = exp; | { stmt* } | return exp; | return; | if (exp) stmt else stmt | while (exp) stmt | break; | print(exp); | exp.methodname(exp\*);
 
 access ::=
-: public | private | protec
+  public | private | protec
 
 methoddec ::=
-: access type methodname(vardec*) stmt
+  access type methodname(vardec*) stmt
 
 instancedec ::=
-: access vardec = exp;
+  access vardec = exp;
 
 ***classdec ::=***
 
-```text
+
 class classname super classname {
    instancedec*
    construc(vardec*) { super(exp*); stmt* } 
@@ -188,7 +202,8 @@ class classname {
    construc(vardec*) stmt
    methoddec*
 }
-```
+
 
 program ::=
 : classdec* thyEntryPoint stmt
+```
