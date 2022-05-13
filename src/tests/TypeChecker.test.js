@@ -91,7 +91,7 @@ let string = `
         }
 
         thyEntryPoint {
-            pupper: animal = new GermanShepard("Billy", "Black", 150, 24);
+            pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
             pupper.getName();
             pupper.area();
         }
@@ -165,7 +165,7 @@ test("test", () => {
         }
 
         thyEntryPoint{
-            animal pupper = new GermanShepard("Billy", "Black", 150, 24);
+            pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
             pupper.getName();
             pupper.area();
         }

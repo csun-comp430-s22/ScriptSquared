@@ -69,9 +69,6 @@ function instance_of(token, type) {
 
         tokenProto = tokenProto.__proto__;
     }
-    // let temp = token.__proto__.constructor.name 
-    // let temp2 = type.name
-    // return temp === temp2;
 }
 
 
