@@ -40,67 +40,68 @@ function objsEqual(obj1, obj2) {
     return true;
 }
 
-// let string = `
+let string = `
+        class animal {
+            protec name: string = "empty";
 
-// class base {
-//     protec test: int = 1;
+            construc(nameCon: string) {
+                name = nameCon;
+            }
 
-//     construc(var: int) {}
-    
-//     public int baseMethod(test: int, test2: boolean, test3: string) {
-//         return 1;
-//     }
-// }
+            public string getName() {
+                return name;
+            }
+        }
 
-// class child super base {
-//     private var: boolean = true;
+        class dog super animal {
+            private weight: int = 0;
+            private height: int = 0;
 
-//     construc(var: string) {
-//         super(1);
-//         test = 2;
-//     }
+            construc(name: string, weightCon: int, heightCon: int) {
+                super(name);
+                weight = weightCon;
+                height = heightCon;
+            }
 
-//     private boolean baseMethod(test: int) {
-//         return true;
-//     }
-// }
+            protec int getWeight () {
+                return weight;
+            }
+
+            protec int getHeight () {
+                return height;
+            }
+        }
+
+        class GermanShepard super dog {
+            private color: string = "blank";
+
+            construc(name: string, colorCon: string, weight: int, height: int) {
+                super(name, weight, height);
+
+                color = colorCon;
+            }
+
+            public string getColor() {
+                return color;
+            }
+
+            public int area() {
+                return this.getWeight() + this.getHeight(); 
+            }
+        }
+
+        thyEntryPoint {
+            pupper: animal = new GermanShepard("Billy", "Black", 150, 24);
+            pupper.getName();
+            pupper.area();
+        }
+          
+         `
 
 
-// class childchild super child {
-//     private varchildchild: string = "hello";
-
-//     construc(var: boolean) {
-//         super("yeet");
-
-//         this.baseMethod(3, true, "yeet");  
-//     }
-
-//     public boolean superChildMethod(test: boolean) {
-//         return true;
-//     }
-  
-//     public child superChildMethod2(test: child) {
-//         return new child("hello");
-//     }
-
-// }
-
-// class unrelatedClass {
-//     construc(var: int, var1: child) {}
-
-//     public string baseMethod(test: string, test2: boolean) {
-//         return "hello";
-//     }
-// }
-
-
-// thyEntryPoint {
-//     var: base = new base(1);
-// }
-// `
-// let ast = createAST(string)
-// let typeChecker = new TypeChecker(ast.result)
-// typeChecker.isWellTypedProgram()
+        let ast = createAST(string)
+        let typeChecker = new TypeChecker(ast.result)
+        typeChecker.isWellTypedProgram()
 
 // console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
 // console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
@@ -111,6 +112,74 @@ function objsEqual(obj1, obj2) {
 // console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
 // console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
+test("test", () => {
+    function func () {
+        let string = `
+        class animal {
+            protec name: string = "empty";
+
+            construc(nameCon: string) {
+                name = nameCon;
+            }
+
+            public string getName() {
+                return name;
+            }
+        }
+
+        class dog super animal {
+            private weight: int = 0;
+            private height: int = 0;
+
+            construc(name: string, weightCon: int, heightCon: int) {
+                super(name);
+                weight = weightCon;
+                height = heightCon;
+            }
+
+            protec int getWeight () {
+                return weight;
+            }
+
+            protec int getHeight () {
+                return height;
+            }
+        }
+
+        class GermanShepard super dog {
+            private color: string = "blank";
+
+            construc(name: string, colorCon: string, weight: int, height: int) {
+                super(name, weight, height);
+
+                color = colorCon;
+            }
+
+            public string getColor() {
+                return color;
+            }
+
+            public int area() {
+                return this.getWeight() + this.getHeight(); 
+            }
+        }
+
+        thyEntryPoint{
+            animal pupper = new GermanShepard("Billy", "Black", 150, 24);
+            pupper.getName();
+            pupper.area();
+        }
+          
+         `
+
+
+        let ast = createAST(string)
+        let typeChecker = new TypeChecker(ast.result)
+        typeChecker.isWellTypedProgram()
+    }
+
+    expect(func).not.toThrow(Error)
+})
 
 describe("Test Expression TypeChecker", () => {
     const ast = createAST("thyEntryPoint {}")

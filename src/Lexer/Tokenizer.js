@@ -209,7 +209,7 @@ class Tokenizer {
                 return new ClassNameTypeToken(name);
             } 
 
-            else if (this.input.charAt(this.offset) === "(") {
+            else if (this.getNext() === "(") {
                 return new MethodNameToken(name);
             }
             else
@@ -219,6 +219,11 @@ class Tokenizer {
             
         } else { return null; }
         
+    }
+
+    getNext() {
+        this.skipWhiteSpace()
+        return this.input.charAt(this.offset);
     }
     
     isLetter(c) {

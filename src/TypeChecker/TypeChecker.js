@@ -215,6 +215,12 @@ class TypeChecker {
             typeTree[parentType].push(classType)
         }
 
+        // Make class subtype of everything its parent is a subtype of 
+        Object.keys(typeTree).forEach(key => {
+            if (typeTree[key].includes(parentType))
+                typeTree[key].push(classType)
+        })
+
         if (!(classType in typeTree)) {
             typeTree[classType] = [] 
         }
