@@ -80,6 +80,7 @@ Classes
 - Classes require a constructor even if it will not be used
 - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name. This also applies to instanced variables.
 - When a data member is declared within a class it must be instantiated at declaration.
+- If a variable of type class is assigned a value that is a subclass, the variable will only have the methods of the class used for the declaratoin and not assignment
 
 Functions
 
