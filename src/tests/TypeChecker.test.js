@@ -41,7 +41,7 @@ function objsEqual(obj1, obj2) {
 }
 
 
-test("test", () => {
+test("Inheritance Test", () => {
     function func () {
         let string = `
         class animal {
