@@ -218,7 +218,13 @@ The process
 
 ## Compellation instruction
 
-The compiler requires Node.js to run the code.
+- Download [Node.js](https://nodejs.org/en/)
+- Clone the repository
+- Run ```npm install``` in the terminal at the project directory
+
+## Running tests
+- Go to the project root directory in terminal
+- Run ```npm run test```
 
 ## Abstract syntax
 
