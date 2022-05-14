@@ -123,29 +123,25 @@ let string = `
 
             pupper.returnType(); 
             woofy.returnType();  
-            doggo.returnType(); 
+            doggo.returnType();  
 
         }
           
          `
-        /*
-            pupper.returnType(); // GermanShepard
-            woofy.returnType();  // dog
-            doggo.returnType();  // animal
-        */
 
         let ast = createAST(string)
         let typeChecker = new TypeChecker(ast.result)
         typeChecker.isWellTypedProgram()
 
-// console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
-// console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
-// console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
-// console.log("\nTypeTree: ", typeChecker.typeTree)
-// console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
+        // console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
+        // console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
+        // console.log("\nMethodReturnType: ", typeChecker.methodReturnType)
+        // console.log("\nTypeTree: ", typeChecker.typeTree)
+        // console.log("\nClassConstructorTypes: ", typeChecker.classConstructorTypes)
 
-// console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
-// console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
+        // console.log("\n\nclassInstanceVariables", typeChecker.classInstanceVariables)
+        // console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
+
 
 test("test", () => {
     function func () {
@@ -230,10 +226,9 @@ test("test", () => {
             doggo.getName();
 
 
-            pupper.returnType(); 
-            woofy.returnType();  
-            doggo.returnType(); 
-
+            pupper.returnType(); // GermanShepard
+            woofy.returnType();  // dog
+            doggo.returnType();  // animal
         }
           
          `
