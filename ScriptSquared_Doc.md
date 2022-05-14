@@ -62,7 +62,7 @@ thyEntryPoint {
 }
 ```
 
-- Variables can be initialized with or without assignment
+- Variables must be initialize with assignment
 
 ***Sample class inheritance***
 
@@ -140,8 +140,8 @@ thyEntryPoint {
     pupper.area();
 
     woofy: dog = new GermanShepard("Steve", "Red", 50, 5);
-    pupper.getName();
-    pupper.getCuteness();
+    woofy.getName();
+    woofy.getCuteness();
 
     doggo: animal = new GermanShepard("Bob", "Blue", 125, 16);
     doggo.getName();
@@ -152,7 +152,17 @@ thyEntryPoint {
     doggo.returnType();  // animal
 }
 ```
-- 
+- The variable `doggo` is of type `animal` but is assigned a `GermanShepard` type expression
+  - Since it's type is `animal` it only has access to the `animal` methods - `getName()` & `returnType()` 
+- However the variable `pupper` is of type `GermanShepard` which is a subtype of `dog` which is a subtype of `animal` thus it has access to all their methods
+- Note that by making the `returnType` method in each class we are overriding the method from the super class
+- A limitation that is visible in this snippet is the fact that instance variables cannot be accessed using the `.` operator
+  - If referencing the variable in the class it is declared simple call it as a normal variable 
+  - However if you wish to access the variable outside of the class, you must get the data through a function
+- Access modifiers determine where a method can be called and if a subclass can inherit a specific method or instance variable.
+  - `public` - method can be accessed from any context. Methods and instance variables are inherited by subclasses
+  - `protec` - method can only be accessed from inside class or subclass. Methods and instance variables are inherited by subclasses
+  - `private` - method can only be accessed from inside class. Methods and instance variables are NOT inherited by subclasses
 
 ## Known Limitations
 
