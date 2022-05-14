@@ -62,11 +62,135 @@ thyEntryPoint {
 }
 ```
 
-- Variables can be initialized with or without assignment
+- Variables must be initialize with assignment
+
+***Sample class declaration***
+```
+thyEntryPoint {
+    base: Base = new Base();
+    child: Child = new Child();
+    superChild: SuperChild = new SuperChild();
+}   
+
+class Child super Base {
+    construc() {
+        super();
+    }
+}
+
+class Base {
+    construc() {}
+}
+
+class SuperChild super Child {
+    construc() {
+        super();
+    }
+}
+```
+- The order that classes are declared and subtyped matters
+  - Here `Child` extends `Base` even though `Base` hasn't been declared yet which will fail to compile
+- Also note that `thyEntryPoint` must come before or after all class declarations
 
 ***Sample class inheritance***
 
----
+```
+class animal {
+    protec name: string = "empty";
+
+    construc(nameCon: string) {
+        name = nameCon;
+    }
+
+    public string getName() {
+        return name;
+    }
+
+    public string returnType() {
+        return "animal";
+    }
+}
+
+class dog super animal {
+    private weight: int = 0;
+    private height: int = 0;
+
+    construc(name: string, weightCon: int, heightCon: int) {
+        super(name);
+        weight = weightCon;
+        height = heightCon;
+    }
+
+    protec int getWeight () {
+        return weight;
+    }
+
+    protec int getHeight () {
+        return height;
+    }
+
+    public int getCuteness () {
+        return 100;
+    }
+
+    public string returnType() {
+        return "dog";
+    }
+}
+
+class GermanShepard super dog {
+    private color: string = "blank";
+
+    construc(name: string, colorCon: string, weight: int, height: int) {
+        super(name, weight, height);
+
+        color = colorCon;
+    }
+
+    public string getColor() {
+        return color;
+    }
+
+    public int area() {
+        return this.getWeight() + this.getHeight(); 
+    }
+
+    public string returnType() {
+        return "German Shepard";
+    }
+}
+
+thyEntryPoint {
+    pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
+    pupper.getName();
+    pupper.getCuteness();
+    pupper.getColor();
+    pupper.area();
+
+    woofy: dog = new GermanShepard("Steve", "Red", 50, 5);
+    woofy.getName();
+    woofy.getCuteness();
+
+    doggo: animal = new GermanShepard("Bob", "Blue", 125, 16);
+    doggo.getName();
+
+
+    pupper.returnType(); // GermanShepard
+    woofy.returnType();  // dog
+    doggo.returnType();  // animal
+}
+```
+- The variable `doggo` is of type `animal` but is assigned a `GermanShepard` type expression
+  - Since it's type is `animal` it only has access to the `animal` methods - `getName()` & `returnType()` 
+- However the variable `pupper` is of type `GermanShepard` which is a subtype of `dog` which is a subtype of `animal` thus it has access to all their methods
+- Note that by making the `returnType` method in each class we are overriding the method from the super class
+- A limitation that is visible in this snippet is the fact that instance variables cannot be accessed using the `.` operator
+  - If referencing the variable in the class it is declared simple call it as a normal variable 
+  - However if you wish to access the variable outside of the class, you must get the data through a function
+- Access modifiers determine where a method can be called and if a subclass can inherit a specific method or instance variable.
+  - `public` - method can be accessed from any context. Methods and instance variables are inherited by subclasses
+  - `protec` - method can only be accessed from inside class or subclass. Methods and instance variables are inherited by subclasses
+  - `private` - method can only be accessed from inside class. Methods and instance variables are NOT inherited by subclasses
 
 ## Known Limitations
 
@@ -74,7 +198,7 @@ thyEntryPoint {
 
 Classes
 
-- All classes must be declared before or after 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
+- All classes must be declared before or after 'thyEntryPoint'. This is due to how the compiler finds and stores the classes and functions list
 - The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
   - This applies to the use of `this` in a constructor. If a data member needs a value assigned `this.val = val` will not work instead it can either be `val = valIn` or `this.setVal(val);`.
 - Classes require a constructor even if it will not be used
@@ -133,7 +257,13 @@ The process
 
 ## Compellation instruction
 
-The compiler requires Node.js to run the code.
+- Download [Node.js](https://nodejs.org/en/)
+- Clone the repository
+- Run ```npm install``` in the terminal at the project directory
+
+## Running tests
+- Go to the project root directory in terminal
+- Run ```npm run test```
 
 ## Abstract syntax
 
