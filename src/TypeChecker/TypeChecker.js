@@ -424,6 +424,7 @@ class TypeChecker {
      * @returns true if everything is okay; throws error otherwise
      */
     checkAccessMod(className, methodName, accessMod, classWeAreIn) {
+
         // if method is private, then you can only call it inside the class of the method
         if ( instance_of(accessMod, PrivateModifier) && className !== classWeAreIn ) 
             throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");

@@ -51,6 +51,10 @@ let string = `
             public string getName() {
                 return name;
             }
+
+            public string returnType() {
+                return "animal";
+            }
         }
 
         class dog super animal {
@@ -70,6 +74,14 @@ let string = `
             protec int getHeight () {
                 return height;
             }
+
+            public int getCuteness () {
+                return 100;
+            }
+
+            public string returnType() {
+                return "dog";
+            }
         }
 
         class GermanShepard super dog {
@@ -88,16 +100,39 @@ let string = `
             public int area() {
                 return this.getWeight() + this.getHeight(); 
             }
+
+            public string returnType() {
+                return "German Shepard";
+            }
         }
 
         thyEntryPoint {
             pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
             pupper.getName();
+            pupper.getCuteness();
+            pupper.getColor();
             pupper.area();
+
+            woofy: dog = new GermanShepard("Steve", "Red", 50, 5);
+            pupper.getName();
+            pupper.getCuteness();
+
+            doggo: animal = new GermanShepard("Bob", "Blue", 125, 16);
+            doggo.getName();
+
+
+            pupper.returnType(); 
+            woofy.returnType();  
+            doggo.returnType(); 
+
         }
           
          `
-
+        /*
+            pupper.returnType(); // GermanShepard
+            woofy.returnType();  // dog
+            doggo.returnType();  // animal
+        */
 
         let ast = createAST(string)
         let typeChecker = new TypeChecker(ast.result)
@@ -125,6 +160,10 @@ test("test", () => {
             public string getName() {
                 return name;
             }
+
+            public string returnType() {
+                return "animal";
+            }
         }
 
         class dog super animal {
@@ -144,6 +183,14 @@ test("test", () => {
             protec int getHeight () {
                 return height;
             }
+
+            public int getCuteness () {
+                return 100;
+            }
+
+            public string returnType() {
+                return "dog";
+            }
         }
 
         class GermanShepard super dog {
@@ -162,12 +209,31 @@ test("test", () => {
             public int area() {
                 return this.getWeight() + this.getHeight(); 
             }
+
+            public string returnType() {
+                return "German Shepard";
+            }
         }
 
-        thyEntryPoint{
+        thyEntryPoint {
             pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
             pupper.getName();
+            pupper.getCuteness();
+            pupper.getColor();
             pupper.area();
+
+            woofy: dog = new GermanShepard("Steve", "Red", 50, 5);
+            pupper.getName();
+            pupper.getCuteness();
+
+            doggo: animal = new GermanShepard("Bob", "Blue", 125, 16);
+            doggo.getName();
+
+
+            pupper.returnType(); 
+            woofy.returnType();  
+            doggo.returnType(); 
+
         }
           
          `
