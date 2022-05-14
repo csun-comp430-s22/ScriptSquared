@@ -192,6 +192,52 @@ thyEntryPoint {
   - `protec` - method can only be accessed from inside class or subclass. Methods and instance variables are inherited by subclasses
   - `private` - method can only be accessed from inside class. Methods and instance variables are NOT inherited by subclasses
 
+***Sample Method Inheritance***
+```
+thyEntryPoint {
+    base: Base = new Base();
+    base.methodBase();              // returns "base"
+
+    child: Child = new Child();
+    // child.methodBase();          // throws error
+
+    superChild: SuperChild = new SuperChild();
+    superChild.methodBase();        // returns "base"
+    // superChild.privateMethod();  // throws error
+}   
+
+class Base {
+    construc() {}
+
+    public string methodBase() {
+        return "base";
+    }
+}
+
+class Child super Base {
+    construc() {
+        super();
+    }
+
+    private boolean methodBase() {
+        return false;
+    }
+
+    private int privatesMethod() {
+        return 2;
+    }
+}
+
+class SuperChild super Child {
+    construc() {
+        super();
+    }
+}
+```
+
+- Since `SuperChild` extends `Child` but the method `methodBase` is private, `SuperChild` inherits the method from the next super class, which is `Base` in this case
+- Since the method `privateMethod`
+
 ## Known Limitations
 
 ### The Nitty (The idiosyncrasies)
