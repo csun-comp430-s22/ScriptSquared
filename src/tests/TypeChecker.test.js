@@ -121,17 +121,19 @@ let string = `
             doggo.getName();
 
 
-            pupper.returnType(); 
-            woofy.returnType();  
-            doggo.returnType();  
+            pupper.returnType(); // GermanShepard
+            woofy.returnType();  // dog
+            doggo.returnType();  // animal
 
         }
           
          `
 
-        let ast = createAST(string)
-        let typeChecker = new TypeChecker(ast.result)
-        typeChecker.isWellTypedProgram()
+        // let ast = createAST(string)
+        // let typeChecker = new TypeChecker(ast.result)
+        // typeChecker.isWellTypedProgram()
+
+
 
         // console.log("\nClassMethodMap: ", typeChecker.classMethodMap)
         // console.log("\nMethodAccessMod: ", typeChecker.methodAccessMod)
@@ -143,7 +145,7 @@ let string = `
         // console.log("\n\instanceVariableAccessMod", typeChecker.instanceVariableAccessMod)
 
 
-test("test", () => {
+test("Inheritance Test", () => {
     function func () {
         let string = `
         class animal {
@@ -232,7 +234,6 @@ test("test", () => {
         }
           
          `
-
 
         let ast = createAST(string)
         let typeChecker = new TypeChecker(ast.result)
