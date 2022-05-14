@@ -73,10 +73,7 @@ class TypeChecker {
         })
 
         // Check for Cycles in type tree
-        let trackerMap = {}
-        this.checkForCycles(this.typeTree, "Object", this.typeTree.Object, trackerMap)
-        if (Object.keys(trackerMap).length < classList.length)
-            throw new TypeError("There is a cycle in the class hierarchy");
+        this.checkForCycles(this.typeTree, classList)
 
         // Fill classMethodMap, methodReturnType, classConstructorTypes, and methodAccessMod
         classList.forEach(classDec => {
@@ -215,20 +212,27 @@ class TypeChecker {
             typeTree[parentType].push(classType)
         }
 
+        // Make class subtype of everything its parent is a subtype of 
+        Object.keys(typeTree).forEach(key => {
+            if (typeTree[key].includes(parentType))
+                typeTree[key].push(classType)
+        })
+
         if (!(classType in typeTree)) {
             typeTree[classType] = [] 
         }
     }
 
-    checkForCycles(typeTree, currentType, currentSubTypeArray, trackerMap = {}) {
+    checkForCycles(typeTree, classList) {
 
-        if (trackerMap[currentType])
+        if (typeTree["Object"].length !== classList.length)
             throw new TypeError("There is a cycle in the class hierarchy");
-        else 
-            trackerMap[currentType] = true
 
-        currentSubTypeArray.forEach(type => {
-            this.checkForCycles(typeTree, type, typeTree[type], trackerMap)
+        classList.forEach(classDec => {
+            const isIncluded = typeTree["Object"].includes(classDec.classNameType.value)
+
+            if (!isIncluded)
+                throw new TypeError("There is a cycle in the class hierarchy");
         })
     }
 
@@ -420,6 +424,7 @@ class TypeChecker {
      * @returns true if everything is okay; throws error otherwise
      */
     checkAccessMod(className, methodName, accessMod, classWeAreIn) {
+
         // if method is private, then you can only call it inside the class of the method
         if ( instance_of(accessMod, PrivateModifier) && className !== classWeAreIn ) 
             throw new TypeError("Method '" + methodName + "' is not accessible in class '" + classWeAreIn + "'");

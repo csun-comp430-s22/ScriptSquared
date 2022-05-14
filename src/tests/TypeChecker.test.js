@@ -41,6 +41,105 @@ function objsEqual(obj1, obj2) {
 }
 
 
+test("test", () => {
+    function func () {
+        let string = `
+        class animal {
+            protec name: string = "empty";
+
+            construc(nameCon: string) {
+                name = nameCon;
+            }
+
+            public string getName() {
+                return name;
+            }
+
+            public string returnType() {
+                return "animal";
+            }
+        }
+
+        class dog super animal {
+            private weight: int = 0;
+            private height: int = 0;
+
+            construc(name: string, weightCon: int, heightCon: int) {
+                super(name);
+                weight = weightCon;
+                height = heightCon;
+            }
+
+            protec int getWeight () {
+                return weight;
+            }
+
+            protec int getHeight () {
+                return height;
+            }
+
+            public int getCuteness () {
+                return 100;
+            }
+
+            public string returnType() {
+                return "dog";
+            }
+        }
+
+        class GermanShepard super dog {
+            private color: string = "blank";
+
+            construc(name: string, colorCon: string, weight: int, height: int) {
+                super(name, weight, height);
+
+                color = colorCon;
+            }
+
+            public string getColor() {
+                return color;
+            }
+
+            public int area() {
+                return this.getWeight() + this.getHeight(); 
+            }
+
+            public string returnType() {
+                return "German Shepard";
+            }
+        }
+
+        thyEntryPoint {
+            pupper: GermanShepard = new GermanShepard("Billy", "Black", 150, 24);
+            pupper.getName();
+            pupper.getCuteness();
+            pupper.getColor();
+            pupper.area();
+
+            woofy: dog = new GermanShepard("Steve", "Red", 50, 5);
+            pupper.getName();
+            pupper.getCuteness();
+
+            doggo: animal = new GermanShepard("Bob", "Blue", 125, 16);
+            doggo.getName();
+
+
+            pupper.returnType(); // GermanShepard
+            woofy.returnType();  // dog
+            doggo.returnType();  // animal
+        }
+          
+         `
+
+
+        let ast = createAST(string)
+        let typeChecker = new TypeChecker(ast.result)
+        typeChecker.isWellTypedProgram()
+    }
+
+    expect(func).not.toThrow(Error)
+})
+
 describe("Test Expression TypeChecker", () => {
     const ast = createAST("thyEntryPoint {}")
     const typeChecker = new TypeChecker(ast.result)

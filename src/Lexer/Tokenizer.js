@@ -76,9 +76,23 @@ class Tokenizer {
         }
     }
 
+    doComment() {
+        
+        if (this.input.startsWith("/", this.offset) && this.input.startsWith("/", this.offset + 1)) {
+            console.log("COMMENTING")
+
+            while ( (this.offset < this.inputLength) && this.input.charAt(this.offset) !== '\n') {
+                this.offset++;
+            }
+
+            this.skipWhiteSpace()
+        }
+    }
+
     tokenizeSingle(){   
         let retval = null
         this.skipWhiteSpace()
+        this.doComment()
         
         if  (this.offset < this.inputLength &&
             (retval = this.tryTokenizeVariableOrKeyword()) === null &&
@@ -209,7 +223,7 @@ class Tokenizer {
                 return new ClassNameTypeToken(name);
             } 
 
-            else if (this.input.charAt(this.offset) === "(") {
+            else if (this.getNext() === "(") {
                 return new MethodNameToken(name);
             }
             else
@@ -219,6 +233,11 @@ class Tokenizer {
             
         } else { return null; }
         
+    }
+
+    getNext() {
+        this.skipWhiteSpace()
+        return this.input.charAt(this.offset);
     }
     
     isLetter(c) {
