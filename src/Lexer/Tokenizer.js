@@ -55,8 +55,6 @@ class Tokenizer {
         this.offset = 0
         this.inputLength = input.length
         this.tokens = []
-        // this.classNameTypeList = []
-        // this.methodNameTypeList = []
     }
 
     tokenize () {
@@ -85,6 +83,7 @@ class Tokenizer {
             }
 
             this.skipWhiteSpace()
+            this.doComment()
         }
     }
 

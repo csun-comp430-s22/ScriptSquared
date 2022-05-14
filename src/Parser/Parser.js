@@ -655,6 +655,7 @@ class Parser {
         
         // classdecs are first
         try {
+            this.assertTokenHereIs(position, ClassToken)
             const result = parseList(position, this.parseClassDec.bind(this))
             const classDecList = result.list
             const currentPosition = result.position
@@ -672,7 +673,7 @@ class Parser {
             const classDecList = result.list
             const currentPosition = result.position
 
-            return new ParseResult( new Program(classDecList, stmt.result), stmt.position );
+            return new ParseResult( new Program(classDecList, stmt.result), currentPosition );
         }
     }
 
