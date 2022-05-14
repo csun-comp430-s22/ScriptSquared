@@ -79,7 +79,6 @@ class Tokenizer {
     doComment() {
         
         if (this.input.startsWith("/", this.offset) && this.input.startsWith("/", this.offset + 1)) {
-            console.log("COMMENTING")
 
             while ( (this.offset < this.inputLength) && this.input.charAt(this.offset) !== '\n') {
                 this.offset++;
