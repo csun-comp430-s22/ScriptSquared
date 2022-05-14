@@ -198,7 +198,7 @@ thyEntryPoint {
 
 Classes
 
-- All classes must be declared before or after 'thyEntryPoint'. This is down to how the compiler finds and stores the class and functions list
+- All classes must be declared before or after 'thyEntryPoint'. This is due to how the compiler finds and stores the classes and functions list
 - The data members of a class cannot be accessed directly. Instead the classes must be programmed with getters and setter to interact with the data members
   - This applies to the use of `this` in a constructor. If a data member needs a value assigned `this.val = val` will not work instead it can either be `val = valIn` or `this.setVal(val);`.
 - Classes require a constructor even if it will not be used
