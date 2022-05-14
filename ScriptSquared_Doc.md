@@ -64,6 +64,34 @@ thyEntryPoint {
 
 - Variables must be initialize with assignment
 
+***Sample class declaration***
+```
+thyEntryPoint {
+    base: Base = new Base();
+    child: Child = new Child();
+    superChild: SuperChild = new SuperChild();
+}   
+
+class Child super Base {
+    construc() {
+        super();
+    }
+}
+
+class Base {
+    construc() {}
+}
+
+class SuperChild super Child {
+    construc() {
+        super();
+    }
+}
+```
+- The order that classes are declared and subtyped matters
+  - Here `Child` extends `Base` even though `Base` hasn't been declared yet which will fail to compile
+- Also note that `thyEntryPoint` must come before or after all class declarations
+
 ***Sample class inheritance***
 
 ```
