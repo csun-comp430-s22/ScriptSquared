@@ -194,19 +194,9 @@ thyEntryPoint {
 
 ***Sample Method Inheritance***
 ```
-thyEntryPoint {
-    base: Base = new Base();
-    base.methodBase();              // returns "base"
-
-    child: Child = new Child();
-    // child.methodBase();          // throws error
-
-    superChild: SuperChild = new SuperChild();
-    superChild.methodBase();        // returns "base"
-    // superChild.privateMethod();  // throws error
-}   
-
 class Base {
+    public string: variable = "hello";
+    
     construc() {}
 
     public string methodBase() {
@@ -215,11 +205,13 @@ class Base {
 }
 
 class Child super Base {
+    private boolean: variable = true;
+    
     construc() {
         super();
     }
 
-    private boolean methodBase() {
+    private boolean methodBase(var: int) {
         return false;
     }
 
@@ -233,10 +225,25 @@ class SuperChild super Child {
         super();
     }
 }
+
+thyEntryPoint {
+    base: Base = new Base();
+    base.methodBase();              // returns "base"
+
+    child: Child = new Child();
+    // child.methodBase();          // throws error
+
+    superChild: SuperChild = new SuperChild();
+    superChild.methodBase();        // returns "base"
+    // superChild.privateMethod();  // throws error
+}  
 ```
 
 - Since `SuperChild` extends `Child` but the method `methodBase` is private, `SuperChild` inherits the method from the next super class, which is `Base` in this case
-- Since the method `privateMethod`
+- Since the method `privateMethod` is private and the method doesn't exist anywhere else in the class chain, calling it throws an error
+- Also note that the `methodBase` method in the `Child` class overrides the method but also changes the return type and adds a parameter
+  - This is okay because the only thing required for overriding is having the same name
+- Similar to methods, the instance variable `variable` is override in the `Child` class and its type is changed
 
 ## Known Limitations
 
