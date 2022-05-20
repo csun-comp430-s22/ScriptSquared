@@ -11,7 +11,7 @@ ScriptSquared is an object-oriented language that is meant to imitate Java and i
     - [What is this language](#what-is-this-language)
     - [Why this language](#why-this-language)
     - [Why this design](#why-this-design)
-  - [Features !!!!!GONNA NEED HELP WITH THIS](#features-gonna-need-help-with-this)
+  - [Features](#features)
   - [Known Limitations](#known-limitations)
     - [The Nitty (The idiosyncrasies)](#the-nitty-the-idiosyncrasies)
     - [The Gritty (Actual oversights or shortcomings)](#the-gritty-actual-oversights-or-shortcomings)
@@ -19,8 +19,6 @@ ScriptSquared is an object-oriented language that is meant to imitate Java and i
   - [What we would do differently](#what-we-would-do-differently)
   - [Compellation instruction](#compellation-instruction)
   - [Abstract syntax](#abstract-syntax)
-
----
 
 ## Language Design
 
@@ -47,11 +45,7 @@ We wanted to use JS to make this language happen and to make this an actual lear
 - When construction on the parser began we made many changes to the way we handled expressions. Mainly we implemented a right recursive hierarchy that is shown below in Abstract Syntax.
 - There are places we made conscious decisions to distance from Java syntax. We approached class declaration in manner more similar to C because we wanted to simplify the type checking processes. Variable declaration was also altered to make parsing simpler.
 
-!!!We also altered the way that we handled variable declaration from our initial proposal. This was to simplify class recognition in the type checker phase
-
----
-
-## Features !!!!!GONNA NEED HELP WITH THIS
+## Features
 
 ***Sample "Hello World"***
 
@@ -65,6 +59,7 @@ thyEntryPoint {
 - Variables must be initialize with assignment
 
 ***Sample class declaration***
+
 ```
 thyEntryPoint {
     base: Base = new Base();
@@ -88,6 +83,7 @@ class SuperChild super Child {
     }
 }
 ```
+
 - The order that classes are declared and subtyped matters
   - Here `Child` extends `Base` even though `Base` hasn't been declared yet which will fail to compile
 - Also note that `thyEntryPoint` must come before or after all class declarations
@@ -180,6 +176,7 @@ thyEntryPoint {
     doggo.returnType();  // animal
 }
 ```
+
 - The variable `doggo` is of type `animal` but is assigned a `GermanShepard` type expression
   - Since it's type is `animal` it only has access to the `animal` methods - `getName()` & `returnType()` 
 - However the variable `pupper` is of type `GermanShepard` which is a subtype of `dog` which is a subtype of `animal` thus it has access to all their methods
@@ -289,8 +286,6 @@ Types
 - No string manipulation. A string can be overwritten but it is a static thing.
 - No constants so all variables are mutable
 
----
-
 ## What we would do differently
 
 The code
@@ -306,13 +301,9 @@ The process
 - With hindsight we should have made tighter deadlines on smaller components to stay on track and manage time better. There where a few mad scrambles to get components finished when our expected workflow hit a road block on a particularly difficult aspect of the compiler.
 - We should have been more iterative in our process. We usually locked in an idea and tried running it until we couldn't get past a problem that was rooted in the design. If we continuously thought about our design and the way that it was going to interact we would have saved ourselves a lot of trouble.
 
----
-
 ## Compellation instruction
 
-- Download [Node.js](https://nodejs.org/en/)
-- Clone the repository
-- Run ```npm install``` in the terminal at the project directory
+Code generator is not implemented, so there is currently nothing to run.
 
 ## Running tests
 - Go to the project root directory in terminal
