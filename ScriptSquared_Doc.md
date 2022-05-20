@@ -18,6 +18,7 @@ ScriptSquared is an object-oriented language that is meant to imitate Java and i
     - [The things that cannot be done](#the-things-that-cannot-be-done)
   - [What we would do differently](#what-we-would-do-differently)
   - [Compellation instruction](#compellation-instruction)
+  - [Running tests](#running-tests)
   - [Abstract syntax](#abstract-syntax)
 
 ## Language Design
@@ -60,7 +61,7 @@ thyEntryPoint {
 
 ***Sample class declaration***
 
-```
+```text
 thyEntryPoint {
     base: Base = new Base();
     child: Child = new Child();
@@ -90,7 +91,7 @@ class SuperChild super Child {
 
 ***Sample class inheritance***
 
-```
+```text
 class animal {
     protec name: string = "empty";
 
@@ -178,11 +179,11 @@ thyEntryPoint {
 ```
 
 - The variable `doggo` is of type `animal` but is assigned a `GermanShepard` type expression
-  - Since it's type is `animal` it only has access to the `animal` methods - `getName()` & `returnType()` 
+  - Since it's type is `animal` it only has access to the `animal` methods - `getName()` & `returnType()`
 - However the variable `pupper` is of type `GermanShepard` which is a subtype of `dog` which is a subtype of `animal` thus it has access to all their methods
 - Note that by making the `returnType` method in each class we are overriding the method from the super class
 - A limitation that is visible in this snippet is the fact that instance variables cannot be accessed using the `.` operator
-  - If referencing the variable in the class it is declared simple call it as a normal variable 
+  - If referencing the variable in the class it is declared simple call it as a normal variable
   - However if you wish to access the variable outside of the class, you must get the data through a function
 - Access modifiers determine where a method can be called and if a subclass can inherit a specific method or instance variable.
   - `public` - method can be accessed from any context. Methods and instance variables are inherited by subclasses
@@ -190,7 +191,8 @@ thyEntryPoint {
   - `private` - method can only be accessed from inside class. Methods and instance variables are NOT inherited by subclasses
 
 ***Sample Method Inheritance***
-```
+
+```text
 class Base {
     public string: variable = "hello";
     
@@ -254,7 +256,7 @@ Classes
 - Classes require a constructor even if it will not be used
 - There is no keyword for overriding inherited functions. The inherited functions can still be overridden if the child has a function with the exact same name. This also applies to instanced variables.
 - When a data member is declared within a class it must be instantiated at declaration.
-- If a variable of type class is assigned a value that is a subclass, the variable will only have the methods of the class used for the declaratoin and not assignment
+- If a variable of type class is assigned a value that is a subclass, the variable will only have the methods of the class used for the declaration and not assignment
 
 Functions
 
@@ -306,6 +308,7 @@ The process
 Code generator is not implemented, so there is currently nothing to run.
 
 ## Running tests
+
 - Go to the project root directory in terminal
 - Run ```npm run test```
 
