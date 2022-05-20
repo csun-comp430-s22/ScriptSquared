@@ -2,7 +2,7 @@
 
 Created by Gevork Manukyan, Jack Kouyoumdjian, Emmanuel Bruce Loh, Erick Sanchez
 
-[**Documentation**](ScriptSquared_Doc.md)
+[**DOCUMENTATION CLICK HERE**](ScriptSquared_Doc.md)
 
 ## Compiler Implementation Language and Reasoning
 
